@@ -21,7 +21,4 @@ public class AddressEntity {
 
     @NotNull
     private String value;
-
-    @ManyToOne
-    private CustomerEntity customer;
 }

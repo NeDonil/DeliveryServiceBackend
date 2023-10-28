@@ -24,7 +24,7 @@ public class GroupEntity {
     @NotNull
     private String name;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "group_product",
             joinColumns = @JoinColumn(name = "group_id"),
