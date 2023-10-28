@@ -27,12 +27,15 @@ public class UserCredentialsEntity {
     @NotNull
     private String password;
 
+    private boolean enabled;
+
     @NotNull
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
     public UserCredentialsEntity(String email, String password, UserRole role){
         this.email = email;
+        this.enabled = true;
         this.password = passwordEncoder.encode(password);
         this.role = role;
     }
