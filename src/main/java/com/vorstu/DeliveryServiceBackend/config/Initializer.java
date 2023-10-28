@@ -14,8 +14,6 @@ import java.util.stream.Stream;
 @Component
 public class Initializer implements CommandLineRunner {
     @Autowired
-    AddressRepository addressRepository;
-    @Autowired
     AdminRepository adminRepository;
     @Autowired
     AssemblerRepository assemblerRepository;
@@ -27,10 +25,6 @@ public class Initializer implements CommandLineRunner {
     GroupRepository groupRepository;
     @Autowired
     OrderRepository orderRepository;
-    @Autowired
-    PaymentDataRepository paymentDataRepository;
-    @Autowired
-    ProductRepository productRepository;
 
     @Override
     public void run(String... args){
@@ -77,5 +71,8 @@ public class Initializer implements CommandLineRunner {
 
         OrderEntity order1 = new OrderEntity("Give me that", LocalDateTime.now(), OrderStatus.MAKING, customer1);
         orderRepository.save(order1);
+
+        courierRepository.save(new CourierEntity("Danil Wantropp", "wanropp@email.com", "w12345"));
+        assemblerRepository.save(new AssemblerEntity("Marina Kovaleva", "marina@email.com", "loqiemean12345"));
     }
 }
