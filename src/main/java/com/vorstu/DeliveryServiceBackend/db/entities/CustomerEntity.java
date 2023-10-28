@@ -1,6 +1,7 @@
 package com.vorstu.DeliveryServiceBackend.db.entities;
 
 
+import com.vorstu.DeliveryServiceBackend.db.entities.auth.UserRole;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -15,8 +16,8 @@ import java.util.List;
 @NoArgsConstructor
 public class CustomerEntity extends BaseUser {
 
-    public CustomerEntity(String fio){
-        super(fio);
+    public CustomerEntity(String fio, String email, String password){
+        super(fio, email, password, UserRole.CUSTOMER);
     }
     @OneToMany(cascade = CascadeType.MERGE, mappedBy = "customer")
     private List<AddressEntity> addresses;

@@ -1,10 +1,10 @@
 package com.vorstu.DeliveryServiceBackend.config;
 
 import com.vorstu.DeliveryServiceBackend.db.entities.*;
+import com.vorstu.DeliveryServiceBackend.db.entities.auth.UserCredentialsEntity;
 import com.vorstu.DeliveryServiceBackend.db.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -41,29 +41,19 @@ public class Initializer implements CommandLineRunner {
         AddressEntity address2 = new AddressEntity("Karla Marksa 67/2  p4 kv 4101");
         AddressEntity address3 = new AddressEntity("40 let Octyabrya 12 p1 kv 2");
 
-        UserCredentialsEntity crdntls1 = new UserCredentialsEntity("dima@mail.ru", "12345");
-        UserCredentialsEntity crdntls2 = new UserCredentialsEntity("dima1@mail.ru", "54321");
-        UserCredentialsEntity crdntls3 = new UserCredentialsEntity("dima2@mail.ru", "qwerrty");
-        UserCredentialsEntity crdntls4 = new UserCredentialsEntity("dima_rudnev@gmail.ru", "difficultpswd");
-        userCredentialsRepository.saveAll(Arrays.asList(crdntls1, crdntls2, crdntls3, crdntls4));
+        AdminEntity admin1 = new AdminEntity("Rudneva Olesya", "lesya@mail.ru", "12345");
 
-        AdminEntity admin1 = new AdminEntity("Rudneva Olesya");
-        admin1.setCredentials(crdntls1);
+        AdminEntity admin2 = new AdminEntity("Shmatko Galyna", "whore@mail.ru", "superpswrd");
 
-        AdminEntity admin2 = new AdminEntity("Shmatko Galyna");
-        admin2.setCredentials(crdntls2);
-
-        AdminEntity admin3 = new AdminEntity("Gallagher Fiona");
-        admin3.setCredentials(crdntls3);
+        AdminEntity admin3 = new AdminEntity("Gallagher Fiona", "fiona@mail.ru", "qwerrty");
 
         PaymentDataEntity payment1 = new PaymentDataEntity(4000000L);
         PaymentDataEntity payment2 = new PaymentDataEntity(4060060L);
         PaymentDataEntity payment3 = new PaymentDataEntity(1600000000L);
         paymentDataRepository.saveAll(Arrays.asList(payment1, payment2, payment3));
 
-        CustomerEntity customer1 = new CustomerEntity("Dmitry Rudnev");
+        CustomerEntity customer1 = new CustomerEntity("Dmitry Rudnev", "dimas@gmail.com", "dima12345");
         customer1.setAddresses(Arrays.asList(address1));
-        customer1.setCredentials(crdntls4);
         customer1.setPaymentData(payment1);
         customerRepository.save(customer1);
 
