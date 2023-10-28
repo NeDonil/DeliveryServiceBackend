@@ -15,10 +15,13 @@ import java.util.List;
 @NoArgsConstructor
 public class CustomerEntity extends BaseUser {
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "customer")
+    public CustomerEntity(String fio){
+        super(fio);
+    }
+    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "customer")
     private List<AddressEntity> addresses;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "payment_data_id", referencedColumnName = "id")
     private PaymentDataEntity paymentData;
 }
