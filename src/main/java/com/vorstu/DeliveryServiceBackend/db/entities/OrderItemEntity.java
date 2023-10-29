@@ -20,9 +20,10 @@ public class OrderItemEntity {
     private Long id;
 
     @NotNull
-    private Long count;
-
-    @OneToOne(cascade = CascadeType.MERGE)
+    @ManyToOne()
     @JoinColumn(name = "product_id", referencedColumnName = "id")
     private ProductEntity product;
+
+    @NotNull
+    private Long count;
 }

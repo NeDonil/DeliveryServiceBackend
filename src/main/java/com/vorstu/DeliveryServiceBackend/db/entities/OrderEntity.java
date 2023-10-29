@@ -8,38 +8,48 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "orders")
 @Getter
 @Setter
 @NoArgsConstructor
-@RequiredArgsConstructor
 public class OrderEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
     private String comment;
 
-    @NotNull
     private LocalDateTime date;
 
-    @NotNull
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
 
-    @NotNull
-    @OneToOne(cascade = CascadeType.MERGE)
+    @ManyToOne()
+    private AddressEntity address;
+
+    @ManyToOne()
     @JoinColumn(name = "customer_id", referencedColumnName = "id")
     private CustomerEntity customer;
 
-    @OneToOne(cascade = CascadeType.MERGE)
+    @ManyToOne()
     @JoinColumn(name = "assembler_id", referencedColumnName = "id")
     private AssemblerEntity assembler;
 
-    @OneToOne(cascade = CascadeType.MERGE)
+    @ManyToOne()
     @JoinColumn(name = "courier_id", referencedColumnName = "id")
     private CourierEntity courier;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "order_id")
+    private List<OrderItemEntity> items;
+
+    public OrderEntity(CustomerEntity customer){
+        this.status = OrderStatus.MAKING;
+        this.customer = customer;
+        this.items = new ArrayList<>();
+    }
 }
