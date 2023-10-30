@@ -1,8 +1,7 @@
 package com.vorstu.DeliveryServiceBackend.controllers;
 
-import com.vorstu.DeliveryServiceBackend.db.dto.FullProductDTO;
 import com.vorstu.DeliveryServiceBackend.db.dto.GroupDTO;
-import com.vorstu.DeliveryServiceBackend.db.dto.ShortProductDTO;
+import com.vorstu.DeliveryServiceBackend.db.dto.ProductDTO;
 import com.vorstu.DeliveryServiceBackend.db.entities.ProductEntity;
 import com.vorstu.DeliveryServiceBackend.db.repositories.GroupRepository;
 import com.vorstu.DeliveryServiceBackend.db.repositories.ProductRepository;
@@ -32,7 +31,7 @@ public class UnauthorizedController {
     public ResponseEntity getFullProduct(@RequestParam Long product_id){
         Optional<ProductEntity> productCandid = productRepository.findById(product_id);
         if(productCandid.isPresent()) {
-            return ResponseEntity.ok().body(FullProductDTO.fromEntity(productCandid.get()));
+            return ResponseEntity.ok().body(ProductDTO.Full.Response.fromEntity(productCandid.get()));
         }
 
         return ResponseEntity.badRequest().body("Could not found product by id");
@@ -49,8 +48,8 @@ public class UnauthorizedController {
 
     @GetMapping("group")
     public ResponseEntity getGroups(@RequestParam Long group_id){
-        List<ShortProductDTO> groups = StreamSupport.stream(groupRepository.findProductsInGroup(group_id).spliterator(), false)
-                .map(value -> ShortProductDTO.fromEntity(value))
+        List<ProductDTO.Short.Response> groups = StreamSupport.stream(groupRepository.findProductsInGroup(group_id).spliterator(), false)
+                .map(ProductDTO.Short.Response::fromEntity)
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok().body(groups);

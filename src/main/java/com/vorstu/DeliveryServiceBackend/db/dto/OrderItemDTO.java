@@ -9,9 +9,9 @@ import lombok.Getter;
 public class OrderItemDTO {
     private Long id;
     private Long count;
-    private ShortProductDTO shortProduct;
+    private ProductDTO.Short.Response shortProduct;
 
     public static OrderItemDTO fromEntity(OrderItemEntity entity){
-        return new OrderItemDTO(entity.getId(), entity.getCount(), ShortProductDTO.fromEntity(entity.getProduct()));
+        return new OrderItemDTO(entity.getId(), entity.getCount(), ProductDTO.Short.Response.fromEntity(entity.getProduct()));
     }
 }
