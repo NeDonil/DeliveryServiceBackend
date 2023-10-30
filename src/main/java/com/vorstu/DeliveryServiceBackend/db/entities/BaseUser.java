@@ -1,11 +1,9 @@
 package com.vorstu.DeliveryServiceBackend.db.entities;
 
-import com.sun.istack.NotNull;
 import com.vorstu.DeliveryServiceBackend.db.entities.auth.UserCredentialsEntity;
 import com.vorstu.DeliveryServiceBackend.db.entities.auth.UserRole;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -21,7 +19,7 @@ public class BaseUser {
 
     private String fio;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "credentials_id", referencedColumnName = "id")
     private UserCredentialsEntity credentials;
 
