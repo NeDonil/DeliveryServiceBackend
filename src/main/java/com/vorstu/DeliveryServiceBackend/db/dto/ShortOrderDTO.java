@@ -14,12 +14,12 @@ public class ShortOrderDTO {
     private Long id;
     private String comment;
     private AddressEntity address;
-    private List<OrderItemDTO> items;
+    private List<OrderItemDTO.Short.Response> items;
 
     public static ShortOrderDTO fromEntity(OrderEntity entity){
-        List<OrderItemDTO> items = entity.getItems()
+        List<OrderItemDTO.Short.Response> items = entity.getItems()
                 .stream()
-                .map(OrderItemDTO::fromEntity)
+                .map(OrderItemDTO.Short.Response::fromEntity)
                 .collect(Collectors.toList());
         return new ShortOrderDTO(entity.getId(), entity.getComment(), entity.getAddress(), items);
     }
