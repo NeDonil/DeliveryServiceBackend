@@ -7,10 +7,7 @@ import com.vorstu.DeliveryServiceBackend.db.repositories.GroupRepository;
 import com.vorstu.DeliveryServiceBackend.db.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -37,17 +34,17 @@ public class UnauthorizedController {
         return ResponseEntity.badRequest().body("Could not found product by id");
     }
 
-    @GetMapping("groups")
+    @GetMapping("group")
     public ResponseEntity getGroups(){
-        List<GroupDTO> groups = StreamSupport.stream(groupRepository.findAll().spliterator(), false)
-                .map(value -> GroupDTO.fromEntity(value))
+        List<GroupDTO.Response> groups = StreamSupport.stream(groupRepository.findAll().spliterator(), false)
+                .map(GroupDTO.Response::fromEntity)
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok().body(groups);
     }
 
-    @GetMapping("group")
-    public ResponseEntity getGroups(@RequestParam Long group_id){
+    @GetMapping("group/{group_id}")
+    public ResponseEntity getProductsInGroup(@PathVariable Long group_id){
         List<ProductDTO.Short.Response> groups = StreamSupport.stream(groupRepository.findProductsInGroup(group_id).spliterator(), false)
                 .map(ProductDTO.Short.Response::fromEntity)
                 .collect(Collectors.toList());
