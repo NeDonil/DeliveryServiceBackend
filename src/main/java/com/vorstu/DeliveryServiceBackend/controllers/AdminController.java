@@ -93,7 +93,7 @@ public class AdminController {
     ResponseEntity getOrderByStatus(@PathVariable OrderStatus status){
         return ResponseEntity.ok().body(orderRepository.findAllOrdersByStatus(status)
                 .stream()
-                .map(OrderDTO::fromEntity)
+                .map(OrderDTO.Short.Response::fromEntity)
                 .collect(Collectors.toList())
         );
     }

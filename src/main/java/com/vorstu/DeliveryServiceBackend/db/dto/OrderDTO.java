@@ -1,26 +1,35 @@
 package com.vorstu.DeliveryServiceBackend.db.dto;
 
-import com.vorstu.DeliveryServiceBackend.db.entities.AddressEntity;
 import com.vorstu.DeliveryServiceBackend.db.entities.OrderEntity;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Value;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-@AllArgsConstructor
-@Getter
-public class OrderDTO {
-    private Long id;
-    private String comment;
-    private AddressEntity address;
-    private List<OrderItemDTO.Short.Response> items;
+public enum OrderDTO{
+    ;
 
-    public static OrderDTO fromEntity(OrderEntity entity){
-        List<OrderItemDTO.Short.Response> items = entity.getItems()
-                .stream()
-                .map(OrderItemDTO.Short.Response::fromEntity)
-                .collect(Collectors.toList());
-        return new OrderDTO(entity.getId(), entity.getComment(), entity.getAddress(), items);
+    private interface Id{Long getId(); }
+    private interface Comment{String getComment(); }
+    private interface Address{String getAddress();}
+    private interface ShortItems{List<OrderItemDTO.Short.Response> getShortItems();}
+
+    public enum Short {;
+
+        @Value public static class Response implements Id, Comment, Address, ShortItems {
+            Long id;
+            String comment;
+            String address;
+            List<OrderItemDTO.Short.Response> shortItems;
+            public static Response fromEntity(OrderEntity entity){
+                List<OrderItemDTO.Short.Response> shortItems = entity.getItems()
+                        .stream()
+                        .map(OrderItemDTO.Short.Response::fromEntity)
+                        .collect(Collectors.toList());
+                String address =  entity.getAddress() == null ? "" : entity.getAddress().getValue(); // Todo
+                return new Response(entity.getId(), entity.getComment(), address, shortItems);
+            }
+
+        }
     }
 }

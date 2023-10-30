@@ -1,11 +1,9 @@
 package com.vorstu.DeliveryServiceBackend.controllers;
 
-import com.vorstu.DeliveryServiceBackend.db.dto.ShortOrderDTO;
-import com.vorstu.DeliveryServiceBackend.db.entities.AssemblerEntity;
+import com.vorstu.DeliveryServiceBackend.db.dto.OrderDTO;
 import com.vorstu.DeliveryServiceBackend.db.entities.CourierEntity;
 import com.vorstu.DeliveryServiceBackend.db.entities.OrderEntity;
 import com.vorstu.DeliveryServiceBackend.db.entities.OrderStatus;
-import com.vorstu.DeliveryServiceBackend.db.repositories.AssemblerRepository;
 import com.vorstu.DeliveryServiceBackend.db.repositories.CourierRepository;
 import com.vorstu.DeliveryServiceBackend.db.repositories.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,9 +27,9 @@ public class CourierController {
     OrderRepository orderRepository;
     @GetMapping("order")
     ResponseEntity getOrders(){
-        List<ShortOrderDTO> shortOrders = orderRepository.findAllOrdersByStatus(OrderStatus.ASSEMBLED)
+        List<OrderDTO.Short.Response> shortOrders = orderRepository.findAllOrdersByStatus(OrderStatus.ASSEMBLED)
                 .stream()
-                .map(ShortOrderDTO::fromEntity)
+                .map(OrderDTO.Short.Response::fromEntity)
                 .collect(Collectors.toList());
         return ResponseEntity.ok().body(shortOrders);
     }

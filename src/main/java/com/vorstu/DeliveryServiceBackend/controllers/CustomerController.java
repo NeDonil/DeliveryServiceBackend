@@ -35,9 +35,9 @@ public class CustomerController {
     @GetMapping("order")
     public ResponseEntity getAllOrders(Principal principal){
         CustomerEntity customerEntity = customerRepository.findUserByEmail(principal.getName());
-        List<OrderDTO> orders = orderRepository.findAllOrdersByCustomerId(customerEntity.getId())
+        List<OrderDTO.Short.Response> orders = orderRepository.findAllOrdersByCustomerId(customerEntity.getId())
                 .stream()
-                .map(OrderDTO::fromEntity)
+                .map(OrderDTO.Short.Response::fromEntity)
                 .collect(Collectors.toList());
         return ResponseEntity.ok().body(orders);
     }
@@ -46,7 +46,7 @@ public class CustomerController {
     public ResponseEntity getCurrentOrder(Principal principal){
         CustomerEntity customerEntity = customerRepository.findUserByEmail(principal.getName());
         OrderEntity currentOrderEntity = orderRepository.findCurrentOrderByCustomerId(customerEntity.getId());
-        OrderDTO currentOrderDTO = OrderDTO.fromEntity(currentOrderEntity);
+        OrderDTO.Short.Response currentOrderDTO = OrderDTO.Short.Response.fromEntity(currentOrderEntity);
 
         return ResponseEntity.ok().body(currentOrderDTO);
     }
@@ -57,7 +57,7 @@ public class CustomerController {
         CustomerEntity customerEntity = customerRepository.findUserByEmail(principal.getName());
         OrderEntity orderEntity = orderRepository.findById(orderId).get();
         if(orderEntity.getCustomer() == customerEntity){
-            return ResponseEntity.ok().body(OrderDTO.fromEntity(orderEntity));
+            return ResponseEntity.ok().body(OrderDTO.Short.Response.fromEntity(orderEntity));
         } else {
             return ResponseEntity.badRequest().body("Is not your order");
         }
