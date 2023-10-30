@@ -20,7 +20,7 @@ public class OrderItemEntity {
     private Long id;
 
     @NotNull
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", referencedColumnName = "id")
     private ProductEntity product;
 

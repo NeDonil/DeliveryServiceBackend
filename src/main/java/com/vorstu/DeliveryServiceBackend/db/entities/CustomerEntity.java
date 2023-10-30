@@ -22,11 +22,11 @@ public class CustomerEntity extends BaseUser {
         this.paymentData = new PaymentDataEntity(0L);
         this.addresses = new ArrayList<>();
     }
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id")
     private List<AddressEntity> addresses;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "payment_data_id", referencedColumnName = "id")
     private PaymentDataEntity paymentData;
 }

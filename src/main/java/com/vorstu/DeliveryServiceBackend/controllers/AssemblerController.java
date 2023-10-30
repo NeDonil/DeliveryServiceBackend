@@ -1,8 +1,7 @@
 package com.vorstu.DeliveryServiceBackend.controllers;
 
-import com.vorstu.DeliveryServiceBackend.db.dto.ShortOrderDTO;
+import com.vorstu.DeliveryServiceBackend.db.dto.OrderDTO;
 import com.vorstu.DeliveryServiceBackend.db.entities.AssemblerEntity;
-import com.vorstu.DeliveryServiceBackend.db.entities.CustomerEntity;
 import com.vorstu.DeliveryServiceBackend.db.entities.OrderEntity;
 import com.vorstu.DeliveryServiceBackend.db.entities.OrderStatus;
 import com.vorstu.DeliveryServiceBackend.db.repositories.AssemblerRepository;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Principal;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,9 +27,9 @@ public class AssemblerController {
     OrderRepository orderRepository;
     @GetMapping("order")
     ResponseEntity getOrders(){
-        List<ShortOrderDTO> shortOrders = orderRepository.findAllOrdersByStatus(OrderStatus.PLACED)
+        List<OrderDTO.Short.Response> shortOrders = orderRepository.findAllOrdersByStatus(OrderStatus.PLACED)
                 .stream()
-                .map(ShortOrderDTO::fromEntity)
+                .map(OrderDTO.Short.Response::fromEntity)
                 .collect(Collectors.toList());
         return ResponseEntity.ok().body(shortOrders);
     }
