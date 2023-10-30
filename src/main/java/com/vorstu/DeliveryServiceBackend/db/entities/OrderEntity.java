@@ -23,7 +23,8 @@ public class OrderEntity {
 
     private String comment;
 
-    private LocalDateTime date;
+    private LocalDateTime beginDate;
+    private LocalDateTime endDate;
 
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
