@@ -2,10 +2,13 @@ package com.vorstu.DeliveryServiceBackend.controllers;
 
 import com.vorstu.DeliveryServiceBackend.db.dto.AssemblerDTO;
 import com.vorstu.DeliveryServiceBackend.db.dto.CourierDTO;
+import com.vorstu.DeliveryServiceBackend.db.dto.OrderDTO;
 import com.vorstu.DeliveryServiceBackend.db.entities.AssemblerEntity;
 import com.vorstu.DeliveryServiceBackend.db.entities.CourierEntity;
+import com.vorstu.DeliveryServiceBackend.db.entities.OrderStatus;
 import com.vorstu.DeliveryServiceBackend.db.repositories.AssemblerRepository;
 import com.vorstu.DeliveryServiceBackend.db.repositories.CourierRepository;
+import com.vorstu.DeliveryServiceBackend.db.repositories.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +25,9 @@ public class AdminController {
 
     @Autowired
     CourierRepository courierRepository;
+
+    @Autowired
+    OrderRepository orderRepository;
 
     @GetMapping("assembler")
     ResponseEntity getAssemblers(){
@@ -81,5 +87,14 @@ public class AdminController {
     ResponseEntity deleteCourier(@RequestParam Long courierId){
         courierRepository.deleteById(courierId);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("order/{status}")
+    ResponseEntity getOrderByStatus(@PathVariable OrderStatus status){
+        return ResponseEntity.ok().body(orderRepository.findAllOrdersByStatus(status)
+                .stream()
+                .map(OrderDTO::fromEntity)
+                .collect(Collectors.toList())
+        );
     }
 }
