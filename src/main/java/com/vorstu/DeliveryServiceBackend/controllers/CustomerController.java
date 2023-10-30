@@ -81,7 +81,7 @@ public class CustomerController {
     @GetMapping("order/{orderId}/action/{action}")
     public ResponseEntity doActionOnOrder(Principal principal,
                                           @PathVariable Long orderId,
-                                          @PathVariable OrderActions action){
+                                          @PathVariable OrderAction action){
         CustomerEntity customer = customerRepository.findUserByEmail(principal.getName());
         OrderEntity orderEntity = orderRepository.findById(orderId).get();
         if(orderEntity.getCustomer() == customer){
