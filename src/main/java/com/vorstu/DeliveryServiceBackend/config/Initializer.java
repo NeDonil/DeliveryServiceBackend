@@ -39,6 +39,9 @@ public class Initializer implements CommandLineRunner {
                 .add(new AddressEntity("Kukolkina 11 p5 kv 11"));
         customerRepository.save(customer1);
 
+        CustomerEntity customer2 = new CustomerEntity("Danil Svinoukhov", "svinouhov03@gmail.com", "superhardpassword");
+        customerRepository.save(customer2);
+
         adminRepository.saveAll(Arrays.asList(admin1, admin2, admin3));
 
         ProductEntity product1 = new ProductEntity("Alpen Gold", "desk1", 1L, 100000L);
@@ -77,7 +80,9 @@ public class Initializer implements CommandLineRunner {
         order3.getItems().add(item4);
         order3.setStatus(OrderStatus.DELIVERED);
 
-        orderRepository.saveAll(Arrays.asList(order1, order2, order3));
+        OrderEntity order4 = new OrderEntity(customer2);
+
+        orderRepository.saveAll(Arrays.asList(order1, order2, order3, order4));
 
         courierRepository.save(new CourierEntity("Danil Wantropp", "wanropp@email.com", "w12345"));
         assemblerRepository.save(new AssemblerEntity("Marina Kovaleva", "marina@email.com", "loqiemean12345"));
