@@ -74,7 +74,7 @@ public class Initializer implements CommandLineRunner {
         OrderEntity order2 = new OrderEntity(customer1);
         order2.getItems().add(item2);
         order2.getItems().add(item3);
-        order2.setStatus(OrderStatus.DELIVERED);
+        order2.setStatus(OrderStatus.PLACED);
 
         OrderEntity order3 = new OrderEntity(customer1);
         order3.getItems().add(item4);

@@ -2,15 +2,11 @@ package com.vorstu.DeliveryServiceBackend.controllers;
 
 import com.vorstu.DeliveryServiceBackend.db.dto.CustomerDTO;
 import com.vorstu.DeliveryServiceBackend.db.dto.OrderDTO;
-import com.vorstu.DeliveryServiceBackend.db.dto.OrderItemDTO;
-import com.vorstu.DeliveryServiceBackend.db.dto.ShortOrderDTO;
 import com.vorstu.DeliveryServiceBackend.db.entities.CustomerEntity;
 import com.vorstu.DeliveryServiceBackend.db.entities.OrderEntity;
-import com.vorstu.DeliveryServiceBackend.db.entities.OrderItemEntity;
 import com.vorstu.DeliveryServiceBackend.db.entities.OrderStatus;
 import com.vorstu.DeliveryServiceBackend.db.repositories.CustomerRepository;
 import com.vorstu.DeliveryServiceBackend.db.repositories.OrderRepository;
-import com.vorstu.DeliveryServiceBackend.db.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -85,7 +81,7 @@ public class CustomerController {
     @GetMapping("order/{orderId}/action/{action}")
     public ResponseEntity doActionOnOrder(Principal principal,
                                           @PathVariable Long orderId,
-                                          @PathVariable OrderActions action){
+                                          @PathVariable OrderAction action){
         CustomerEntity customer = customerRepository.findUserByEmail(principal.getName());
         OrderEntity orderEntity = orderRepository.findById(orderId).get();
         if(orderEntity.getCustomer() == customer){
