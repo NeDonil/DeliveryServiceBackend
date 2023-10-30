@@ -18,9 +18,13 @@ public class OrderDTO {
     private Long id;
     private String comment;
     private AddressEntity address;
-    private List<OrderItemEntity> items;
+    private List<OrderItemDTO> orders;
 
     public static OrderDTO fromEntity(OrderEntity entity){
-        return new OrderDTO(entity.getId(), entity.getComment(), entity.getAddress(), entity.getItems());
+        List<OrderItemDTO> orderItems = entity.getItems()
+                .stream()
+                .map(OrderItemDTO::fromEntity)
+                .collect(Collectors.toList());
+        return new OrderDTO(entity.getId(), entity.getComment(), entity.getAddress(), orderItems);
     }
 }

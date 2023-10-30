@@ -2,6 +2,7 @@ package com.vorstu.DeliveryServiceBackend.controllers;
 
 import com.vorstu.DeliveryServiceBackend.db.dto.CustomerDTO;
 import com.vorstu.DeliveryServiceBackend.db.dto.OrderDTO;
+import com.vorstu.DeliveryServiceBackend.db.dto.ShortOrderDTO;
 import com.vorstu.DeliveryServiceBackend.db.entities.CustomerEntity;
 import com.vorstu.DeliveryServiceBackend.db.entities.OrderEntity;
 import com.vorstu.DeliveryServiceBackend.db.repositories.CustomerRepository;
@@ -12,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("api/customer")
@@ -30,6 +33,16 @@ public class CustomerController {
     }
 
     @GetMapping("order")
+    public ResponseEntity getAllOrders(Principal principal){
+        CustomerEntity customerEntity = customerRepository.findUserByEmail(principal.getName());
+        List<OrderDTO> orders = orderRepository.findAllOrdersByCustomerId(customerEntity.getId())
+                .stream()
+                .map(OrderDTO::fromEntity)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok().body(orders);
+    }
+
+    @GetMapping("order/current")
     public ResponseEntity getCurrentOrder(Principal principal){
         CustomerEntity customerEntity = customerRepository.findUserByEmail(principal.getName());
         OrderEntity currentOrderEntity = orderRepository.findCurrentOrderByCustomerId(customerEntity.getId());

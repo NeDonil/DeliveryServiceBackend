@@ -1,12 +1,11 @@
 package com.vorstu.DeliveryServiceBackend.db.dto;
 
 import com.vorstu.DeliveryServiceBackend.db.entities.OrderItemEntity;
-import com.vorstu.DeliveryServiceBackend.db.entities.ProductEntity;
 import lombok.AllArgsConstructor;
-import lombok.Setter;
+import lombok.Getter;
 
 @AllArgsConstructor
-@Setter
+@Getter
 public class OrderItemDTO {
     private Long id;
     private Long count;

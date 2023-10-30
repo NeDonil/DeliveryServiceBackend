@@ -63,10 +63,21 @@ public class Initializer implements CommandLineRunner {
         OrderItemEntity item1 = new OrderItemEntity(product1, 10L);
         OrderItemEntity item2 = new OrderItemEntity(product2, 17L);
         OrderItemEntity item3 = new OrderItemEntity(product3, 1L);
+        OrderItemEntity item4 = new OrderItemEntity(product3, 100L);
 
         OrderEntity order1 = new OrderEntity(customer1);
         order1.getItems().add(item1);
-        orderRepository.save(order1);
+
+        OrderEntity order2 = new OrderEntity(customer1);
+        order2.getItems().add(item2);
+        order2.getItems().add(item3);
+        order2.setStatus(OrderStatus.DELIVERED);
+
+        OrderEntity order3 = new OrderEntity(customer1);
+        order3.getItems().add(item4);
+        order3.setStatus(OrderStatus.DELIVERED);
+
+        orderRepository.saveAll(Arrays.asList(order1, order2, order3));
 
         courierRepository.save(new CourierEntity("Danil Wantropp", "wanropp@email.com", "w12345"));
         assemblerRepository.save(new AssemblerEntity("Marina Kovaleva", "marina@email.com", "loqiemean12345"));
