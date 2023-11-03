@@ -16,7 +16,7 @@ import java.util.stream.StreamSupport;
 
 @RestController
 @RequestMapping("api/product")
-public class UnauthorizedController {
+public class ProductController {
 
     @Autowired
     GroupRepository groupRepository;
