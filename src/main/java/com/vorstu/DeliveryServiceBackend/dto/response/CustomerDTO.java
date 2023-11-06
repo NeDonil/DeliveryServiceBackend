@@ -19,7 +19,7 @@ public class CustomerDTO {
         return new CustomerDTO(entity.getId(),
                 entity.getFio(),
                 entity.getCredentials().getEmail(),
-                entity.getAddresses()
+                entity.getAddresses() == null ? null : entity.getAddresses()
                         .stream()
                         .map(AddressDTO::fromEntity)
                         .collect(Collectors.toList())

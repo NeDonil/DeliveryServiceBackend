@@ -17,7 +17,7 @@ public class OrderDTO {
 
     public static OrderDTO fromEntity(OrderEntity entity){
         return new OrderDTO(entity.getId(), entity.getComment(),
-                AddressDTO.fromEntity(entity.getAddress()),
+                entity.getAddress() != null ? AddressDTO.fromEntity(entity.getAddress()): null,
                 entity.getItems()
                         .stream()
                         .map(OrderItemDTO::fromEntity)
