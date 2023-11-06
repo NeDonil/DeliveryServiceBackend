@@ -1,14 +1,16 @@
 package com.vorstu.DeliveryServiceBackend.controllers;
 
-import com.vorstu.DeliveryServiceBackend.db.dto.AssemblerDTO;
-import com.vorstu.DeliveryServiceBackend.db.dto.CourierDTO;
-import com.vorstu.DeliveryServiceBackend.db.dto.OrderDTO;
 import com.vorstu.DeliveryServiceBackend.db.entities.AssemblerEntity;
 import com.vorstu.DeliveryServiceBackend.db.entities.CourierEntity;
 import com.vorstu.DeliveryServiceBackend.db.entities.OrderStatus;
 import com.vorstu.DeliveryServiceBackend.db.repositories.AssemblerRepository;
 import com.vorstu.DeliveryServiceBackend.db.repositories.CourierRepository;
 import com.vorstu.DeliveryServiceBackend.db.repositories.OrderRepository;
+import com.vorstu.DeliveryServiceBackend.dto.request.FullAssemblerDTO;
+import com.vorstu.DeliveryServiceBackend.dto.request.FullCourierDTO;
+import com.vorstu.DeliveryServiceBackend.dto.response.AssemblerDTO;
+import com.vorstu.DeliveryServiceBackend.dto.response.CourierDTO;
+import com.vorstu.DeliveryServiceBackend.dto.response.OrderDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,13 +34,13 @@ public class AdminController {
     @GetMapping("assembler")
     ResponseEntity getAssemblers(){
         return ResponseEntity.ok().body(StreamSupport.stream(assemblerRepository.findAll().spliterator(), false)
-                .map(AssemblerDTO.Response::fromEntity)
+                .map(AssemblerDTO::fromEntity)
                 .collect(Collectors.toList())
         );
     }
 
     @PostMapping("assembler")
-    ResponseEntity addAssembler(@RequestBody AssemblerDTO.Request assembler){
+    ResponseEntity addAssembler(@RequestBody FullAssemblerDTO assembler){
         AssemblerEntity assemblerEntity = new AssemblerEntity(assembler.getFio(), assembler.getEmail(), assembler.getPassword());
         assemblerRepository.save(assemblerEntity);
         return ResponseEntity.ok().build();
@@ -46,7 +48,7 @@ public class AdminController {
 
     @PutMapping("assembler")
     ResponseEntity updateAssembler(@RequestParam Long assemblerId,
-                                @RequestBody AssemblerDTO.Request assembler){
+                                @RequestBody FullAssemblerDTO assembler){
         AssemblerEntity assemblerEntity = assemblerRepository.findById(assemblerId).get();
         assemblerEntity.setFio(assembler.getFio());
         assemblerRepository.save(assemblerEntity);
@@ -62,13 +64,13 @@ public class AdminController {
     @GetMapping("courier")
     ResponseEntity getCouriers(){
         return ResponseEntity.ok().body(StreamSupport.stream(courierRepository.findAll().spliterator(), false)
-                .map(CourierDTO.Response::fromEntity)
+                .map(CourierDTO::fromEntity)
                 .collect(Collectors.toList())
         );
     }
 
     @PostMapping("courier")
-    ResponseEntity addCourier(@RequestBody CourierDTO.Request courier){
+    ResponseEntity addCourier(@RequestBody FullCourierDTO courier){
         CourierEntity courierEntity = new CourierEntity(courier.getFio(), courier.getEmail(), courier.getPassword());
         courierRepository.save(courierEntity);
         return ResponseEntity.ok().build();
@@ -76,7 +78,7 @@ public class AdminController {
 
     @PutMapping("courier")
     ResponseEntity updateCourier(@RequestParam Long courierId,
-                                   @RequestBody CourierDTO.Request courier){
+                                   @RequestBody FullCourierDTO courier){
         CourierEntity courierEntity = courierRepository.findById(courierId).get();
         courierEntity.setFio(courier.getFio());
         courierRepository.save(courierEntity);
@@ -93,7 +95,7 @@ public class AdminController {
     ResponseEntity getOrderByStatus(@PathVariable OrderStatus status){
         return ResponseEntity.ok().body(orderRepository.findAllOrdersByStatus(status)
                 .stream()
-                .map(OrderDTO.Short.Response::fromEntity)
+                .map(OrderDTO::fromEntity)
                 .collect(Collectors.toList())
         );
     }

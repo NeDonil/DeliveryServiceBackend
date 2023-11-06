@@ -1,10 +1,10 @@
 package com.vorstu.DeliveryServiceBackend.controllers;
 
-import com.vorstu.DeliveryServiceBackend.db.dto.GroupDTO;
-import com.vorstu.DeliveryServiceBackend.db.dto.ProductDTO;
 import com.vorstu.DeliveryServiceBackend.db.entities.ProductEntity;
 import com.vorstu.DeliveryServiceBackend.db.repositories.GroupRepository;
 import com.vorstu.DeliveryServiceBackend.db.repositories.ProductRepository;
+import com.vorstu.DeliveryServiceBackend.dto.response.FullProductDTO;
+import com.vorstu.DeliveryServiceBackend.dto.response.GroupDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,11 +24,11 @@ public class ProductController {
     @Autowired
     ProductRepository productRepository;
 
-    @GetMapping()
-    public ResponseEntity getFullProduct(@RequestParam Long product_id){
+    @GetMapping("/{product_id}")
+    public ResponseEntity getFullProduct(@PathVariable Long product_id){
         Optional<ProductEntity> productCandid = productRepository.findById(product_id);
         if(productCandid.isPresent()) {
-            return ResponseEntity.ok().body(ProductDTO.Full.Response.fromEntity(productCandid.get()));
+            return ResponseEntity.ok().body(FullProductDTO.fromEntity(productCandid.get()));
         }
 
         return ResponseEntity.badRequest().body("Could not found product by id");
@@ -36,8 +36,8 @@ public class ProductController {
 
     @GetMapping("group")
     public ResponseEntity getGroups(){
-        List<GroupDTO.Response> groups = StreamSupport.stream(groupRepository.findAll().spliterator(), false)
-                .map(GroupDTO.Response::fromEntity)
+        List<GroupDTO> groups = StreamSupport.stream(groupRepository.findAll().spliterator(), false)
+                .map(GroupDTO::fromEntity)
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok().body(groups);
@@ -45,8 +45,8 @@ public class ProductController {
 
     @GetMapping("group/{group_id}")
     public ResponseEntity getProductsInGroup(@PathVariable Long group_id){
-        List<ProductDTO.Short.Response> groups = StreamSupport.stream(groupRepository.findProductsInGroup(group_id).spliterator(), false)
-                .map(ProductDTO.Short.Response::fromEntity)
+        List<FullProductDTO> groups = StreamSupport.stream(groupRepository.findProductsInGroup(group_id).spliterator(), false)
+                .map(FullProductDTO::fromEntity)
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok().body(groups);
