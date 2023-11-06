@@ -13,6 +13,8 @@ import com.vorstu.DeliveryServiceBackend.dto.request.ShortOrderItemDTO;
 import com.vorstu.DeliveryServiceBackend.dto.response.CustomerDTO;
 import com.vorstu.DeliveryServiceBackend.dto.response.OrderDTO;
 import com.vorstu.DeliveryServiceBackend.dto.response.ProductDTO;
+import com.vorstu.DeliveryServiceBackend.mappers.AddressMapper;
+import com.vorstu.DeliveryServiceBackend.mappers.CustomerMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -39,10 +41,13 @@ public class CustomerController {
 
     @Autowired
     AddressRepository addressRepository;
+
+    @Autowired
+    CustomerMapper customerMapper;
     @GetMapping
     public ResponseEntity getCustomerInfo(Principal principal){
         CustomerEntity customer = customerRepository.findUserByEmail(principal.getName());
-        CustomerDTO customerDTO = CustomerDTO.fromEntity(customer);
+        CustomerDTO customerDTO = customerMapper.toDTO(customer);
         return ResponseEntity.ok().body(customerDTO);
     }
 

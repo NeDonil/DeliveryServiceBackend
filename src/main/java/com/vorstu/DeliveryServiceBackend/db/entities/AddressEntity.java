@@ -1,19 +1,15 @@
 package com.vorstu.DeliveryServiceBackend.db.entities;
 
 import com.sun.istack.NotNull;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "addresses")
-@Getter
-@Setter
-@NoArgsConstructor
+@Data
 @RequiredArgsConstructor
+@NoArgsConstructor
 public class AddressEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
