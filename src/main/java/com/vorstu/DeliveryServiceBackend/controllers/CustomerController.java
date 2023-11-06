@@ -15,6 +15,8 @@ import com.vorstu.DeliveryServiceBackend.dto.response.OrderDTO;
 import com.vorstu.DeliveryServiceBackend.dto.response.ProductDTO;
 import com.vorstu.DeliveryServiceBackend.mappers.AddressMapper;
 import com.vorstu.DeliveryServiceBackend.mappers.CustomerMapper;
+import com.vorstu.DeliveryServiceBackend.mappers.OrderListMapper;
+import com.vorstu.DeliveryServiceBackend.mappers.OrderMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -44,6 +46,12 @@ public class CustomerController {
 
     @Autowired
     CustomerMapper customerMapper;
+
+    @Autowired
+    OrderMapper orderMapper;
+
+    @Autowired
+    OrderListMapper orderListMapper;
     @GetMapping
     public ResponseEntity getCustomerInfo(Principal principal){
         CustomerEntity customer = customerRepository.findUserByEmail(principal.getName());
@@ -54,11 +62,8 @@ public class CustomerController {
     @GetMapping("order")
     public ResponseEntity getAllOrders(Principal principal){
         CustomerEntity customerEntity = customerRepository.findUserByEmail(principal.getName());
-        List<OrderDTO> orders = orderRepository.findAllOrdersByCustomerId(customerEntity.getId())
-                .stream()
-                .map(OrderDTO::fromEntity)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok().body(orders);
+        List<OrderEntity> orderEntityList = orderRepository.findAllOrdersByCustomerId(customerEntity.getId());
+        return ResponseEntity.ok().body(orderListMapper.toDTOList(orderEntityList));
     }
 
     @GetMapping("order/current")
@@ -76,7 +81,7 @@ public class CustomerController {
         CustomerEntity customerEntity = customerRepository.findUserByEmail(principal.getName());
         OrderEntity orderEntity = orderRepository.findById(orderId).get();
         if(orderEntity.getCustomer() == customerEntity){
-            return ResponseEntity.ok().body(OrderDTO.fromEntity(orderEntity));
+            return ResponseEntity.ok().body(orderMapper.toDTO(orderEntity));
         } else {
             return ResponseEntity.badRequest().body("Is not your order");
         }
