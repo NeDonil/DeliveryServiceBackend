@@ -6,6 +6,7 @@ import com.vorstu.DeliveryServiceBackend.db.entities.OrderStatus;
 import com.vorstu.DeliveryServiceBackend.db.repositories.AssemblerRepository;
 import com.vorstu.DeliveryServiceBackend.db.repositories.OrderRepository;
 import com.vorstu.DeliveryServiceBackend.dto.response.OrderDTO;
+import com.vorstu.DeliveryServiceBackend.mappers.OrderListMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,13 +26,13 @@ public class AssemblerController {
     AssemblerRepository assemblerRepository;
     @Autowired
     OrderRepository orderRepository;
+
+    @Autowired
+    OrderListMapper orderListMapper;
     @GetMapping("order")
     ResponseEntity getOrders(){
-        List<OrderDTO> shortOrders = orderRepository.findAllOrdersByStatus(OrderStatus.PLACED)
-                .stream()
-                .map(OrderDTO::fromEntity)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok().body(shortOrders);
+        List<OrderEntity> orderEntities = orderRepository.findAllOrdersByStatus(OrderStatus.PLACED);
+        return ResponseEntity.ok().body(orderListMapper.toDTOList(orderEntities));
     }
 
     @GetMapping("order/{orderId}/action/{action}")
