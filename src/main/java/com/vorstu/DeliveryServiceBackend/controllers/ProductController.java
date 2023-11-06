@@ -8,52 +8,48 @@ import com.vorstu.DeliveryServiceBackend.dto.response.FullProductDTO;
 import com.vorstu.DeliveryServiceBackend.dto.response.GroupDTO;
 import com.vorstu.DeliveryServiceBackend.mappers.FullProductListMapper;
 import com.vorstu.DeliveryServiceBackend.mappers.GroupListMapper;
+import com.vorstu.DeliveryServiceBackend.services.ProductService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 @RestController
 @RequestMapping("api/product")
+@Slf4j
 public class ProductController {
 
     @Autowired
-    GroupRepository groupRepository;
+    ProductService productService;
 
-    @Autowired
-    ProductRepository productRepository;
-
-    @Autowired
-    GroupListMapper groupListMapper;
-
-    @Autowired
-    FullProductListMapper fullProductListMapper;
-
-    @GetMapping("/{product_id}")
-    public ResponseEntity getFullProduct(@PathVariable Long product_id){
-        Optional<ProductEntity> productCandid = productRepository.findById(product_id);
-        if(productCandid.isPresent()) {
-            return ResponseEntity.ok().body(FullProductDTO.fromEntity(productCandid.get()));
+    @GetMapping("/{productId}")
+    public ResponseEntity getFullProduct(@PathVariable Long productId){
+        try{
+            return ResponseEntity.ok().body(productService.getFullProduct(productId));
+        } catch (NoSuchElementException ex){
+            return ResponseEntity.notFound().build();
         }
-
-        return ResponseEntity.badRequest().body("Could not found product by id");
     }
 
     @GetMapping("group")
     public ResponseEntity getGroups(){
-        List<GroupEntity> groupEntities = new ArrayList();
-        groupRepository.findAll().forEach(groupEntities::add);
-        return ResponseEntity.ok().body(groupListMapper.toDTOList(groupEntities));
+        try{
+            return ResponseEntity.ok().body(productService.getGroups());
+        } catch (Exception ex){
+            log.warn(ex.getMessage());
+            return ResponseEntity.badRequest().build();
+        }
     }
 
-    @GetMapping("group/{group_id}")
-    public ResponseEntity getProductsInGroup(@PathVariable Long group_id){
-        List<ProductEntity> productEntities = groupRepository.findProductsInGroup(group_id);
-        return ResponseEntity.ok().body(fullProductListMapper.toDTOList(productEntities));
+    @GetMapping("group/{groupId}")
+    public ResponseEntity getProductsInGroup(@PathVariable Long groupId){
+        return ResponseEntity.ok().body(productService.getProductsInGroup(groupId));
     }
 }
