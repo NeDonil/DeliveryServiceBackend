@@ -8,15 +8,13 @@ import com.vorstu.DeliveryServiceBackend.db.repositories.CourierRepository;
 import com.vorstu.DeliveryServiceBackend.db.repositories.OrderRepository;
 import com.vorstu.DeliveryServiceBackend.dto.request.FullAssemblerDTO;
 import com.vorstu.DeliveryServiceBackend.dto.request.FullCourierDTO;
-import com.vorstu.DeliveryServiceBackend.dto.response.AssemblerDTO;
-import com.vorstu.DeliveryServiceBackend.dto.response.CourierDTO;
-import com.vorstu.DeliveryServiceBackend.dto.response.OrderDTO;
+import com.vorstu.DeliveryServiceBackend.mappers.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("api/admin")
@@ -31,17 +29,32 @@ public class AdminController {
     @Autowired
     OrderRepository orderRepository;
 
+    @Autowired
+    CourierListMapper courierListMapper;
+
+    @Autowired
+    CourierMapper courierMapper;
+
+    @Autowired
+    AssemblerListMapper assemblerListMapper;
+
+    @Autowired
+    AssemblerMapper assemblerMapper;
+
+    @Autowired
+    OrderListMapper orderListMapper;
+
     @GetMapping("assembler")
     ResponseEntity getAssemblers(){
-        return ResponseEntity.ok().body(StreamSupport.stream(assemblerRepository.findAll().spliterator(), false)
-                .map(AssemblerDTO::fromEntity)
-                .collect(Collectors.toList())
-        );
+        List<AssemblerEntity> assemblerEntities = new ArrayList();
+        assemblerRepository.findAll().forEach(assemblerEntities::add);
+        return ResponseEntity.ok().body(assemblerListMapper.toDTOList(assemblerEntities));
     }
 
     @PostMapping("assembler")
     ResponseEntity addAssembler(@RequestBody FullAssemblerDTO assembler){
-        AssemblerEntity assemblerEntity = new AssemblerEntity(assembler.getFio(), assembler.getEmail(), assembler.getPassword());
+        AssemblerEntity assemblerEntity = new AssemblerEntity(assembler.getFio(), assembler.getEmail(),
+                assembler.getPassword());
         assemblerRepository.save(assemblerEntity);
         return ResponseEntity.ok().build();
     }
@@ -63,10 +76,9 @@ public class AdminController {
 
     @GetMapping("courier")
     ResponseEntity getCouriers(){
-        return ResponseEntity.ok().body(StreamSupport.stream(courierRepository.findAll().spliterator(), false)
-                .map(CourierDTO::fromEntity)
-                .collect(Collectors.toList())
-        );
+        List<CourierEntity> courierEntities = new ArrayList();
+        courierRepository.findAll().forEach(courierEntities::add);
+        return ResponseEntity.ok().body(courierListMapper.toDTOList(courierEntities));
     }
 
     @PostMapping("courier")
@@ -92,11 +104,9 @@ public class AdminController {
     }
 
     @GetMapping("order/{status}")
-    ResponseEntity getOrderByStatus(@PathVariable OrderStatus status){
-        return ResponseEntity.ok().body(orderRepository.findAllOrdersByStatus(status)
-                .stream()
-                .map(OrderDTO::fromEntity)
-                .collect(Collectors.toList())
+    ResponseEntity getOrdersByStatus(@PathVariable OrderStatus status){
+        return ResponseEntity.ok().body(
+                orderListMapper.toDTOList(orderRepository.findAllOrdersByStatus(status))
         );
     }
 }
