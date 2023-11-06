@@ -1,112 +1,99 @@
 package com.vorstu.DeliveryServiceBackend.controllers;
 
-import com.vorstu.DeliveryServiceBackend.db.entities.AssemblerEntity;
-import com.vorstu.DeliveryServiceBackend.db.entities.CourierEntity;
 import com.vorstu.DeliveryServiceBackend.db.entities.OrderStatus;
-import com.vorstu.DeliveryServiceBackend.db.repositories.AssemblerRepository;
-import com.vorstu.DeliveryServiceBackend.db.repositories.CourierRepository;
-import com.vorstu.DeliveryServiceBackend.db.repositories.OrderRepository;
 import com.vorstu.DeliveryServiceBackend.dto.request.FullAssemblerDTO;
 import com.vorstu.DeliveryServiceBackend.dto.request.FullCourierDTO;
-import com.vorstu.DeliveryServiceBackend.mappers.*;
+import com.vorstu.DeliveryServiceBackend.services.AdminService;
+import com.vorstu.DeliveryServiceBackend.services.AssemblerService;
+import com.vorstu.DeliveryServiceBackend.services.CourierService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("api/admin")
+@Slf4j
 public class AdminController {
 
     @Autowired
-    AssemblerRepository assemblerRepository;
+    AssemblerService assemblerService;
+    @Autowired
+    CourierService courierService;
 
     @Autowired
-    CourierRepository courierRepository;
-
-    @Autowired
-    OrderRepository orderRepository;
-
-    @Autowired
-    CourierListMapper courierListMapper;
-
-    @Autowired
-    CourierMapper courierMapper;
-
-    @Autowired
-    AssemblerListMapper assemblerListMapper;
-
-    @Autowired
-    AssemblerMapper assemblerMapper;
-
-    @Autowired
-    OrderListMapper orderListMapper;
+    AdminService adminService;
 
     @GetMapping("assembler")
     ResponseEntity getAssemblers(){
-        List<AssemblerEntity> assemblerEntities = new ArrayList();
-        assemblerRepository.findAll().forEach(assemblerEntities::add);
-        return ResponseEntity.ok().body(assemblerListMapper.toDTOList(assemblerEntities));
+        return ResponseEntity.ok().body(
+                assemblerService.getAssemblers()
+        );
     }
 
     @PostMapping("assembler")
     ResponseEntity addAssembler(@RequestBody FullAssemblerDTO assembler){
-        AssemblerEntity assemblerEntity = new AssemblerEntity(assembler.getFio(), assembler.getEmail(),
-                assembler.getPassword());
-        assemblerRepository.save(assemblerEntity);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body(
+                assemblerService.createAssembler(assembler)
+        );
     }
 
     @PutMapping("assembler")
     ResponseEntity updateAssembler(@RequestParam Long assemblerId,
                                 @RequestBody FullAssemblerDTO assembler){
-        AssemblerEntity assemblerEntity = assemblerRepository.findById(assemblerId).get();
-        assemblerEntity.setFio(assembler.getFio());
-        assemblerRepository.save(assemblerEntity);
-        return ResponseEntity.ok().build();
+        try{
+            assemblerService.updateAssembler(assemblerId, assembler);
+            return ResponseEntity.ok().build();
+        } catch(NoSuchElementException ex){
+            log.warn(ex.getMessage());
+        }
+        return ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("assembler")
     ResponseEntity deleteAssembler(@RequestParam Long assemblerId){
-        assemblerRepository.deleteById(assemblerId);
+        assemblerService.deleteAssembler(assemblerId);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("courier")
     ResponseEntity getCouriers(){
-        List<CourierEntity> courierEntities = new ArrayList();
-        courierRepository.findAll().forEach(courierEntities::add);
-        return ResponseEntity.ok().body(courierListMapper.toDTOList(courierEntities));
+        return ResponseEntity.ok().body(
+                courierService.getCouriers()
+        );
     }
 
     @PostMapping("courier")
     ResponseEntity addCourier(@RequestBody FullCourierDTO courier){
-        CourierEntity courierEntity = new CourierEntity(courier.getFio(), courier.getEmail(), courier.getPassword());
-        courierRepository.save(courierEntity);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body(
+                courierService.createCourier(courier)
+        );
     }
 
     @PutMapping("courier")
     ResponseEntity updateCourier(@RequestParam Long courierId,
                                    @RequestBody FullCourierDTO courier){
-        CourierEntity courierEntity = courierRepository.findById(courierId).get();
-        courierEntity.setFio(courier.getFio());
-        courierRepository.save(courierEntity);
-        return ResponseEntity.ok().build();
+        try{
+            courierService.updateCourier(courierId, courier);
+            return ResponseEntity.ok().build();
+        } catch(NoSuchElementException ex){
+            log.warn(ex.getMessage());
+        }
+        return ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("courier")
     ResponseEntity deleteCourier(@RequestParam Long courierId){
-        courierRepository.deleteById(courierId);
+        courierService.deleteCourier(courierId);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("order/{status}")
     ResponseEntity getOrdersByStatus(@PathVariable OrderStatus status){
         return ResponseEntity.ok().body(
-                orderListMapper.toDTOList(orderRepository.findAllOrdersByStatus(status))
+                adminService.getOrdersByStatus(status)
         );
     }
 }

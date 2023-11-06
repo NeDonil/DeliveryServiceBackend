@@ -6,11 +6,16 @@ import com.vorstu.DeliveryServiceBackend.db.entities.OrderEntity;
 import com.vorstu.DeliveryServiceBackend.db.entities.OrderStatus;
 import com.vorstu.DeliveryServiceBackend.db.repositories.AssemblerRepository;
 import com.vorstu.DeliveryServiceBackend.db.repositories.OrderRepository;
+import com.vorstu.DeliveryServiceBackend.dto.request.FullAssemblerDTO;
+import com.vorstu.DeliveryServiceBackend.dto.response.AssemblerDTO;
 import com.vorstu.DeliveryServiceBackend.dto.response.OrderDTO;
+import com.vorstu.DeliveryServiceBackend.mappers.AssemblerListMapper;
+import com.vorstu.DeliveryServiceBackend.mappers.AssemblerMapper;
 import com.vorstu.DeliveryServiceBackend.mappers.OrderListMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -24,6 +29,12 @@ public class AssemblerService {
 
     @Autowired
     OrderListMapper orderListMapper;
+
+    @Autowired
+    AssemblerListMapper assemblerListMapper;
+
+    @Autowired
+    AssemblerMapper assemblerMapper;
 
     public List<OrderDTO> getOrders(){
         List<OrderEntity> orderEntities = orderRepository.findAllOrdersByStatus(OrderStatus.PLACED);
@@ -54,5 +65,35 @@ public class AssemblerService {
         }
 
         orderRepository.save(orderEntity);
+    }
+
+    public List<AssemblerDTO> getAssemblers(){
+        List<AssemblerEntity> assemblerEntities = new ArrayList();
+        assemblerRepository.findAll().forEach(assemblerEntities::add);
+        return assemblerListMapper.toDTOList(assemblerEntities);
+    }
+
+    public AssemblerDTO createAssembler(FullAssemblerDTO assembler){
+        AssemblerEntity assemblerEntity = new AssemblerEntity(
+                assembler.getFio(),
+                assembler.getEmail(),
+                assembler.getPassword()
+        );
+        return assemblerMapper.toDTO(assemblerRepository.save(assemblerEntity));
+    }
+
+    public AssemblerDTO updateAssembler(Long assemblerId, FullAssemblerDTO assembler) throws NoSuchElementException{
+        Optional<AssemblerEntity> assemblerEntityCandid = assemblerRepository.findById(assemblerId);
+        if(!assemblerEntityCandid.isPresent()){
+            throw new NoSuchElementException(String.format("Assembler with id %d not found", assemblerId));
+        }
+
+        AssemblerEntity assemblerEntity = assemblerEntityCandid.get();
+        assemblerEntity.setFio(assembler.getFio());
+        return assemblerMapper.toDTO(assemblerRepository.save(assemblerEntity));
+    }
+
+    public void deleteAssembler(Long assemblerId){
+        assemblerRepository.deleteById(assemblerId);
     }
 }
