@@ -12,6 +12,7 @@ import com.vorstu.DeliveryServiceBackend.dto.response.OrderDTO;
 import com.vorstu.DeliveryServiceBackend.mappers.AssemblerListMapper;
 import com.vorstu.DeliveryServiceBackend.mappers.AssemblerMapper;
 import com.vorstu.DeliveryServiceBackend.mappers.OrderListMapper;
+import com.vorstu.DeliveryServiceBackend.services.action.resolver.ActionResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,7 +35,7 @@ public class AssemblerService {
     AssemblerMapper assemblerMapper;
 
     @Autowired
-    ActionResolver actionResolver;
+    ActionResolver<AssemblerEntity> assemblerActionResolver;
 
     public List<OrderDTO> getOrders(){
         List<OrderEntity> orderEntities = orderRepository.findAllOrdersByStatus(OrderStatus.PLACED);
@@ -51,7 +52,7 @@ public class AssemblerService {
 
         OrderEntity orderEntity = orderEntityCandid.get();
 
-        actionResolver.resolve(action, orderEntity, assembler);
+        assemblerActionResolver.resolve(action, orderEntity, assembler);
         orderRepository.save(orderEntity);
     }
 
