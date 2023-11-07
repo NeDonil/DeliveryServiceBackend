@@ -1,156 +1,75 @@
 package com.vorstu.DeliveryServiceBackend.controllers;
 
-import com.vorstu.DeliveryServiceBackend.db.entities.CustomerEntity;
-import com.vorstu.DeliveryServiceBackend.db.entities.OrderEntity;
-import com.vorstu.DeliveryServiceBackend.db.entities.OrderItemEntity;
-import com.vorstu.DeliveryServiceBackend.db.entities.OrderStatus;
-import com.vorstu.DeliveryServiceBackend.db.repositories.AddressRepository;
-import com.vorstu.DeliveryServiceBackend.db.repositories.CustomerRepository;
-import com.vorstu.DeliveryServiceBackend.db.repositories.OrderRepository;
-import com.vorstu.DeliveryServiceBackend.db.repositories.ProductRepository;
 import com.vorstu.DeliveryServiceBackend.dto.request.ShortOrderDTO;
-import com.vorstu.DeliveryServiceBackend.dto.request.ShortOrderItemDTO;
-import com.vorstu.DeliveryServiceBackend.dto.response.CustomerDTO;
-import com.vorstu.DeliveryServiceBackend.dto.response.OrderDTO;
-import com.vorstu.DeliveryServiceBackend.dto.response.ProductDTO;
+import com.vorstu.DeliveryServiceBackend.services.CustomerService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.time.LocalDateTime;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
+import java.util.NoSuchElementException;
 @RestController
 @RequestMapping("api/customer")
+@Slf4j
 public class CustomerController {
 
     @Autowired
-    CustomerRepository customerRepository;
-
-    @Autowired
-    OrderRepository orderRepository;
-
-    @Autowired
-    ProductRepository productRepository;
-
-    @Autowired
-    AddressRepository addressRepository;
+    CustomerService customerService;
     @GetMapping
     public ResponseEntity getCustomerInfo(Principal principal){
-        CustomerEntity customer = customerRepository.findUserByEmail(principal.getName());
-        CustomerDTO customerDTO = CustomerDTO.fromEntity(customer);
-        return ResponseEntity.ok().body(customerDTO);
+        return ResponseEntity.ok().body(
+                customerService.getCustomerInfo(principal.getName())
+        );
     }
 
     @GetMapping("order")
     public ResponseEntity getAllOrders(Principal principal){
-        CustomerEntity customerEntity = customerRepository.findUserByEmail(principal.getName());
-        List<OrderDTO> orders = orderRepository.findAllOrdersByCustomerId(customerEntity.getId())
-                .stream()
-                .map(OrderDTO::fromEntity)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok().body(orders);
+        return ResponseEntity.ok().body(
+                customerService.getCustomerOrders(principal.getName())
+        );
     }
 
     @GetMapping("order/current")
     public ResponseEntity getCurrentOrder(Principal principal){
-        CustomerEntity customerEntity = customerRepository.findUserByEmail(principal.getName());
-        OrderEntity currentOrderEntity = orderRepository.findCurrentOrderByCustomerId(customerEntity.getId());
-        OrderDTO currentOrderDTO = OrderDTO.fromEntity(currentOrderEntity);
-
-        return ResponseEntity.ok().body(currentOrderDTO);
+        return ResponseEntity.ok().body(
+                customerService.getCurrentOrder(principal.getName())
+        );
     }
 
     @GetMapping("order/{orderId}")
-    public ResponseEntity getCurrentOrder(Principal principal,
-                                          @PathVariable Long orderId){
-        CustomerEntity customerEntity = customerRepository.findUserByEmail(principal.getName());
-        OrderEntity orderEntity = orderRepository.findById(orderId).get();
-        if(orderEntity.getCustomer() == customerEntity){
-            return ResponseEntity.ok().body(OrderDTO.fromEntity(orderEntity));
-        } else {
-            return ResponseEntity.badRequest().body("Is not your order");
+    public ResponseEntity getOrder(Principal principal,
+                                   @PathVariable Long orderId){
+        try{
+            return ResponseEntity.ok().body(
+                    customerService.getOrder(principal.getName(), orderId)
+            );
+        } catch(NoSuchElementException ex){
+            log.warn(ex.getMessage());
         }
 
-
+        return ResponseEntity.notFound().build();
     }
 
     @PutMapping("order/current")
     public ResponseEntity updateCurrentOrder(Principal principal,
                                           @RequestBody ShortOrderDTO order){
-        CustomerEntity customerEntity = customerRepository.findUserByEmail(principal.getName());
-        OrderEntity orderEntity = orderRepository.findCurrentOrderByCustomerId(customerEntity.getId());
-
-        List<OrderItemEntity> orderItemEntities = orderEntity.getItems();
-        Iterator<OrderItemEntity> orderItemEntitiesIterator = orderItemEntities.iterator();
-
-        if(order.getComment() != null){
-            orderEntity.setComment(order.getComment());
-        }
-
-        if(order.getAddress() != null){
-            Long addressId = order.getAddress().getId();
-            orderEntity.setAddress(addressRepository.findById(addressId).get());
-        }
-
-        while(orderItemEntitiesIterator.hasNext()){
-            OrderItemEntity entity = orderItemEntitiesIterator.next();
-            Optional<ShortOrderItemDTO> itemCandid = order.getItems()
-                    .stream()
-                    .filter(x -> x.getId() == entity.getId())
-                    .findFirst();
-
-            if(itemCandid.isPresent()){
-                entity.setCount(itemCandid.get().getCount());
-                order.getItems().remove(itemCandid.get());
-            } else {
-                orderItemEntitiesIterator.remove();
-            }
-        }
-
-        for(ShortOrderItemDTO newItem : order.getItems()){
-            OrderItemEntity newOrderItemEntity = new OrderItemEntity();
-
-            Long productId = newItem.getProduct().getId();
-            newOrderItemEntity.setProduct(productRepository.findById(productId).get());
-
-            newOrderItemEntity.setCount(newItem.getCount());
-
-            orderItemEntities.add(newOrderItemEntity);
-        }
-
-        orderEntity.setItems(orderItemEntities);
-        orderRepository.save(orderEntity);
-
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body(
+                customerService.updateCurrentOrder(principal.getName(), order)
+        );
     }
 
     @GetMapping("order/{orderId}/action/{action}")
     public ResponseEntity doActionOnOrder(Principal principal,
                                           @PathVariable Long orderId,
                                           @PathVariable OrderAction action){
-        CustomerEntity customer = customerRepository.findUserByEmail(principal.getName());
-        OrderEntity orderEntity = orderRepository.findById(orderId).get();
-        if(orderEntity.getCustomer() == customer){
-            switch (action) {
-                case MAKE -> {
-                    orderEntity.setStatus(OrderStatus.PLACED);
-                    orderEntity.setBeginDate(LocalDateTime.now());
-                    OrderEntity newOrderEntity = new OrderEntity(customer);
-                    orderRepository.save(newOrderEntity);
-                }
-                case REFUSE -> {
-                    orderEntity.setStatus(OrderStatus.REJECTED);
-                    orderEntity.setEndDate(LocalDateTime.now());
-                    orderRepository.save(orderEntity);
-                }
-            }
+        try{
+            customerService.doAction(principal.getName(), orderId, action);
             return ResponseEntity.ok().build();
+        } catch(NoSuchElementException ex){
+            log.warn(ex.getMessage());
         }
-        return ResponseEntity.badRequest().build();
+
+        return ResponseEntity.notFound().build();
     }
 }

@@ -1,11 +1,7 @@
 package com.vorstu.DeliveryServiceBackend.controllers;
 
-import com.vorstu.DeliveryServiceBackend.db.entities.CourierEntity;
-import com.vorstu.DeliveryServiceBackend.db.entities.OrderEntity;
-import com.vorstu.DeliveryServiceBackend.db.entities.OrderStatus;
-import com.vorstu.DeliveryServiceBackend.db.repositories.CourierRepository;
-import com.vorstu.DeliveryServiceBackend.db.repositories.OrderRepository;
-import com.vorstu.DeliveryServiceBackend.dto.response.OrderDTO;
+import com.vorstu.DeliveryServiceBackend.services.CourierService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,49 +10,30 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Principal;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("api/courier")
+@Slf4j
 public class CourierController {
     @Autowired
-    CourierRepository courierRepository;
-    @Autowired
-    OrderRepository orderRepository;
+    CourierService courierService;
     @GetMapping("order")
     ResponseEntity getOrders(){
-        List<OrderDTO> shortOrders = orderRepository.findAllOrdersByStatus(OrderStatus.ASSEMBLED)
-                .stream()
-                .map(OrderDTO::fromEntity)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok().body(shortOrders);
+        return ResponseEntity.ok().body(courierService.getOrders());
     }
 
     @GetMapping("order/{orderId}/action/{action}")
     ResponseEntity doActionOnOrder(Principal principal,
                                    @PathVariable Long orderId,
                                    @PathVariable OrderAction action){
-        CourierEntity courier = courierRepository.findUserByEmail(principal.getName());
-        OrderEntity orderEntity = orderRepository.findById(orderId).get();
-
-        switch (action) {
-            case TO_DELIVERY -> {
-                orderEntity.setStatus(OrderStatus.DELIVERING);
-                orderEntity.setCourier(courier);
-            }
-            case TO_DELIVERED -> {
-                orderEntity.setEndDate(LocalDateTime.now());
-                orderEntity.setStatus(OrderStatus.DELIVERED);
-            }
-            case REFUSE -> {
-                orderEntity.setStatus(OrderStatus.ASSEMBLED);
-                orderEntity.setCourier(null);
-            }
+        try{
+            courierService.doActionOnOrder(principal.getName(), orderId, action);
+            return ResponseEntity.ok().build();
+        } catch (NoSuchElementException ex){
+            log.warn(ex.getMessage());
         }
 
-        orderRepository.save(orderEntity);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.notFound().build();
     }
 }

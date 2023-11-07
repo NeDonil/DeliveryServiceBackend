@@ -7,8 +7,10 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface GroupRepository extends CrudRepository<GroupEntity, Long> {
     @Query("SELECT g.products FROM GroupEntity g WHERE g.id=:group_id")
-    Iterable<ProductEntity> findProductsInGroup(@Param("group_id") Long group_id);
+    List<ProductEntity> findProductsInGroup(@Param("group_id") Long group_id);
 }
