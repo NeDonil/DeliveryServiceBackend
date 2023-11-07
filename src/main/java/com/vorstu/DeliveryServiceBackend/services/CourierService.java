@@ -13,6 +13,7 @@ import com.vorstu.DeliveryServiceBackend.dto.response.OrderDTO;
 import com.vorstu.DeliveryServiceBackend.mappers.CourierListMapper;
 import com.vorstu.DeliveryServiceBackend.mappers.CourierMapper;
 import com.vorstu.DeliveryServiceBackend.mappers.OrderListMapper;
+import com.vorstu.DeliveryServiceBackend.services.action.resolver.ActionResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,6 +38,9 @@ public class CourierService {
     @Autowired
     CourierMapper courierMapper;
 
+    @Autowired
+    ActionResolver<CourierEntity> actionResolver;
+
     public List<OrderDTO> getOrders(){
         List<OrderEntity> orderEntities = orderRepository.findAllOrdersByStatus(OrderStatus.ASSEMBLED);
         return orderListMapper.toDTOList(orderEntities);
@@ -51,20 +55,7 @@ public class CourierService {
         }
 
         OrderEntity orderEntity = orderEntityCandid.get();
-        switch (action) {
-            case TO_DELIVERY -> {
-                orderEntity.setStatus(OrderStatus.DELIVERING);
-                orderEntity.setCourier(courier);
-            }
-            case TO_DELIVERED -> {
-                orderEntity.setStatus(OrderStatus.DELIVERED);
-                orderEntity.setEndDate(LocalDateTime.now());
-            }
-            case REFUSE -> {
-                orderEntity.setStatus(OrderStatus.ASSEMBLED);
-                orderEntity.setCourier(null);
-            }
-        }
+        actionResolver.resolve(action, orderEntity, courier);
 
         orderRepository.save(orderEntity);
     }

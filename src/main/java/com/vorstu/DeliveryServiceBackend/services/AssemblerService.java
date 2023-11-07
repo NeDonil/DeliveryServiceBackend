@@ -12,13 +12,11 @@ import com.vorstu.DeliveryServiceBackend.dto.response.OrderDTO;
 import com.vorstu.DeliveryServiceBackend.mappers.AssemblerListMapper;
 import com.vorstu.DeliveryServiceBackend.mappers.AssemblerMapper;
 import com.vorstu.DeliveryServiceBackend.mappers.OrderListMapper;
+import com.vorstu.DeliveryServiceBackend.services.action.resolver.ActionResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class AssemblerService {
@@ -36,6 +34,9 @@ public class AssemblerService {
     @Autowired
     AssemblerMapper assemblerMapper;
 
+    @Autowired
+    ActionResolver<AssemblerEntity> assemblerActionResolver;
+
     public List<OrderDTO> getOrders(){
         List<OrderEntity> orderEntities = orderRepository.findAllOrdersByStatus(OrderStatus.PLACED);
         return orderListMapper.toDTOList(orderEntities);
@@ -50,20 +51,8 @@ public class AssemblerService {
         }
 
         OrderEntity orderEntity = orderEntityCandid.get();
-        switch (action) {
-            case TO_ASSEMBLY -> {
-                orderEntity.setStatus(OrderStatus.ASSEMBLING);
-                orderEntity.setAssembler(assembler);
-            }
-            case TO_ASSEMBLED -> {
-                orderEntity.setStatus(OrderStatus.ASSEMBLED);
-            }
-            case REFUSE -> {
-                orderEntity.setStatus(OrderStatus.PLACED);
-                orderEntity.setAssembler(null);
-            }
-        }
 
+        assemblerActionResolver.resolve(action, orderEntity, assembler);
         orderRepository.save(orderEntity);
     }
 
