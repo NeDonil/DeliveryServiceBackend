@@ -9,8 +9,5 @@ import lombok.Data;
 public class GroupDTO {
     private Long id;
     private String name;
-
-    public static GroupDTO fromEntity(GroupEntity entity){
-        return new GroupDTO(entity.getId(), entity.getName());
-    }
+    private String url;
 }

@@ -24,6 +24,9 @@ public class GroupEntity {
     @NotNull
     private String name;
 
+    @NotNull
+    private String url;
+
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(
             name = "group_product",

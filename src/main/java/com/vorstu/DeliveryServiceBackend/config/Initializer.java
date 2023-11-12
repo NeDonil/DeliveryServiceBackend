@@ -49,19 +49,25 @@ public class Initializer implements CommandLineRunner {
         ProductEntity product3 = new ProductEntity("Apple", "desk3", 23L, 30000L);
         ProductEntity product4 = new ProductEntity("Chicken Fillet", "desk4", 15L, 400000L);
 
-        GroupEntity g1 = new GroupEntity("General");
+        GroupEntity g1 = new GroupEntity("General", "https://cm.samokat.ru/processed/category/4ccedaf7-4296-42fe-9519-6f04e78704ab.jpg");
         g1.setProducts(Stream.of(product1, product2, product3, product4).collect(Collectors.toSet()));
 
-        GroupEntity g2 = new GroupEntity("Meal");
+        GroupEntity g2 = new GroupEntity("Meal", "https://cm.samokat.ru/processed/public/b6db88b1e3657695______________7.jpg");
         g2.setProducts(Stream.of(product4).collect(Collectors.toSet()));
 
-        GroupEntity g3 = new GroupEntity("Vegetables");
+        GroupEntity g3 = new GroupEntity("Vegetables", "https://cm.samokat.ru/processed/category/1694187180-pic1.jpg");
         g3.setProducts(Stream.of(product2).collect(Collectors.toSet()));
 
-        GroupEntity g4 = new GroupEntity("Fruits");
+        GroupEntity g4 = new GroupEntity("Bread", "https://cm.samokat.ru/processed/original/160441_349334568.jpg");
         g4.setProducts(Stream.of(product3).collect(Collectors.toSet()));
 
-        groupRepository.saveAll(Arrays.asList(g1, g2, g3, g4));
+        GroupEntity g5 = new GroupEntity("Grocery", "https://cm.samokat.ru/processed/original/153793_1354391565.jpg");
+        GroupEntity g6 = new GroupEntity("Snack", "https://cm.samokat.ru/processed/public/fd4a6ecb80cdacae_pepsico_3.jpg");
+        GroupEntity g7 = new GroupEntity("Water", "https://cm.samokat.ru/processed/original/88488_1136633278.jpg");
+        GroupEntity g8 = new GroupEntity("Cold", "https://cm.samokat.ru/processed/original/85886_1742409590.jpg");
+        GroupEntity g9 = new GroupEntity("Milk", "https://cm.samokat.ru/processed/public/9ecb524e05b2b4b3_________________________.jpg");
+
+        groupRepository.saveAll(Arrays.asList(g1, g2, g3, g5, g6, g7, g8, g9));
 
         OrderItemEntity item1 = new OrderItemEntity(product1, 10L);
         OrderItemEntity item2 = new OrderItemEntity(product2, 17L);
