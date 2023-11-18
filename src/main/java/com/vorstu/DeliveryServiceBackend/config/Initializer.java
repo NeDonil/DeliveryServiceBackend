@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -44,35 +43,58 @@ public class Initializer implements CommandLineRunner {
 
         adminRepository.saveAll(Arrays.asList(admin1, admin2, admin3));
 
-        ProductEntity product1 = new ProductEntity("Alpen Gold", "desk1", 1L, 100000L);
-        ProductEntity product2 = new ProductEntity("Cucumber", "desk2", 200L, 150000L);
-        ProductEntity product3 = new ProductEntity("Apple", "desk3", 23L, 30000L);
-        ProductEntity product4 = new ProductEntity("Chicken Fillet", "desk4", 15L, 400000L);
+        ProductEntity p1 = new ProductEntity("Чизкейк", "Описание чизкейка",
+                "https://cm.samokat.ru/processed/m/original/95fd4465-27a6-11ed-885a-08c0eb32014b_1636298318.jpg",
+                100L, 2000L);
 
-        GroupEntity g1 = new GroupEntity("General", "https://cm.samokat.ru/processed/category/4ccedaf7-4296-42fe-9519-6f04e78704ab.jpg");
-        g1.setProducts(Stream.of(product1, product2, product3, product4).collect(Collectors.toSet()));
+        ProductEntity p2 = new ProductEntity("Куриное филе", "Описание куриного филе",
+                "https://cm.samokat.ru/processed/m/public/9676203a013c263d_4670117690775-1.jpg",
+                100L, 40000L);
 
-        GroupEntity g2 = new GroupEntity("Meal", "https://cm.samokat.ru/processed/public/b6db88b1e3657695______________7.jpg");
-        g2.setProducts(Stream.of(product4).collect(Collectors.toSet()));
+        ProductEntity p3 = new ProductEntity("Хлеб", "Описание хлеба",
+                "https://cm.samokat.ru/processed/m/original/7323ffdd-3fff-11ed-b96c-08c0eb32008b_1669197198.jpg",
+                100L, 8000L);
 
-        GroupEntity g3 = new GroupEntity("Vegetables", "https://cm.samokat.ru/processed/category/1694187180-pic1.jpg");
-        g3.setProducts(Stream.of(product2).collect(Collectors.toSet()));
+        ProductEntity p4 = new ProductEntity("Вода", "Описание воды",
+                "https://cm.samokat.ru/processed/m/original/8621b85b-8808-11ec-ae6d-08c0eb320147_1952036370.jpg",
+                100L, 5000L);
 
-        GroupEntity g4 = new GroupEntity("Bread", "https://cm.samokat.ru/processed/original/160441_349334568.jpg");
-        g4.setProducts(Stream.of(product3).collect(Collectors.toSet()));
+        ProductEntity p5 = new ProductEntity("Апельсины", "Описание апельсинов",
+                "https://cm.samokat.ru/processed/m/original/69813_1517928215.jpg",
+                100L, 15000L);
 
-        GroupEntity g5 = new GroupEntity("Grocery", "https://cm.samokat.ru/processed/original/153793_1354391565.jpg");
-        GroupEntity g6 = new GroupEntity("Snack", "https://cm.samokat.ru/processed/public/fd4a6ecb80cdacae_pepsico_3.jpg");
-        GroupEntity g7 = new GroupEntity("Water", "https://cm.samokat.ru/processed/original/88488_1136633278.jpg");
-        GroupEntity g8 = new GroupEntity("Cold", "https://cm.samokat.ru/processed/original/85886_1742409590.jpg");
-        GroupEntity g9 = new GroupEntity("Milk", "https://cm.samokat.ru/processed/public/9ecb524e05b2b4b3_________________________.jpg");
+        ProductEntity p6 = new ProductEntity("Чая", "Описание чая",
+                "https://cm.samokat.ru/processed/m/original/112562_643953137.jpg",
+                100L, 12000L);
+
+        ProductEntity p7 = new ProductEntity("Сахар", "Описание Сахара",
+                "https://cm.samokat.ru/processed/m/original/124584_1965506859.jpg",
+                100L, 10000L);
+
+        GroupEntity g1 = new GroupEntity("Все товары", "https://cm.samokat.ru/processed/category/4ccedaf7-4296-42fe-9519-6f04e78704ab.jpg");
+        g1.setProducts(Stream.of(p1, p2, p3, p4, p5, p6, p7).collect(Collectors.toSet()));
+
+        GroupEntity g2 = new GroupEntity("Мясо", "https://cm.samokat.ru/processed/public/b6db88b1e3657695______________7.jpg");
+        g2.setProducts(Stream.of(p2).collect(Collectors.toSet()));
+
+        GroupEntity g3 = new GroupEntity("Овощи", "https://cm.samokat.ru/processed/category/1694187180-pic1.jpg");
+        g3.setProducts(Stream.of(p7, p3).collect(Collectors.toSet()));
+
+        GroupEntity g4 = new GroupEntity("Хлеб", "https://cm.samokat.ru/processed/original/160441_349334568.jpg");
+        g4.setProducts(Stream.of(p1, p7).collect(Collectors.toSet()));
+
+        GroupEntity g5 = new GroupEntity("Бакалея", "https://cm.samokat.ru/processed/original/153793_1354391565.jpg");
+        GroupEntity g6 = new GroupEntity("Чипсы и сухарики", "https://cm.samokat.ru/processed/public/fd4a6ecb80cdacae_pepsico_3.jpg");
+        GroupEntity g7 = new GroupEntity("Вода", "https://cm.samokat.ru/processed/original/88488_1136633278.jpg");
+        GroupEntity g8 = new GroupEntity("Морозилка", "https://cm.samokat.ru/processed/original/85886_1742409590.jpg");
+        GroupEntity g9 = new GroupEntity("Молоко, яйца, хлеб", "https://cm.samokat.ru/processed/public/9ecb524e05b2b4b3_________________________.jpg");
 
         groupRepository.saveAll(Arrays.asList(g1, g2, g3, g5, g6, g7, g8, g9));
 
-        OrderItemEntity item1 = new OrderItemEntity(product1, 10L);
-        OrderItemEntity item2 = new OrderItemEntity(product2, 17L);
-        OrderItemEntity item3 = new OrderItemEntity(product3, 1L);
-        OrderItemEntity item4 = new OrderItemEntity(product3, 100L);
+        OrderItemEntity item1 = new OrderItemEntity(p1, 10L);
+        OrderItemEntity item2 = new OrderItemEntity(p2, 17L);
+        OrderItemEntity item3 = new OrderItemEntity(p3, 1L);
+        OrderItemEntity item4 = new OrderItemEntity(p3, 100L);
 
         OrderEntity order1 = new OrderEntity(customer1);
         order1.getItems().add(item1);

@@ -21,10 +21,10 @@ public class ProductEntity {
 
     @NotNull
     private String title;
-
-    private String photo;
     @NotNull
     private String description;
+    @NotNull
+    private String photo;
     @NotNull
     private Long count;
     @NotNull
