@@ -72,4 +72,11 @@ public class CustomerController {
 
         return ResponseEntity.notFound().build();
     }
+
+    @GetMapping("address")
+    public ResponseEntity getAddresses(Principal principal){
+        return ResponseEntity.ok().body(
+                customerService.getAddresses(principal.getName())
+        );
+    }
 }

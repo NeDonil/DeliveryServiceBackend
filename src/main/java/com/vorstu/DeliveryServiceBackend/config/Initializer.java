@@ -45,31 +45,31 @@ public class Initializer implements CommandLineRunner {
 
         ProductEntity p1 = new ProductEntity("Чизкейк", "Описание чизкейка",
                 "https://cm.samokat.ru/processed/m/original/95fd4465-27a6-11ed-885a-08c0eb32014b_1636298318.jpg",
-                100L, 2000L);
+                100L, 20L);
 
         ProductEntity p2 = new ProductEntity("Куриное филе", "Описание куриного филе",
                 "https://cm.samokat.ru/processed/m/public/9676203a013c263d_4670117690775-1.jpg",
-                100L, 40000L);
+                100L, 400L);
 
         ProductEntity p3 = new ProductEntity("Хлеб", "Описание хлеба",
                 "https://cm.samokat.ru/processed/m/original/7323ffdd-3fff-11ed-b96c-08c0eb32008b_1669197198.jpg",
-                100L, 8000L);
+                100L, 80L);
 
         ProductEntity p4 = new ProductEntity("Вода", "Описание воды",
                 "https://cm.samokat.ru/processed/m/original/8621b85b-8808-11ec-ae6d-08c0eb320147_1952036370.jpg",
-                100L, 5000L);
+                100L, 50L);
 
         ProductEntity p5 = new ProductEntity("Апельсины", "Описание апельсинов",
                 "https://cm.samokat.ru/processed/m/original/69813_1517928215.jpg",
-                100L, 15000L);
+                100L, 150L);
 
-        ProductEntity p6 = new ProductEntity("Чая", "Описание чая",
+        ProductEntity p6 = new ProductEntity("Чай черный Майский Отборный цейлонский, 25 пакетиков", "Описание чая",
                 "https://cm.samokat.ru/processed/m/original/112562_643953137.jpg",
-                100L, 12000L);
+                100L, 120L);
 
         ProductEntity p7 = new ProductEntity("Сахар", "Описание Сахара",
                 "https://cm.samokat.ru/processed/m/original/124584_1965506859.jpg",
-                100L, 10000L);
+                100L, 100L);
 
         GroupEntity g1 = new GroupEntity("Все товары", "https://cm.samokat.ru/processed/category/4ccedaf7-4296-42fe-9519-6f04e78704ab.jpg");
         g1.setProducts(Stream.of(p1, p2, p3, p4, p5, p6, p7).collect(Collectors.toSet()));

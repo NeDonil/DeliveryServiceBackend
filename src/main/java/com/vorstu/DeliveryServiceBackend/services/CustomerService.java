@@ -11,8 +11,10 @@ import com.vorstu.DeliveryServiceBackend.db.repositories.OrderRepository;
 import com.vorstu.DeliveryServiceBackend.db.repositories.ProductRepository;
 import com.vorstu.DeliveryServiceBackend.dto.request.ShortOrderDTO;
 import com.vorstu.DeliveryServiceBackend.dto.request.ShortOrderItemDTO;
+import com.vorstu.DeliveryServiceBackend.dto.response.AddressDTO;
 import com.vorstu.DeliveryServiceBackend.dto.response.CustomerDTO;
 import com.vorstu.DeliveryServiceBackend.dto.response.OrderDTO;
+import com.vorstu.DeliveryServiceBackend.mappers.AddressListMapper;
 import com.vorstu.DeliveryServiceBackend.mappers.CustomerMapper;
 import com.vorstu.DeliveryServiceBackend.mappers.OrderListMapper;
 import com.vorstu.DeliveryServiceBackend.mappers.OrderMapper;
@@ -47,6 +49,9 @@ public class CustomerService {
 
     @Autowired
     OrderListMapper orderListMapper;
+
+    @Autowired
+    AddressListMapper addressListMapper;
 
     public CustomerDTO getCustomerInfo(String email){
         CustomerEntity customer = customerRepository.findUserByEmail(email);
@@ -136,6 +141,8 @@ public class CustomerService {
                 case MAKE -> {
                     orderEntity.setStatus(OrderStatus.PLACED);
                     orderEntity.setBeginDate(LocalDateTime.now());
+                    orderRepository.save(orderEntity);
+
                     OrderEntity newOrderEntity = new OrderEntity(customer);
                     orderRepository.save(newOrderEntity);
                 }
@@ -146,5 +153,11 @@ public class CustomerService {
                 }
             }
         }
+    }
+
+    public List<AddressDTO> getAddresses(String email){
+        return addressListMapper.toDTOList(
+                addressRepository.findAllAddressesByEmail(email)
+        );
     }
 }
