@@ -27,21 +27,19 @@ public class Initializer implements CommandLineRunner {
 
     @Override
     public void run(String... args){
-        AdminEntity admin1 = new AdminEntity("Rudneva Olesya", "lesya@mail.ru", "12345");
-        AdminEntity admin2 = new AdminEntity("Shmatko Galyna", "whore@mail.ru", "superpswrd");
-        AdminEntity admin3 = new AdminEntity("Gallagher Fiona", "fiona@mail.ru", "qwerrty");
+        AdminEntity admin1 = new AdminEntity("Gallagher Fiona", "fiona@mail.ru", "qwerrty");
 
-        CustomerEntity customer1 = new CustomerEntity("Dmitry Rudnev", "dimas@gmail.com", "dima12345");
+        CustomerEntity customer1 = new CustomerEntity("Дмитрий Руднев", "dimas@gmail.com", "dima12345");
         customer1.getAddresses()
                 .add(new AddressEntity("Куколкина 11 п4 э4 кв 290"));
         customer1.getAddresses()
                 .add(new AddressEntity("Беговая 6/3 п4 э5 кв 60"));
         customerRepository.save(customer1);
 
-        CustomerEntity customer2 = new CustomerEntity("Danil Svinoukhov", "svinouhov03@gmail.com", "superhardpassword");
+        CustomerEntity customer2 = new CustomerEntity("Данил Свиноухов", "svinouhov03@gmail.com", "superhardpassword");
         customerRepository.save(customer2);
 
-        adminRepository.saveAll(Arrays.asList(admin1, admin2, admin3));
+        adminRepository.saveAll(Arrays.asList(admin1));
 
         ProductEntity p1 = new ProductEntity("Морковь по-корейски Fresh Secret", "Описание продукта",
                 "https://cm.samokat.ru/processed/m/public/3d4214cbe7e26439_4610092032047-1.jpg",
@@ -278,7 +276,7 @@ public class Initializer implements CommandLineRunner {
 
         orderRepository.saveAll(Arrays.asList(order1, order2, order3, order4));
 
-        courierRepository.save(new CourierEntity("Danil Wantropp", "wanropp@email.com", "w12345"));
-        assemblerRepository.save(new AssemblerEntity("Marina Kovaleva", "marina@email.com", "loqiemean12345"));
+        courierRepository.save(new CourierEntity("Данил Вонтроп", "wanropp@email.com", "w12345"));
+        assemblerRepository.save(new AssemblerEntity("Марина Ковалева", "marina@email.com", "loqiemean12345"));
     }
 }

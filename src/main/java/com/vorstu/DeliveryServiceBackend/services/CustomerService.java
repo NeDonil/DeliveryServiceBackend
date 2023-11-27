@@ -67,7 +67,7 @@ public class CustomerService {
     public OrderDTO getCurrentOrder(String email){
         CustomerEntity customerEntity = customerRepository.findUserByEmail(email);
         OrderEntity currentOrderEntity = orderRepository.findCurrentOrderByCustomerId(customerEntity.getId());
-        return OrderDTO.fromEntity(currentOrderEntity);
+        return orderMapper.toDTO(currentOrderEntity);
     }
 
     public OrderDTO getOrder(String email, Long orderId) throws NoSuchElementException{
