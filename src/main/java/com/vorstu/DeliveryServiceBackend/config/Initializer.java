@@ -36,7 +36,9 @@ public class Initializer implements CommandLineRunner {
                 .add(new AddressEntity("Беговая 6/3 п4 э5 кв 60"));
         customerRepository.save(customer1);
 
-        CustomerEntity customer2 = new CustomerEntity("Данил Свиноухов", "svinouhov03@gmail.com", "superhardpassword");
+        CustomerEntity customer2 = new CustomerEntity("Данил Свиноухов", "svinoukhov03@gmail.com", "superhardpassword");
+        customer2.getAddresses()
+                .add(new AddressEntity("Беговая 6/3 п4 э5 кв 60"));
         customerRepository.save(customer2);
 
         adminRepository.saveAll(Arrays.asList(admin1));
