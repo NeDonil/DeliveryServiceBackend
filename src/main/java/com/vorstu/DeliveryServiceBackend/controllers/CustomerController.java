@@ -79,4 +79,11 @@ public class CustomerController {
                 customerService.getAddresses(principal.getName())
         );
     }
+
+    @PostMapping("address")
+    public ResponseEntity getAddresses(Principal principal, @RequestBody String address){
+        return ResponseEntity.ok().body(
+                customerService.createAddress(principal.getName(), address)
+        );
+    }
 }

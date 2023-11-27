@@ -1,10 +1,7 @@
 package com.vorstu.DeliveryServiceBackend.services;
 
 import com.vorstu.DeliveryServiceBackend.controllers.OrderAction;
-import com.vorstu.DeliveryServiceBackend.db.entities.CustomerEntity;
-import com.vorstu.DeliveryServiceBackend.db.entities.OrderEntity;
-import com.vorstu.DeliveryServiceBackend.db.entities.OrderItemEntity;
-import com.vorstu.DeliveryServiceBackend.db.entities.OrderStatus;
+import com.vorstu.DeliveryServiceBackend.db.entities.*;
 import com.vorstu.DeliveryServiceBackend.db.repositories.AddressRepository;
 import com.vorstu.DeliveryServiceBackend.db.repositories.CustomerRepository;
 import com.vorstu.DeliveryServiceBackend.db.repositories.OrderRepository;
@@ -14,10 +11,7 @@ import com.vorstu.DeliveryServiceBackend.dto.request.ShortOrderItemDTO;
 import com.vorstu.DeliveryServiceBackend.dto.response.AddressDTO;
 import com.vorstu.DeliveryServiceBackend.dto.response.CustomerDTO;
 import com.vorstu.DeliveryServiceBackend.dto.response.OrderDTO;
-import com.vorstu.DeliveryServiceBackend.mappers.AddressListMapper;
-import com.vorstu.DeliveryServiceBackend.mappers.CustomerMapper;
-import com.vorstu.DeliveryServiceBackend.mappers.OrderListMapper;
-import com.vorstu.DeliveryServiceBackend.mappers.OrderMapper;
+import com.vorstu.DeliveryServiceBackend.mappers.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -50,6 +44,8 @@ public class CustomerService {
     @Autowired
     OrderListMapper orderListMapper;
 
+    @Autowired
+    AddressMapper addressMapper;
     @Autowired
     AddressListMapper addressListMapper;
 
@@ -159,5 +155,13 @@ public class CustomerService {
         return addressListMapper.toDTOList(
                 addressRepository.findAllAddressesByEmail(email)
         );
+    }
+
+    public AddressDTO createAddress(String email, String address) {
+        CustomerEntity customer = customerRepository.findUserByEmail(email);
+        AddressEntity newAddress = new AddressEntity(address);
+
+        customer.getAddresses().add(newAddress);
+        return addressMapper.toDTO(addressRepository.save(newAddress));
     }
 }
