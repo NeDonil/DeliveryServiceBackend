@@ -50,4 +50,9 @@ public class ProductService {
         List<ProductEntity> productEntities = groupRepository.findProductsInGroup(groupId);
         return fullProductListMapper.toDTOList(productEntities);
     }
+
+    public List<FullProductDTO> findProductsByPattern(String pattern){
+        List<ProductEntity> productEntities = productRepository.findProductsByPattern(pattern);
+        return fullProductListMapper.toDTOList(productEntities);
+    }
 }

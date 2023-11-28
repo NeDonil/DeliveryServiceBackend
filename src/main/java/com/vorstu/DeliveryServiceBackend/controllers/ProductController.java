@@ -52,4 +52,9 @@ public class ProductController {
     public ResponseEntity getProductsInGroup(@PathVariable Long groupId){
         return ResponseEntity.ok().body(productService.getProductsInGroup(groupId));
     }
+
+    @GetMapping("find")
+    public ResponseEntity getProductsByPattern(@RequestParam String pattern){
+        return ResponseEntity.ok().body(productService.findProductsByPattern(pattern));
+    }
 }
