@@ -11,6 +11,6 @@ import java.util.List;
 
 @Repository
 public interface ProductRepository extends CrudRepository<ProductEntity, Long> {
-    @Query("SELECT p FROM ProductEntity p WHERE p.title LIKE :pattern")
+    @Query("SELECT p FROM ProductEntity p WHERE lower(p.title) LIKE %:pattern%")
     List<ProductEntity> findProductsByPattern(@Param("pattern") String pattern);
 }
