@@ -28,7 +28,7 @@ public class AssemblerController {
     }
 
     @MessageMapping("assembler/order/{orderId}")
-    @SendTo({"/order/placed", "/order/assembly", "/order/assembled", "/order/{orderId}"})
+    @SendTo({"/order/placed", "/order/assembling", "/order/assembled", "/order/{orderId}"})
     public OrderMessage makeOrder(Principal principal, @DestinationVariable Long orderId, OrderAction action){
         try{
             return assemblerService.doAction(principal.getName(), orderId, action);

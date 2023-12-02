@@ -8,10 +8,7 @@ import com.vorstu.DeliveryServiceBackend.db.repositories.OrderRepository;
 import com.vorstu.DeliveryServiceBackend.dto.request.FullCourierDTO;
 import com.vorstu.DeliveryServiceBackend.dto.response.CourierDTO;
 import com.vorstu.DeliveryServiceBackend.dto.response.OrderDTO;
-import com.vorstu.DeliveryServiceBackend.mappers.CourierListMapper;
-import com.vorstu.DeliveryServiceBackend.mappers.CourierMapper;
-import com.vorstu.DeliveryServiceBackend.mappers.OrderListMapper;
-import com.vorstu.DeliveryServiceBackend.mappers.OrderMapper;
+import com.vorstu.DeliveryServiceBackend.mappers.*;
 import com.vorstu.DeliveryServiceBackend.messages.OrderMessage;
 import com.vorstu.DeliveryServiceBackend.services.action.resolver.ActionResolver;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +38,9 @@ public class CourierService {
     CourierMapper courierMapper;
 
     @Autowired
+    BaseUserMapper baseUserMapper;
+
+    @Autowired
     ActionResolver<CourierEntity> courierActionResolver;
 
     public List<OrderDTO> getOrders(){
@@ -60,7 +60,7 @@ public class CourierService {
 
         courierActionResolver.resolve(action, orderEntity, courier);
         orderRepository.save(orderEntity);
-        return new OrderMessage(action, orderMapper.toDTO(orderEntity));
+        return new OrderMessage(action, baseUserMapper.toDTO(courier), orderMapper.toDTO(orderEntity));
     }
 
     public List<CourierDTO> getCouriers(){
