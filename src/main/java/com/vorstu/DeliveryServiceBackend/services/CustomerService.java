@@ -12,14 +12,12 @@ import com.vorstu.DeliveryServiceBackend.dto.response.AddressDTO;
 import com.vorstu.DeliveryServiceBackend.dto.response.CustomerDTO;
 import com.vorstu.DeliveryServiceBackend.dto.response.OrderDTO;
 import com.vorstu.DeliveryServiceBackend.mappers.*;
+import com.vorstu.DeliveryServiceBackend.messages.OrderMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Iterator;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class CustomerService {
@@ -70,7 +68,7 @@ public class CustomerService {
         CustomerEntity customerEntity = customerRepository.findUserByEmail(email);
         Optional<OrderEntity> orderEntityCandid = orderRepository.findById(orderId);
 
-        if(!orderEntityCandid.isPresent()){
+        if(orderEntityCandid.isEmpty()){
             throw new NoSuchElementException(String.format("Order with id %d is not found", orderId));
         }
 
@@ -98,7 +96,7 @@ public class CustomerService {
             OrderItemEntity entity = orderItemEntitiesIterator.next();
             Optional<ShortOrderItemDTO> itemCandid = order.getItems()
                     .stream()
-                    .filter(x -> x.getId() == entity.getId())
+                    .filter(x -> Objects.equals(x.getId(), entity.getId()))
                     .findFirst();
 
             if(itemCandid.isPresent()){
@@ -124,31 +122,37 @@ public class CustomerService {
         return orderMapper.toDTO(orderRepository.save(orderEntity));
     }
 
-    public void doAction(String email, Long orderId, OrderAction action) throws NoSuchElementException{
+    public OrderMessage doAction(String email, Long orderId, OrderAction action) throws NoSuchElementException{
         CustomerEntity customer = customerRepository.findUserByEmail(email);
         Optional<OrderEntity> orderEntityCandid = orderRepository.findById(orderId);
-        if(!orderEntityCandid.isPresent()){
+        if(orderEntityCandid.isEmpty()){
             throw new NoSuchElementException(String.format("Order with id %d not found", orderId));
         }
 
         OrderEntity orderEntity = orderEntityCandid.get();
-        if(orderEntity.getCustomer() == customer){
-            switch (action) {
-                case MAKE -> {
-                    orderEntity.setStatus(OrderStatus.PLACED);
-                    orderEntity.setBeginDate(LocalDateTime.now());
-                    orderRepository.save(orderEntity);
+        OrderMessage orderMessage = new OrderMessage();
+        switch (action) { // TODO strategy
+            case MAKE -> {
+                orderEntity.setStatus(OrderStatus.PLACED);
+                orderEntity.setBeginDate(LocalDateTime.now());
+                orderRepository.save(orderEntity);
 
-                    OrderEntity newOrderEntity = new OrderEntity(customer);
-                    orderRepository.save(newOrderEntity);
-                }
-                case REFUSE -> {
-                    orderEntity.setStatus(OrderStatus.REJECTED);
-                    orderEntity.setEndDate(LocalDateTime.now());
-                    orderRepository.save(orderEntity);
-                }
+                OrderEntity newOrderEntity = new OrderEntity(customer);
+                orderRepository.save(newOrderEntity);
+
+                orderMessage.setCode(0L);
+                orderMessage.setOrderDTO(orderMapper.toDTO(orderEntity));
+            }
+            case REFUSE -> {
+                orderEntity.setStatus(OrderStatus.REJECTED);
+                orderEntity.setEndDate(LocalDateTime.now());
+                orderRepository.save(orderEntity);
+                orderMessage.setCode(1L);
+                orderMessage.setOrderDTO(new OrderDTO(orderId));
             }
         }
+
+        return orderMessage;
     }
 
     public List<AddressDTO> getAddresses(String email){

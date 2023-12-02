@@ -1,10 +1,15 @@
 package com.vorstu.DeliveryServiceBackend.controllers;
 
+import com.vorstu.DeliveryServiceBackend.db.entities.OrderEntity;
 import com.vorstu.DeliveryServiceBackend.dto.request.ShortOrderDTO;
+import com.vorstu.DeliveryServiceBackend.dto.response.OrderDTO;
+import com.vorstu.DeliveryServiceBackend.messages.OrderMessage;
 import com.vorstu.DeliveryServiceBackend.services.CustomerService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -59,18 +64,26 @@ public class CustomerController {
         );
     }
 
-    @GetMapping("order/{orderId}/action/{action}")
-    public ResponseEntity doActionOnOrder(Principal principal,
-                                          @PathVariable Long orderId,
-                                          @PathVariable OrderAction action){
+    @MessageMapping("/customer/make_order")
+    @SendTo("/order/placed")
+    public OrderMessage makeOrder(Principal principal, Long orderId){
         try{
-            customerService.doAction(principal.getName(), orderId, action);
-            return ResponseEntity.ok().build();
+            return customerService.doAction(principal.getName(), orderId, OrderAction.MAKE);
         } catch(NoSuchElementException ex){
             log.warn(ex.getMessage());
         }
+        return new OrderMessage();
+    }
 
-        return ResponseEntity.notFound().build();
+    @MessageMapping("/customer/reject_order")
+    @SendTo({"/order/placed", "/order/assembly"})
+    public OrderMessage rejectOrder(Principal principal, Long orderId){
+        try{
+            return customerService.doAction(principal.getName(), orderId, OrderAction.REFUSE);
+        } catch(NoSuchElementException ex){
+            log.warn(ex.getMessage());
+        }
+        return new OrderMessage();
     }
 
     @GetMapping("address")
