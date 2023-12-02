@@ -65,8 +65,8 @@ public class CustomerController {
         );
     }
 
-    @MessageMapping("/order/{orderId}")
-    @SendTo({"/order", "/order/{orderId}"})
+    @MessageMapping("customer/order/{orderId}")
+    @SendTo({"/order/placed", "/order/{orderId}"})
     public OrderMessage makeOrder(Principal principal, @DestinationVariable Long orderId, OrderAction action){
         try{
             return customerService.doAction(principal.getName(), orderId, action);
