@@ -1,10 +1,8 @@
 package com.vorstu.DeliveryServiceBackend.services;
 
 import com.vorstu.DeliveryServiceBackend.controllers.OrderAction;
+import com.vorstu.DeliveryServiceBackend.db.entities.*;
 import com.vorstu.DeliveryServiceBackend.db.entities.CourierEntity;
-import com.vorstu.DeliveryServiceBackend.db.entities.CourierEntity;
-import com.vorstu.DeliveryServiceBackend.db.entities.OrderEntity;
-import com.vorstu.DeliveryServiceBackend.db.entities.OrderStatus;
 import com.vorstu.DeliveryServiceBackend.db.repositories.CourierRepository;
 import com.vorstu.DeliveryServiceBackend.db.repositories.OrderRepository;
 import com.vorstu.DeliveryServiceBackend.dto.request.FullCourierDTO;
@@ -13,6 +11,8 @@ import com.vorstu.DeliveryServiceBackend.dto.response.OrderDTO;
 import com.vorstu.DeliveryServiceBackend.mappers.CourierListMapper;
 import com.vorstu.DeliveryServiceBackend.mappers.CourierMapper;
 import com.vorstu.DeliveryServiceBackend.mappers.OrderListMapper;
+import com.vorstu.DeliveryServiceBackend.mappers.OrderMapper;
+import com.vorstu.DeliveryServiceBackend.messages.OrderMessage;
 import com.vorstu.DeliveryServiceBackend.services.action.resolver.ActionResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,6 +31,8 @@ public class CourierService {
     OrderRepository orderRepository;
 
     @Autowired
+    OrderMapper orderMapper;
+    @Autowired
     OrderListMapper orderListMapper;
     @Autowired
     CourierListMapper courierListMapper;
@@ -39,25 +41,26 @@ public class CourierService {
     CourierMapper courierMapper;
 
     @Autowired
-    ActionResolver<CourierEntity> actionResolver;
+    ActionResolver<CourierEntity> courierActionResolver;
 
     public List<OrderDTO> getOrders(){
         List<OrderEntity> orderEntities = orderRepository.findAllOrdersByStatus(OrderStatus.ASSEMBLED);
         return orderListMapper.toDTOList(orderEntities);
     }
 
-    public void doActionOnOrder(String email, Long orderId, OrderAction action) throws NoSuchElementException {
+    public OrderMessage doAction(String email, Long orderId, OrderAction action) throws NoSuchElementException {
         CourierEntity courier = courierRepository.findUserByEmail(email);
         Optional<OrderEntity> orderEntityCandid = orderRepository.findById(orderId);
 
-        if(!orderEntityCandid.isPresent()){
+        if(orderEntityCandid.isEmpty()){
             throw new NoSuchElementException(String.format("Order with id %d not found", orderId));
         }
 
         OrderEntity orderEntity = orderEntityCandid.get();
-        actionResolver.resolve(action, orderEntity, courier);
 
+        courierActionResolver.resolve(action, orderEntity, courier);
         orderRepository.save(orderEntity);
+        return new OrderMessage(action, orderMapper.toDTO(orderEntity));
     }
 
     public List<CourierDTO> getCouriers(){
