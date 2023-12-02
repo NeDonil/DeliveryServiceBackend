@@ -12,6 +12,8 @@ import com.vorstu.DeliveryServiceBackend.dto.response.OrderDTO;
 import com.vorstu.DeliveryServiceBackend.mappers.AssemblerListMapper;
 import com.vorstu.DeliveryServiceBackend.mappers.AssemblerMapper;
 import com.vorstu.DeliveryServiceBackend.mappers.OrderListMapper;
+import com.vorstu.DeliveryServiceBackend.mappers.OrderMapper;
+import com.vorstu.DeliveryServiceBackend.messages.OrderMessage;
 import com.vorstu.DeliveryServiceBackend.services.action.resolver.ActionResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +27,8 @@ public class AssemblerService {
     @Autowired
     OrderRepository orderRepository;
 
+    @Autowired
+    OrderMapper orderMapper;
     @Autowired
     OrderListMapper orderListMapper;
 
@@ -42,11 +46,11 @@ public class AssemblerService {
         return orderListMapper.toDTOList(orderEntities);
     }
 
-    public void doActionOnOrder(String email, Long orderId, OrderAction action) throws NoSuchElementException {
+    public OrderMessage doAction(String email, Long orderId, OrderAction action) throws NoSuchElementException {
         AssemblerEntity assembler = assemblerRepository.findUserByEmail(email);
         Optional<OrderEntity> orderEntityCandid = orderRepository.findById(orderId);
 
-        if(!orderEntityCandid.isPresent()){
+        if(orderEntityCandid.isEmpty()){
             throw new NoSuchElementException(String.format("Order with id %d not found", orderId));
         }
 
@@ -54,6 +58,7 @@ public class AssemblerService {
 
         assemblerActionResolver.resolve(action, orderEntity, assembler);
         orderRepository.save(orderEntity);
+        return new OrderMessage(action, orderMapper.toDTO(orderEntity));
     }
 
     public List<AssemblerDTO> getAssemblers(){

@@ -1,9 +1,13 @@
 package com.vorstu.DeliveryServiceBackend.controllers;
 
+import com.vorstu.DeliveryServiceBackend.messages.OrderMessage;
 import com.vorstu.DeliveryServiceBackend.services.CourierService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,17 +27,14 @@ public class CourierController {
         return ResponseEntity.ok().body(courierService.getOrders());
     }
 
-    @GetMapping("order/{orderId}/action/{action}")
-    ResponseEntity doActionOnOrder(Principal principal,
-                                   @PathVariable Long orderId,
-                                   @PathVariable OrderAction action){
+    @MessageMapping("courier/order/{orderId}")
+    @SendTo({"/order/assembled", "/order/delivery", "/order/delivered", "/order/{orderId}"})
+    public OrderMessage makeOrder(Principal principal, @DestinationVariable Long orderId, OrderAction action){
         try{
-            courierService.doActionOnOrder(principal.getName(), orderId, action);
-            return ResponseEntity.ok().build();
-        } catch (NoSuchElementException ex){
+            return courierService.doAction(principal.getName(), orderId, action);
+        } catch(NoSuchElementException ex){
             log.warn(ex.getMessage());
         }
-
-        return ResponseEntity.notFound().build();
+        return new OrderMessage();
     }
 }
