@@ -10,5 +10,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class OrderMessage {
     private Long code;
-    private OrderDTO orderDTO;
+    private OrderDTO order;
 }

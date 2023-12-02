@@ -141,14 +141,14 @@ public class CustomerService {
                 orderRepository.save(newOrderEntity);
 
                 orderMessage.setCode(0L);
-                orderMessage.setOrderDTO(orderMapper.toDTO(orderEntity));
+                orderMessage.setOrder(orderMapper.toDTO(orderEntity));
             }
             case REFUSE -> {
                 orderEntity.setStatus(OrderStatus.REJECTED);
                 orderEntity.setEndDate(LocalDateTime.now());
                 orderRepository.save(orderEntity);
                 orderMessage.setCode(1L);
-                orderMessage.setOrderDTO(new OrderDTO(orderId));
+                orderMessage.setOrder(new OrderDTO(orderId));
             }
         }
 

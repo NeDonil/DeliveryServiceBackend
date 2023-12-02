@@ -8,6 +8,7 @@ import com.vorstu.DeliveryServiceBackend.services.CustomerService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.*;
@@ -64,22 +65,11 @@ public class CustomerController {
         );
     }
 
-    @MessageMapping("/customer/make_order")
-    @SendTo("/order/placed")
-    public OrderMessage makeOrder(Principal principal, Long orderId){
+    @MessageMapping("/order/{orderId}")
+    @SendTo({"/order", "/order/{orderId}"})
+    public OrderMessage makeOrder(Principal principal, @DestinationVariable Long orderId, OrderAction action){
         try{
-            return customerService.doAction(principal.getName(), orderId, OrderAction.MAKE);
-        } catch(NoSuchElementException ex){
-            log.warn(ex.getMessage());
-        }
-        return new OrderMessage();
-    }
-
-    @MessageMapping("/customer/reject_order")
-    @SendTo({"/order/placed", "/order/assembly"})
-    public OrderMessage rejectOrder(Principal principal, Long orderId){
-        try{
-            return customerService.doAction(principal.getName(), orderId, OrderAction.REFUSE);
+            return customerService.doAction(principal.getName(), orderId, action);
         } catch(NoSuchElementException ex){
             log.warn(ex.getMessage());
         }
