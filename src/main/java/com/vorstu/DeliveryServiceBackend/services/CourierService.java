@@ -8,6 +8,7 @@ import com.vorstu.DeliveryServiceBackend.db.repositories.OrderRepository;
 import com.vorstu.DeliveryServiceBackend.dto.request.FullCourierDTO;
 import com.vorstu.DeliveryServiceBackend.dto.response.CourierDTO;
 import com.vorstu.DeliveryServiceBackend.dto.response.OrderDTO;
+import com.vorstu.DeliveryServiceBackend.dto.response.OrderWithStatusDTO;
 import com.vorstu.DeliveryServiceBackend.mappers.*;
 import com.vorstu.DeliveryServiceBackend.messages.OrderMessage;
 import com.vorstu.DeliveryServiceBackend.services.action.resolver.ActionResolver;
@@ -15,10 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class CourierService {
@@ -46,6 +44,18 @@ public class CourierService {
     public List<OrderDTO> getOrders(){
         List<OrderEntity> orderEntities = orderRepository.findAllOrdersByStatus(OrderStatus.ASSEMBLED);
         return orderListMapper.toDTOList(orderEntities);
+    }
+
+    public OrderWithStatusDTO getCurrentOrder(String email) {
+        CourierEntity courier = courierRepository.findUserByEmail(email);
+        OrderWithStatusDTO candid;
+        Optional<OrderEntity> orderCandid = orderRepository.findCurrentEmployeeOrder(courier.getId(), Arrays.asList(OrderStatus.DELIVERING));
+        if(orderCandid.isPresent()) { //Todo orElseThrow
+            OrderEntity order = orderCandid.get();
+            return new OrderWithStatusDTO(order.getStatus(), orderMapper.toDTO(order));
+        } else {
+            return new OrderWithStatusDTO();
+        }
     }
 
     public OrderMessage doAction(String email, Long orderId, OrderAction action) throws NoSuchElementException {

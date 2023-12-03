@@ -65,7 +65,7 @@ public class AssemblerService {
     public OrderWithStatusDTO getCurrentOrder(String email) {
         AssemblerEntity assembler = assemblerRepository.findUserByEmail(email);
         OrderWithStatusDTO candid;
-        Optional<OrderEntity> orderCandid = orderRepository.findCurrentEmployeeOrder(assembler.getId(), Arrays.asList(OrderStatus.PLACED, OrderStatus.ASSEMBLING));
+        Optional<OrderEntity> orderCandid = orderRepository.findCurrentEmployeeOrder(assembler.getId(), Arrays.asList(OrderStatus.ASSEMBLING));
         if(orderCandid.isPresent()) { //Todo orElseThrow
             OrderEntity order = orderCandid.get();
             return new OrderWithStatusDTO(order.getStatus(), orderMapper.toDTO(order));
