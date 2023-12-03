@@ -14,5 +14,5 @@ public class AssemblerRefuseActionProcessor implements ActionProcessor<Assembler
     }
 
     @Override
-    public OrderAction getAction(){return OrderAction.REFUSE;}
+    public OrderAction getAction(){return OrderAction.ASSEMBLER_REFUSE;}
 }

@@ -143,7 +143,7 @@ public class CustomerService {
                 orderMessage.setCode(action);
                 orderMessage.setOrder(orderMapper.toDTO(orderEntity));
             }
-            case REFUSE -> {
+            case REJECT -> {
                 orderEntity.setStatus(OrderStatus.REJECTED);
                 orderEntity.setEndDate(LocalDateTime.now());
                 orderRepository.save(orderEntity);

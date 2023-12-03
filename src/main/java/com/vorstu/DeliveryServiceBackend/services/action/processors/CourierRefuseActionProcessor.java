@@ -14,5 +14,5 @@ public class CourierRefuseActionProcessor implements ActionProcessor<CourierEnti
     }
 
     @Override
-    public OrderAction getAction(){return OrderAction.REFUSE;}
+    public OrderAction getAction(){return OrderAction.COURIER_REFUSE;}
 }
