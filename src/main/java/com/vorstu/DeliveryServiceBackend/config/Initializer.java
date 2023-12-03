@@ -27,7 +27,7 @@ public class Initializer implements CommandLineRunner {
 
     @Override
     public void run(String... args){
-        AdminEntity admin1 = new AdminEntity("Gallagher Fiona", "fiona@mail.ru", "qwerrty");
+        AdminEntity admin1 = new AdminEntity("Фиона Галагер", "fiona@mail.ru", "f12345");
 
         CustomerEntity customer1 = new CustomerEntity("Дмитрий Руднев", "dimas@gmail.com", "dima12345");
         customer1.getAddresses()

@@ -9,10 +9,7 @@ import com.vorstu.DeliveryServiceBackend.db.repositories.OrderRepository;
 import com.vorstu.DeliveryServiceBackend.dto.request.FullAssemblerDTO;
 import com.vorstu.DeliveryServiceBackend.dto.response.AssemblerDTO;
 import com.vorstu.DeliveryServiceBackend.dto.response.OrderDTO;
-import com.vorstu.DeliveryServiceBackend.mappers.AssemblerListMapper;
-import com.vorstu.DeliveryServiceBackend.mappers.AssemblerMapper;
-import com.vorstu.DeliveryServiceBackend.mappers.OrderListMapper;
-import com.vorstu.DeliveryServiceBackend.mappers.OrderMapper;
+import com.vorstu.DeliveryServiceBackend.mappers.*;
 import com.vorstu.DeliveryServiceBackend.messages.OrderMessage;
 import com.vorstu.DeliveryServiceBackend.services.action.resolver.ActionResolver;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +34,9 @@ public class AssemblerService {
 
     @Autowired
     AssemblerMapper assemblerMapper;
+    @Autowired
+    BaseUserMapper baseUserMapper;
+
 
     @Autowired
     ActionResolver<AssemblerEntity> assemblerActionResolver;
@@ -58,7 +58,7 @@ public class AssemblerService {
 
         assemblerActionResolver.resolve(action, orderEntity, assembler);
         orderRepository.save(orderEntity);
-        return new OrderMessage(action, orderMapper.toDTO(orderEntity));
+        return new OrderMessage(action, baseUserMapper.toDTO(assembler), orderMapper.toDTO(orderEntity));
     }
 
     public List<AssemblerDTO> getAssemblers(){
