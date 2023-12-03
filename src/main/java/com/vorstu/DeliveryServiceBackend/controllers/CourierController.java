@@ -9,7 +9,6 @@ import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -25,6 +24,11 @@ public class CourierController {
     @GetMapping("order")
     ResponseEntity getOrders(){
         return ResponseEntity.ok().body(courierService.getOrders());
+    }
+
+    @GetMapping("order/current")
+    ResponseEntity getCurrentOrder(Principal principal){
+        return ResponseEntity.ok().body(courierService.getCurrentOrder(principal.getName()));
     }
 
     @MessageMapping("courier/order/{orderId}")

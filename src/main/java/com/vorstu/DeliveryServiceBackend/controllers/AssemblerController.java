@@ -27,6 +27,11 @@ public class AssemblerController {
         return ResponseEntity.ok().body(assemblerService.getOrders());
     }
 
+    @GetMapping("order/current")
+    ResponseEntity getCurrentOrder(Principal principal){
+        return ResponseEntity.ok().body(assemblerService.getCurrentOrder(principal.getName()));
+    }
+
     @MessageMapping("assembler/order/{orderId}")
     @SendTo({"/order/placed", "/order/assembling", "/order/assembled", "/order/{orderId}"})
     public OrderMessage makeOrder(Principal principal, @DestinationVariable Long orderId, OrderAction action){
