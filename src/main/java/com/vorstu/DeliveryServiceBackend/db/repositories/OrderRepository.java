@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface OrderRepository extends CrudRepository<OrderEntity, Long> {
@@ -19,4 +20,7 @@ public interface OrderRepository extends CrudRepository<OrderEntity, Long> {
 
     @Query("SELECT o FROM OrderEntity o WHERE o.status=:status")
     List<OrderEntity> findAllOrdersByStatus(@Param("status") OrderStatus status);
+
+    @Query("SELECT o FROM OrderEntity o WHERE o.status IN :statuses AND (o.assembler.id=:employee_id OR o.courier.id=:employee_id)")
+    Optional<OrderEntity> findCurrentEmployeeOrder(@Param("employee_id") Long employee_id, @Param("statuses") List<OrderStatus> statuses);
 }

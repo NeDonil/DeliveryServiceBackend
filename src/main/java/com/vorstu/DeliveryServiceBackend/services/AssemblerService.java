@@ -9,6 +9,7 @@ import com.vorstu.DeliveryServiceBackend.db.repositories.OrderRepository;
 import com.vorstu.DeliveryServiceBackend.dto.request.FullAssemblerDTO;
 import com.vorstu.DeliveryServiceBackend.dto.response.AssemblerDTO;
 import com.vorstu.DeliveryServiceBackend.dto.response.OrderDTO;
+import com.vorstu.DeliveryServiceBackend.dto.response.OrderWithStatusDTO;
 import com.vorstu.DeliveryServiceBackend.mappers.*;
 import com.vorstu.DeliveryServiceBackend.messages.OrderMessage;
 import com.vorstu.DeliveryServiceBackend.services.action.resolver.ActionResolver;
@@ -59,6 +60,18 @@ public class AssemblerService {
         assemblerActionResolver.resolve(action, orderEntity, assembler);
         orderRepository.save(orderEntity);
         return new OrderMessage(action, baseUserMapper.toDTO(assembler), orderMapper.toDTO(orderEntity));
+    }
+
+    public OrderWithStatusDTO getCurrentOrder(String email) {
+        AssemblerEntity assembler = assemblerRepository.findUserByEmail(email);
+        OrderWithStatusDTO candid;
+        Optional<OrderEntity> orderCandid = orderRepository.findCurrentEmployeeOrder(assembler.getId(), Arrays.asList(OrderStatus.PLACED, OrderStatus.ASSEMBLING));
+        if(orderCandid.isPresent()) { //Todo orElseThrow
+            OrderEntity order = orderCandid.get();
+            return new OrderWithStatusDTO(order.getStatus(), orderMapper.toDTO(order));
+        } else {
+            return new OrderWithStatusDTO();
+        }
     }
 
     public List<AssemblerDTO> getAssemblers(){
