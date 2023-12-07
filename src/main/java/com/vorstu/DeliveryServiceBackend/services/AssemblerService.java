@@ -52,7 +52,8 @@ public class AssemblerService {
         OrderEntity orderEntity = orderRepository.findById(orderId)
                 .orElseThrow(()-> new NoSuchElementException(String.format("Order with id %d not found", orderId)));
 
-        if(orderEntity.getAssembler() != assembler){
+        AssemblerEntity orderAssembler = orderEntity.getAssembler();
+                if(orderAssembler != null && orderAssembler.getId() != assembler.getId()){
             throw new UnsupportedOperationException(String.format("You cannot operate with order(%d)", orderId));
         }
 
