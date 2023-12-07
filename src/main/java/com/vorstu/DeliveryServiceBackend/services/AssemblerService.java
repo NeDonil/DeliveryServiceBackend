@@ -49,34 +49,28 @@ public class AssemblerService {
 
     public OrderMessage doAction(String email, Long orderId, OrderAction action) throws NoSuchElementException {
         AssemblerEntity assembler = assemblerRepository.findUserByEmail(email);
-        Optional<OrderEntity> orderEntityCandid = orderRepository.findById(orderId);
-
-        if(orderEntityCandid.isEmpty()){
-            throw new NoSuchElementException(String.format("Order with id %d not found", orderId));
-        }
-
-        OrderEntity orderEntity = orderEntityCandid.get();
+        OrderEntity orderEntity = orderRepository.findById(orderId)
+                .orElseThrow(()-> new NoSuchElementException(String.format("Order with id %d not found", orderId)));
 
         assemblerActionResolver.resolve(action, orderEntity, assembler);
         orderRepository.save(orderEntity);
+
         return new OrderMessage(action, baseUserMapper.toDTO(assembler), orderMapper.toDTO(orderEntity));
     }
 
     public OrderWithStatusDTO getCurrentOrder(String email) {
         AssemblerEntity assembler = assemblerRepository.findUserByEmail(email);
         OrderWithStatusDTO candid;
-        Optional<OrderEntity> orderCandid = orderRepository.findCurrentEmployeeOrder(assembler.getId(), Arrays.asList(OrderStatus.ASSEMBLING));
-        if(orderCandid.isPresent()) { //Todo orElseThrow
-            OrderEntity order = orderCandid.get();
-            return new OrderWithStatusDTO(order.getStatus(), orderMapper.toDTO(order));
-        } else {
-            return new OrderWithStatusDTO();
-        }
+        OrderEntity order = orderRepository.findCurrentEmployeeOrder(assembler.getId(), List.of(OrderStatus.ASSEMBLING))
+                .orElseThrow(NoSuchElementException::new);
+
+        return new OrderWithStatusDTO(order.getStatus(), orderMapper.toDTO(order));
     }
 
     public List<AssemblerDTO> getAssemblers(){
-        List<AssemblerEntity> assemblerEntities = new ArrayList();
+        List<AssemblerEntity> assemblerEntities = new ArrayList<>();
         assemblerRepository.findAll().forEach(assemblerEntities::add);
+
         return assemblerListMapper.toDTOList(assemblerEntities);
     }
 
@@ -86,17 +80,15 @@ public class AssemblerService {
                 assembler.getEmail(),
                 assembler.getPassword()
         );
+
         return assemblerMapper.toDTO(assemblerRepository.save(assemblerEntity));
     }
 
-    public AssemblerDTO updateAssembler(Long assemblerId, FullAssemblerDTO assembler) throws NoSuchElementException{
-        Optional<AssemblerEntity> assemblerEntityCandid = assemblerRepository.findById(assemblerId);
-        if(!assemblerEntityCandid.isPresent()){
-            throw new NoSuchElementException(String.format("Assembler with id %d not found", assemblerId));
-        }
-
-        AssemblerEntity assemblerEntity = assemblerEntityCandid.get();
+    public AssemblerDTO updateAssembler(Long assemblerId, FullAssemblerDTO assembler){
+        AssemblerEntity assemblerEntity = assemblerRepository.findById(assemblerId)
+                .orElseThrow(NoSuchElementException::new);
         assemblerEntity.setFio(assembler.getFio());
+
         return assemblerMapper.toDTO(assemblerRepository.save(assemblerEntity));
     }
 
