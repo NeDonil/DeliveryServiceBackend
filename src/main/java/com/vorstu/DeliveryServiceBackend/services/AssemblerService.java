@@ -47,10 +47,14 @@ public class AssemblerService {
         return orderListMapper.toDTOList(orderEntities);
     }
 
-    public OrderMessage doAction(String email, Long orderId, OrderAction action) throws NoSuchElementException {
+    public OrderMessage doAction(String email, Long orderId, OrderAction action) {
         AssemblerEntity assembler = assemblerRepository.findUserByEmail(email);
         OrderEntity orderEntity = orderRepository.findById(orderId)
                 .orElseThrow(()-> new NoSuchElementException(String.format("Order with id %d not found", orderId)));
+
+        if(orderEntity.getAssembler() != assembler){
+            throw new UnsupportedOperationException(String.format("You cannot operate with order(%d)", orderId));
+        }
 
         assemblerActionResolver.resolve(action, orderEntity, assembler);
         orderRepository.save(orderEntity);
