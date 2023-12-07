@@ -60,16 +60,16 @@ public class CourierService {
 
     public OrderMessage doAction(String email, Long orderId, OrderAction action) throws NoSuchElementException {
         CourierEntity courier = courierRepository.findUserByEmail(email);
-        Optional<OrderEntity> orderEntityCandid = orderRepository.findById(orderId);
+        OrderEntity orderEntity = orderRepository.findById(orderId)
+                .orElseThrow(NoSuchElementException::new);
 
-        if(orderEntityCandid.isEmpty()){
-            throw new NoSuchElementException(String.format("Order with id %d not found", orderId));
+        if(orderEntity.getCourier() != courier){
+            throw new UnsupportedOperationException();
         }
-
-        OrderEntity orderEntity = orderEntityCandid.get();
 
         courierActionResolver.resolve(action, orderEntity, courier);
         orderRepository.save(orderEntity);
+
         return new OrderMessage(action, baseUserMapper.toDTO(courier), orderMapper.toDTO(orderEntity));
     }
 
