@@ -1,0 +1,1172 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd">
+    <changeSet id="2023-12-13-initial-schema-create-1" author="NeDonil">
+        <createTable tableName="addresses">
+            <column name="id" type="bigserial">
+                <constraints nullable="false"/>
+            </column>
+            <column name="value" type="varchar(255)"/>
+            <column name="customer_id" type="bigint"/>
+        </createTable>
+        <addPrimaryKey tableName="addresses" columnNames="id" />
+
+        <createTable tableName="admins">
+            <column name="id" type="bigserial">
+                <constraints nullable="false"/>
+            </column>
+            <column name="fio" type="varchar(255)"/>
+            <column name="credentials_id" type="bigint"/>
+        </createTable>
+        <addPrimaryKey tableName="admins" columnNames="id" />
+
+        <createTable tableName="assemblers">
+            <column name="id" type="bigserial">
+                <constraints nullable="false"/>
+            </column>
+            <column name="fio" type="varchar(255)"/>
+            <column name="credentials_id" type="bigint"/>
+        </createTable>
+        <addPrimaryKey tableName="assemblers" columnNames="id" />
+
+        <createTable tableName="couriers">
+            <column name="id" type="bigserial">
+                <constraints nullable="false"/>
+            </column>
+            <column name="fio" type="varchar(255)"/>
+            <column name="credentials_id" type="bigint"/>
+        </createTable>
+        <addPrimaryKey tableName="couriers" columnNames="id" />
+
+        <createTable tableName="customers">
+            <column name="id" type="bigserial">
+                <constraints nullable="false"/>
+            </column>
+            <column name="fio" type="varchar(255)"/>
+            <column name="credentials_id" type="bigint"/>
+            <column name="payment_data_id" type="bigint"/>
+        </createTable>
+        <addPrimaryKey tableName="customers" columnNames="id" />
+
+        <createTable tableName="group_product">
+            <column name="group_id" type="bigserial">
+                <constraints nullable="false"/>
+            </column>
+            <column name="product_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addPrimaryKey tableName="group_product" columnNames="group_id,product_id" />
+
+        <createTable tableName="groups">
+            <column name="id" type="bigserial">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="varchar(255)"/>
+            <column name="url" type="varchar(255)"/>
+        </createTable>
+
+        <createTable tableName="order_items">
+            <column name="id" type="bigserial">
+                <constraints nullable="false"/>
+            </column>
+            <column name="count" type="int8"/>
+            <column name="product_id" type="bigint"/>
+            <column name="order_id" type="bigint"/>
+        </createTable>
+        <addPrimaryKey tableName="order_items" columnNames="id" />
+
+        <createTable tableName="orders">
+            <column name="id" type="bigserial">
+                <constraints nullable="false"/>
+            </column>
+            <column name="comment" type="varchar(255)"/>
+            <column name="begin_date" type="timestamp"/>
+            <column name="end_date" type="timestamp"/>
+            <column name="status" type="varchar(255)"/>
+            <column name="address_id" type="bigint"/>
+            <column name="assembler_id" type="bigint"/>
+            <column name="courier_id" type="bigint"/>
+            <column name="customer_id" type="bigint"/>
+        </createTable>
+        <addPrimaryKey tableName="orders" columnNames="id" />
+
+        <createTable tableName="payments">
+            <column name="id" type="bigserial">
+                <constraints nullable="false"/>
+            </column>
+            <column name="balance" type="bigint"/>
+        </createTable>
+        <addPrimaryKey tableName="payments" columnNames="id" />
+
+        <createTable tableName="products">
+            <column name="id" type="bigserial">
+                <constraints nullable="false"/>
+            </column>
+            <column name="count" type="bigint"/>
+            <column name="title" type="varchar(255)"/>
+            <column name="description" type="varchar(255)"/>
+            <column name="photo" type="varchar(255)"/>
+            <column name="price" type="bigint"/>
+        </createTable>
+        <addPrimaryKey tableName="products" columnNames="id" />
+
+        <createTable tableName="user_credentials">
+            <column name="id" type="bigserial">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" type="varchar(255)"/>
+            <column name="password" type="varchar(255)"/>
+            <column name="enabled" type="boolean"/>
+            <column name="role" type="varchar(255)"/>
+        </createTable>
+        <addPrimaryKey tableName="user_credentials" columnNames="id" />
+
+    </changeSet>
+
+    <changeSet id="2023-12-13-initial-schema-create-2" author="NeDonil">
+        <addPrimaryKey tableName="groups" columnNames="id" />
+
+        <addForeignKeyConstraint baseColumnNames="customer_id"
+                                 baseTableName="addresses"
+                                 constraintName="fk_address_customer_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="customers"/>
+
+        <addForeignKeyConstraint baseColumnNames="credentials_id"
+                                 baseTableName="admins"
+                                 constraintName="fk_admins_credentials_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="user_credentials"/>
+
+        <addForeignKeyConstraint baseColumnNames="credentials_id"
+                                 baseTableName="assemblers"
+                                 constraintName="fk_assemblers_credentials_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="user_credentials"/>
+
+        <addForeignKeyConstraint baseColumnNames="credentials_id"
+                                 baseTableName="couriers"
+                                 constraintName="fk_couriers_credentials_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="user_credentials"/>
+
+        <addForeignKeyConstraint baseColumnNames="credentials_id"
+                                 baseTableName="customers"
+                                 constraintName="fk_customers_credentials_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="user_credentials"/>
+
+        <addForeignKeyConstraint baseColumnNames="payment_data_id"
+                                 baseTableName="customers"
+                                 constraintName="fk_customers_payment_data_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="payments"/>
+
+        <addForeignKeyConstraint baseColumnNames="product_id"
+                                 baseTableName="group_product"
+                                 constraintName="fk_group_product_product_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="products"/>
+
+        <addForeignKeyConstraint baseColumnNames="group_id"
+                                 baseTableName="group_product"
+                                 constraintName="fk_group_product_group_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="groups"/>
+
+        <addForeignKeyConstraint baseColumnNames="product_id"
+                                 baseTableName="order_items"
+                                 constraintName="fk_order_items_product_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="products"/>
+
+        <addForeignKeyConstraint baseColumnNames="order_id"
+                                 baseTableName="order_items"
+                                 constraintName="fk_order_items_order_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="orders"/>
+
+        <addForeignKeyConstraint baseColumnNames="address_id"
+                                 baseTableName="orders"
+                                 constraintName="fk_order_address_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="addresses"/>
+
+        <addForeignKeyConstraint baseColumnNames="assembler_id"
+                                 baseTableName="orders"
+                                 constraintName="fk_order_assembler_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="assemblers"/>
+
+        <addForeignKeyConstraint baseColumnNames="courier_id"
+                                 baseTableName="orders"
+                                 constraintName="fk_order_courier_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="couriers"/>
+
+        <addForeignKeyConstraint baseColumnNames="customer_id"
+                                 baseTableName="orders"
+                                 constraintName="fk_order_customer_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="customers"/>
+
+    </changeSet>
+    <changeSet id="2023-12-13-initial-schema-create-3" author="NeDonil">
+        <insert tableName="user_credentials">
+            <column name="email" value="fiona@mail.ru"/>
+            <column name="enabled" value="True"/>
+            <column name="password" value="$2a$10$yz33/BW.MYLQ6SCWPkKbS.gtluWyLPoMS8Bx0yFj.UxyTHrUF78Ue"/>
+            <column name="role" value="ADMIN"/>
+        </insert>
+
+        <insert tableName="user_credentials">
+            <column name="email" value="wanropp@email.com"/>
+            <column name="enabled" value="True"/>
+            <column name="password" value="$2a$10$2TvLkPv4xYhb/w4hm6pcJuyraHtY/da93ITdQB89a087hT/tx5X06"/>
+            <column name="role" value="COURIER"/>
+        </insert>
+
+        <insert tableName="user_credentials">
+            <column name="email" value="marina@email.com"/>
+            <column name="enabled" value="True"/>
+            <column name="password" value="$2a$10$zmbBcDW.DJS0oZ.RJNbYHeaYTH9TF0vfdZWR3bcAzVh3jLZwD2gxu"/>
+            <column name="role" value="ASSEMBLER"/>
+        </insert>
+
+        <insert tableName="user_credentials">
+            <column name="email" value="dimas@gmail.com"/>
+            <column name="enabled" value="True"/>
+            <column name="password" value="$2a$10$5SOooyJjPnMdeieUmml37uAyLCnMb9t2XLC2N2.OhbeHVVu1fFovq"/>
+            <column name="role" value="CUSTOMER"/>
+        </insert>
+
+        <insert tableName="user_credentials">
+            <column name="email" value="svinoukhov03@gmail.com"/>
+            <column name="enabled" value="True"/>
+            <column name="password" value="$2a$10$js/AInH6JXYV1TK14tt0vulCa.gSRIvnrZg7DunlH2b9HLyhoLSwy"/>
+            <column name="role" value="CUSTOMER"/>
+        </insert>
+    </changeSet>
+    <changeSet id="2023-12-13-initial-schema-create-4" author="NeDonil">
+        <insert tableName="admins">
+            <column name="credentials_id" value="1"/>
+            <column name="fio" value="Фиона Галагер"/>
+        </insert>
+
+        <insert tableName="couriers">
+            <column name="credentials_id" value="2"/>
+            <column name="fio" value="Данил Вонтроп"/>
+        </insert>
+
+        <insert tableName="assemblers">
+            <column name="credentials_id" value="3"/>
+            <column name="fio" value="Марина Ковалева"/>
+        </insert>
+
+        <insert tableName="payments">
+            <column name="balance" value="0"/>
+        </insert>
+
+        <insert tableName="payments">
+            <column name="balance" value="0"/>
+        </insert>
+
+        <insert tableName="customers">
+            <column name="credentials_id" value="4"/>
+            <column name="fio" value="Дмитрий Руднев"/>
+            <column name="payment_data_id" value="1"/>
+        </insert>
+
+        <insert tableName="customers">
+            <column name="credentials_id" value="5"/>
+            <column name="fio" value="Данил Свиноухов"/>
+            <column name="payment_data_id" value="2"/>
+        </insert>
+
+        <insert tableName="addresses">
+            <column name="value" value="Куколкина 11 п4 э4 кв 290"/>
+        </insert>
+
+        <insert tableName="addresses">
+            <column name="value" value="Беговая 6/3 п4 э5 кв 60"/>
+        </insert>
+
+        <insert tableName="addresses">
+            <column name="value" value="Беговая 6/3 п4 э5 кв 60"/>
+        </insert>
+    </changeSet>
+    
+    <changeSet id="2023-12-13-initial-schema-create-5" author="NeDonil">
+        <update tableName="addresses">
+            <column name="customer_id" value="1" />
+            <where>id = 1</where>
+        </update>
+        <update tableName="addresses">
+            <column name="customer_id" value="1" />
+            <where>id = 2</where>
+        </update>
+        <update tableName="addresses">
+            <column name="customer_id" value="2" />
+            <where>id = 3</where>
+        </update>
+    </changeSet>
+
+    <changeSet id="2023-12-13-initial-schema-create-6" author="NeDonil">
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/original/170753280_976093574.jpg"/>
+            <column name="price" value="189"/>
+            <column name="title" value="Перец желтый сочный классный"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/product_card/0025cb80-df43-4e4f-a682-a353e66d7c5e.jpg"/>
+            <column name="price" value="190"/>
+            <column name="title" value="Шоколад Милка молочный с фундуком"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/product_card/4f603584-a70b-46e7-b8ed-1bd011ad3c79.jpg"/>
+            <column name="price" value="102"/>
+            <column name="title" value="Чипсы Lays из печи нежный сыр"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/product_card/40ddd4d5-1c36-45ba-a294-60fecfd5a268.jpg"/>
+            <column name="price" value="107"/>
+            <column name="title" value="Гречка Свели"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/original/158334_425819778.jpg"/>
+            <column name="price" value="74"/>
+            <column name="title" value="Молоко Домик в деревне"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/public/ee23e3228c717463_4690388050474.jpg"/>
+            <column name="price" value="215"/>
+            <column name="title" value="Чипсы Lays рифленые сметана и лук"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/public/f3fbb4509de69b38_4630061958789-1.jpg"/>
+            <column name="price" value="85"/>
+            <column name="title" value="Самса Mr. Food с говядиной"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/public/165ba98f9d7bffd6_80969112-1.jpg"/>
+            <column name="price" value="139"/>
+            <column name="title" value="Шоколад Kinder Фигурный молочный"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/public/88970d79dc387229_2199603000000.jpg"/>
+            <column name="price" value="64"/>
+            <column name="title" value="Молоко пастеризованное Самокат"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/original/948a127d-9f93-11ec-b967-08c0eb32008b_304784882.jpg"/>
+            <column name="price" value="429"/>
+            <column name="title" value="Филе грудки цыпленка-бройлера"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/product_card/224f7330-8ee8-4514-85a8-de2ff2084ef1.jpg"/>
+            <column name="price" value="177"/>
+            <column name="title" value="Чипсы Lays рифленые паприка"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/public/c8f1c79b2281cc5e_4607135168924-1.jpg"/>
+            <column name="price" value="87"/>
+            <column name="title" value="Пшеничный хлеб ЭкоХлеб Монж"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/public/be2eb4fa45f71b6c_4630061956341-1.jpg"/>
+            <column name="price" value="86"/>
+            <column name="title" value="Сосиска в тесте Mr. Food"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/original/167196_1623671804.jpg"/>
+            <column name="price" value="182"/>
+            <column name="title" value="Рёбра Слово Мясника свинны"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/public/1d529a1460bfdaf1_4607100970354-1.jpg"/>
+            <column name="price" value="41"/>
+            <column name="title" value="Ромовая баба Хлебозавод №7"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/original/174846_1989637154.jpg"/>
+            <column name="price" value="42"/>
+            <column name="title" value="Слойка Лимак с вишневой начинкой"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/public/f431fbf095a41451_4601445206680-1.jpg"/>
+            <column name="price" value="315"/>
+            <column name="title" value="Комплексный обед"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/original/170757066_1561048227.jpg"/>
+            <column name="price" value="69"/>
+            <column name="title" value="Огурец Луховицкий длинноплодный"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/original/3aac2b0a-9f9a-11ec-b967-08c0eb32008b_719590546.jpg"/>
+            <column name="price" value="144"/>
+            <column name="title" value="Печень цеплёнка бройлера Наша птичка"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/original/170756323_640519044.jpg"/>
+            <column name="price" value="153"/>
+            <column name="title" value="Вода Святой источник без газа"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/public/711937cd1532ce68_4601662000023.jpg"/>
+            <column name="price" value="108"/>
+            <column name="title" value="Молоко Parmalat пастеризованное"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/public/eef66516a6288c67_4620005842113-1.jpg"/>
+            <column name="price" value="149"/>
+            <column name="title" value="Макароны Самокат с томатом"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/original/c3eb76f4-c465-11eb-85ac-1c34dae33151_699928974.jpg"/>
+            <column name="price" value="239"/>
+            <column name="title" value="Грибы шампиньон"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/public/349603eec48328c9_4690388111465.jpg"/>
+            <column name="price" value="177"/>
+            <column name="title" value="Чипсы Lays рифленые лобстер"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/public/a6c6cad1508e335a_4690228030161.jpg"/>
+            <column name="price" value="139"/>
+            <column name="title" value="Молоко Агуша ультрапастеризованное"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/public/743bed11dec5f138_4630016235941-1.jpg"/>
+            <column name="price" value="705"/>
+            <column name="title" value="Мякоть бедра Мираторг из говядины"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/public/951e3384ee773e22_4650061637675-1.jpg"/>
+            <column name="price" value="119"/>
+            <column name="title" value="Сырники Creative Kitchen"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/public/38019f76a2e6ca38_4607072719876.jpg"/>
+            <column name="price" value="69"/>
+            <column name="title" value="Макароны Самокат Fusilli спирали"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/public/8156f371aa0111f8_4635000821216-1.jpg"/>
+            <column name="price" value="99"/>
+            <column name="title" value="Томаты Эко-культура коктейльные"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/public/b752cb87b1b1de59_4607072719913-1.jpg"/>
+            <column name="price" value="99"/>
+            <column name="title" value="Макароны Самокат гнезда"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/public/a170360eebcf06e5_4607135168955-1.jpg"/>
+            <column name="price" value="64"/>
+            <column name="title" value="Ржано-пшеничный хлеб ЭкоХлеб"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/original/97285_1355385209.jpg"/>
+            <column name="price" value="223"/>
+            <column name="title" value="Шницель Слово Мясника охлажденный"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/public/3d4214cbe7e26439_4610092032047-1.jpg"/>
+            <column name="price" value="176"/>
+            <column name="title" value="Морковь по-корейски Fresh Secret"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/public/ca68743854e0bafe_7622201769291-2.jpg"/>
+            <column name="price" value="182"/>
+            <column name="title" value="Шоколад Милка молочный"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/public/1ab7217b0f187c74_4631158748627-1.jpg"/>
+            <column name="price" value="169"/>
+            <column name="title" value="Осетинский пирог Рамонти пайз"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/original/301285013_494472226.jpg"/>
+            <column name="price" value="88"/>
+            <column name="title" value="Молоко Авида пастеризованное"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/public/76c1a0c645089128_4600286103363.jpg"/>
+            <column name="price" value="249"/>
+            <column name="title" value="Напиток Starbar Soda water"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/public/b86c5d851cf12cb8_4601025115609.jpg"/>
+            <column name="price" value="112"/>
+            <column name="title" value="Вода Липецкая росинка без газа"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/product_card/37a5f1f8-a8bc-45ca-990d-e811a6a9f073.jpg"/>
+            <column name="price" value="150"/>
+            <column name="title" value="Чипсы Lays зеленый лук"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/original/170753259_967847855.jpg"/>
+            <column name="price" value="89"/>
+            <column name="title" value="Картофель красны"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/product_card/141f32b8-9410-4916-b568-87d94e1b913d.jpg"/>
+            <column name="price" value="129"/>
+            <column name="title" value="Яйцо шоколадное Kinder Сюрприз"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/public/f17b03ec87aa5320_7622210451255.jpg"/>
+            <column name="price" value="190"/>
+            <column name="title" value="Шоколад Милка с печеньем"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/public/6675082fa29e9912_4610092031996-1.jpg"/>
+            <column name="price" value="136"/>
+            <column name="title" value="Блинчики по-домашнему"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/public/773de7d153852a79_4620005842106-1.jpg"/>
+            <column name="price" value="154"/>
+            <column name="title" value="Макароны Самокат со шпинатом"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/original/180195_722042624.jpg"/>
+            <column name="price" value="43"/>
+            <column name="title" value="Вода Святой Источник без газа"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/original/152455_1394027930.jpg"/>
+            <column name="price" value="94"/>
+            <column name="title" value="Молоко Вкуснотеево пастеризованное"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="2023-12-13-initial-schema-create-7" author="NeDonil">
+        <insert tableName="groups">
+            <column name="name" value="Все товары"/>
+            <column name="url" value="https://cm.samokat.ru/processed/category/4ccedaf7-4296-42fe-9519-6f04e78704ab.jpg"/>
+        </insert>
+
+        <insert tableName="groups">
+            <column name="name" value="Готовая еда"/>
+            <column name="url" value="https://cm.samokat.ru/processed/category/8d121a12-45a6-4ec3-b195-c62c818e162d.jpg"/>
+        </insert>
+
+        <insert tableName="groups">
+            <column name="name" value="Хлеб и выпечка"/>
+            <column name="url" value="https://cm.samokat.ru/processed/original/160441_349334568.jpg"/>
+        </insert>
+
+        <insert tableName="groups">
+            <column name="name" value="Мясо и рыба"/>
+            <column name="url" value="https://cm.samokat.ru/processed/public/b6db88b1e3657695______________7.jpg"/>
+        </insert>
+
+        <insert tableName="groups">
+            <column name="name" value="Вода и напитки"/>
+            <column name="url" value="https://cm.samokat.ru/processed/original/88488_1136633278.jpg"/>
+        </insert>
+
+        <insert tableName="groups">
+            <column name="name" value="Сладкое"/>
+            <column name="url" value="https://cm.samokat.ru/processed/category/186dd558-e7ec-4309-a576-abc39bc18202.jpg"/>
+        </insert>
+
+        <insert tableName="groups">
+            <column name="name" value="Чипсы и сухарики"/>
+            <column name="url" value="https://cm.samokat.ru/processed/public/fd4a6ecb80cdacae_pepsico_3.jpg"/>
+        </insert>
+
+        <insert tableName="groups">
+            <column name="name" value="Бакалея"/>
+            <column name="url" value="https://cm.samokat.ru/processed/original/153793_1354391565.jpg"/>
+        </insert>
+
+        <insert tableName="groups">
+            <column name="name" value="Молок"/>
+            <column name="url" value="йца и сыр"/>
+        </insert>
+
+        <insert tableName="group_product">
+            <column name="group_id" value="1"/>
+            <column name="product_id" value="1"/>
+        </insert>
+
+        <insert tableName="group_product">
+            <column name="group_id" value="1"/>
+            <column name="product_id" value="2"/>
+        </insert>
+
+        <insert tableName="group_product">
+            <column name="group_id" value="1"/>
+            <column name="product_id" value="3"/>
+        </insert>
+
+        <insert tableName="group_product">
+            <column name="group_id" value="1"/>
+            <column name="product_id" value="4"/>
+        </insert>
+
+        <insert tableName="group_product">
+            <column name="group_id" value="1"/>
+            <column name="product_id" value="5"/>
+        </insert>
+
+        <insert tableName="group_product">
+            <column name="group_id" value="1"/>
+            <column name="product_id" value="6"/>
+        </insert>
+
+        <insert tableName="group_product">
+            <column name="group_id" value="1"/>
+            <column name="product_id" value="7"/>
+        </insert>
+
+        <insert tableName="group_product">
+            <column name="group_id" value="1"/>
+            <column name="product_id" value="8"/>
+        </insert>
+
+        <insert tableName="group_product">
+            <column name="group_id" value="1"/>
+            <column name="product_id" value="9"/>
+        </insert>
+
+        <insert tableName="group_product">
+            <column name="group_id" value="1"/>
+            <column name="product_id" value="10"/>
+        </insert>
+
+        <insert tableName="group_product">
+            <column name="group_id" value="1"/>
+            <column name="product_id" value="11"/>
+        </insert>
+
+        <insert tableName="group_product">
+            <column name="group_id" value="1"/>
+            <column name="product_id" value="12"/>
+        </insert>
+
+        <insert tableName="group_product">
+            <column name="group_id" value="1"/>
+            <column name="product_id" value="13"/>
+        </insert>
+
+        <insert tableName="group_product">
+            <column name="group_id" value="1"/>
+            <column name="product_id" value="14"/>
+        </insert>
+
+        <insert tableName="group_product">
+            <column name="group_id" value="1"/>
+            <column name="product_id" value="15"/>
+        </insert>
+
+        <insert tableName="group_product">
+            <column name="group_id" value="1"/>
+            <column name="product_id" value="16"/>
+        </insert>
+
+        <insert tableName="group_product">
+            <column name="group_id" value="1"/>
+            <column name="product_id" value="17"/>
+        </insert>
+
+        <insert tableName="group_product">
+            <column name="group_id" value="1"/>
+            <column name="product_id" value="18"/>
+        </insert>
+
+        <insert tableName="group_product">
+            <column name="group_id" value="1"/>
+            <column name="product_id" value="19"/>
+        </insert>
+
+        <insert tableName="group_product">
+            <column name="group_id" value="1"/>
+            <column name="product_id" value="20"/>
+        </insert>
+
+        <insert tableName="group_product">
+            <column name="group_id" value="1"/>
+            <column name="product_id" value="21"/>
+        </insert>
+
+        <insert tableName="group_product">
+            <column name="group_id" value="1"/>
+            <column name="product_id" value="22"/>
+        </insert>
+
+        <insert tableName="group_product">
+            <column name="group_id" value="1"/>
+            <column name="product_id" value="23"/>
+        </insert>
+
+        <insert tableName="group_product">
+            <column name="group_id" value="1"/>
+            <column name="product_id" value="24"/>
+        </insert>
+
+        <insert tableName="group_product">
+            <column name="group_id" value="1"/>
+            <column name="product_id" value="25"/>
+        </insert>
+
+        <insert tableName="group_product">
+            <column name="group_id" value="1"/>
+            <column name="product_id" value="26"/>
+        </insert>
+
+        <insert tableName="group_product">
+            <column name="group_id" value="1"/>
+            <column name="product_id" value="27"/>
+        </insert>
+
+        <insert tableName="group_product">
+            <column name="group_id" value="1"/>
+            <column name="product_id" value="28"/>
+        </insert>
+
+        <insert tableName="group_product">
+            <column name="group_id" value="1"/>
+            <column name="product_id" value="29"/>
+        </insert>
+
+        <insert tableName="group_product">
+            <column name="group_id" value="1"/>
+            <column name="product_id" value="30"/>
+        </insert>
+
+        <insert tableName="group_product">
+            <column name="group_id" value="1"/>
+            <column name="product_id" value="31"/>
+        </insert>
+
+        <insert tableName="group_product">
+            <column name="group_id" value="1"/>
+            <column name="product_id" value="32"/>
+        </insert>
+
+        <insert tableName="group_product">
+            <column name="group_id" value="1"/>
+            <column name="product_id" value="33"/>
+        </insert>
+
+        <insert tableName="group_product">
+            <column name="group_id" value="1"/>
+            <column name="product_id" value="34"/>
+        </insert>
+
+        <insert tableName="group_product">
+            <column name="group_id" value="1"/>
+            <column name="product_id" value="35"/>
+        </insert>
+
+        <insert tableName="group_product">
+            <column name="group_id" value="1"/>
+            <column name="product_id" value="36"/>
+        </insert>
+
+        <insert tableName="group_product">
+            <column name="group_id" value="1"/>
+            <column name="product_id" value="37"/>
+        </insert>
+
+        <insert tableName="group_product">
+            <column name="group_id" value="1"/>
+            <column name="product_id" value="38"/>
+        </insert>
+
+        <insert tableName="group_product">
+            <column name="group_id" value="1"/>
+            <column name="product_id" value="39"/>
+        </insert>
+
+        <insert tableName="group_product">
+            <column name="group_id" value="1"/>
+            <column name="product_id" value="40"/>
+        </insert>
+
+        <insert tableName="group_product">
+            <column name="group_id" value="1"/>
+            <column name="product_id" value="41"/>
+        </insert>
+
+        <insert tableName="group_product">
+            <column name="group_id" value="1"/>
+            <column name="product_id" value="42"/>
+        </insert>
+
+        <insert tableName="group_product">
+            <column name="group_id" value="1"/>
+            <column name="product_id" value="43"/>
+        </insert>
+
+        <insert tableName="group_product">
+            <column name="group_id" value="1"/>
+            <column name="product_id" value="44"/>
+        </insert>
+
+        <insert tableName="group_product">
+            <column name="group_id" value="1"/>
+            <column name="product_id" value="45"/>
+        </insert>
+
+        <insert tableName="group_product">
+            <column name="group_id" value="1"/>
+            <column name="product_id" value="46"/>
+        </insert>
+
+        <insert tableName="group_product">
+            <column name="group_id" value="2"/>
+            <column name="product_id" value="33"/>
+        </insert>
+
+        <insert tableName="group_product">
+            <column name="group_id" value="2"/>
+            <column name="product_id" value="4"/>
+        </insert>
+
+        <insert tableName="group_product">
+            <column name="group_id" value="2"/>
+            <column name="product_id" value="17"/>
+        </insert>
+
+        <insert tableName="group_product">
+            <column name="group_id" value="2"/>
+            <column name="product_id" value="27"/>
+        </insert>
+
+        <insert tableName="group_product">
+            <column name="group_id" value="2"/>
+            <column name="product_id" value="43"/>
+        </insert>
+
+        <insert tableName="group_product">
+            <column name="group_id" value="3"/>
+            <column name="product_id" value="12"/>
+        </insert>
+
+        <insert tableName="group_product">
+            <column name="group_id" value="3"/>
+            <column name="product_id" value="13"/>
+        </insert>
+
+        <insert tableName="group_product">
+            <column name="group_id" value="3"/>
+            <column name="product_id" value="35"/>
+        </insert>
+
+        <insert tableName="group_product">
+            <column name="group_id" value="3"/>
+            <column name="product_id" value="15"/>
+        </insert>
+
+        <insert tableName="group_product">
+            <column name="group_id" value="3"/>
+            <column name="product_id" value="16"/>
+        </insert>
+
+        <insert tableName="group_product">
+            <column name="group_id" value="3"/>
+            <column name="product_id" value="7"/>
+        </insert>
+
+        <insert tableName="group_product">
+            <column name="group_id" value="3"/>
+            <column name="product_id" value="31"/>
+        </insert>
+
+        <insert tableName="group_product">
+            <column name="group_id" value="4"/>
+            <column name="product_id" value="19"/>
+        </insert>
+
+        <insert tableName="group_product">
+            <column name="group_id" value="4"/>
+            <column name="product_id" value="14"/>
+        </insert>
+
+        <insert tableName="group_product">
+            <column name="group_id" value="4"/>
+            <column name="product_id" value="26"/>
+        </insert>
+
+        <insert tableName="group_product">
+            <column name="group_id" value="4"/>
+            <column name="product_id" value="32"/>
+        </insert>
+
+        <insert tableName="group_product">
+            <column name="group_id" value="5"/>
+            <column name="product_id" value="20"/>
+        </insert>
+
+        <insert tableName="group_product">
+            <column name="group_id" value="5"/>
+            <column name="product_id" value="37"/>
+        </insert>
+
+        <insert tableName="group_product">
+            <column name="group_id" value="5"/>
+            <column name="product_id" value="38"/>
+        </insert>
+
+        <insert tableName="group_product">
+            <column name="group_id" value="5"/>
+            <column name="product_id" value="45"/>
+        </insert>
+
+        <insert tableName="group_product">
+            <column name="group_id" value="6"/>
+            <column name="product_id" value="2"/>
+        </insert>
+
+        <insert tableName="group_product">
+            <column name="group_id" value="6"/>
+            <column name="product_id" value="34"/>
+        </insert>
+
+        <insert tableName="group_product">
+            <column name="group_id" value="6"/>
+            <column name="product_id" value="41"/>
+        </insert>
+
+        <insert tableName="group_product">
+            <column name="group_id" value="6"/>
+            <column name="product_id" value="42"/>
+        </insert>
+
+        <insert tableName="group_product">
+            <column name="group_id" value="6"/>
+            <column name="product_id" value="8"/>
+        </insert>
+
+        <insert tableName="group_product">
+            <column name="group_id" value="7"/>
+            <column name="product_id" value="3"/>
+        </insert>
+
+        <insert tableName="group_product">
+            <column name="group_id" value="7"/>
+            <column name="product_id" value="24"/>
+        </insert>
+
+        <insert tableName="group_product">
+            <column name="group_id" value="7"/>
+            <column name="product_id" value="6"/>
+        </insert>
+
+        <insert tableName="group_product">
+            <column name="group_id" value="7"/>
+            <column name="product_id" value="39"/>
+        </insert>
+
+        <insert tableName="group_product">
+            <column name="group_id" value="7"/>
+            <column name="product_id" value="11"/>
+        </insert>
+
+        <insert tableName="group_product">
+            <column name="group_id" value="8"/>
+            <column name="product_id" value="22"/>
+        </insert>
+
+        <insert tableName="group_product">
+            <column name="group_id" value="8"/>
+            <column name="product_id" value="44"/>
+        </insert>
+
+        <insert tableName="group_product">
+            <column name="group_id" value="8"/>
+            <column name="product_id" value="28"/>
+        </insert>
+
+        <insert tableName="group_product">
+            <column name="group_id" value="8"/>
+            <column name="product_id" value="30"/>
+        </insert>
+
+        <insert tableName="group_product">
+            <column name="group_id" value="9"/>
+            <column name="product_id" value="21"/>
+        </insert>
+
+        <insert tableName="group_product">
+            <column name="group_id" value="9"/>
+            <column name="product_id" value="25"/>
+        </insert>
+
+        <insert tableName="group_product">
+            <column name="group_id" value="9"/>
+            <column name="product_id" value="36"/>
+        </insert>
+
+        <insert tableName="group_product">
+            <column name="group_id" value="9"/>
+            <column name="product_id" value="5"/>
+        </insert>
+
+        <insert tableName="group_product">
+            <column name="group_id" value="9"/>
+            <column name="product_id" value="9"/>
+        </insert>
+
+        <insert tableName="group_product">
+            <column name="group_id" value="9"/>
+            <column name="product_id" value="46"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="2023-12-13-initial-schema-create-8" author="NeDonil">
+        <insert tableName="orders">
+            <column name="customer_id" value="1"/>
+            <column name="status" value="MAKING"/>
+        </insert>
+
+        <insert tableName="orders">
+            <column name="customer_id" value="2"/>
+            <column name="status" value="MAKING"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>
