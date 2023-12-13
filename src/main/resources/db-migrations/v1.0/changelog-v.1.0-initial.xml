@@ -210,5 +210,41 @@
                                  referencedTableName="customers"/>
 
     </changeSet>
+    <changeSet id="2023-12-13-initial-schema-create-3" author="NeDonil">
+        <insert tableName="user_credentials">
+            <column name="email" value="fiona@mail.ru"/>
+            <column name="enabled" value="True"/>
+            <column name="password" value="$2a$10$yz33/BW.MYLQ6SCWPkKbS.gtluWyLPoMS8Bx0yFj.UxyTHrUF78Ue"/>
+            <column name="role" value="ADMIN"/>
+        </insert>
+
+        <insert tableName="user_credentials">
+            <column name="email" value="wanropp@email.com"/>
+            <column name="enabled" value="True"/>
+            <column name="password" value="$2a$10$2TvLkPv4xYhb/w4hm6pcJuyraHtY/da93ITdQB89a087hT/tx5X06"/>
+            <column name="role" value="COURIER"/>
+        </insert>
+
+        <insert tableName="user_credentials">
+            <column name="email" value="marina@email.com"/>
+            <column name="enabled" value="True"/>
+            <column name="password" value="$2a$10$zmbBcDW.DJS0oZ.RJNbYHeaYTH9TF0vfdZWR3bcAzVh3jLZwD2gxu"/>
+            <column name="role" value="ASSEMBLER"/>
+        </insert>
+
+        <insert tableName="user_credentials">
+            <column name="email" value="dimas@gmail.com"/>
+            <column name="enabled" value="True"/>
+            <column name="password" value="$2a$10$5SOooyJjPnMdeieUmml37uAyLCnMb9t2XLC2N2.OhbeHVVu1fFovq"/>
+            <column name="role" value="CUSTOMER"/>
+        </insert>
+
+        <insert tableName="user_credentials">
+            <column name="email" value="svinoukhov03@gmail.com"/>
+            <column name="enabled" value="True"/>
+            <column name="password" value="$2a$10$js/AInH6JXYV1TK14tt0vulCa.gSRIvnrZg7DunlH2b9HLyhoLSwy"/>
+            <column name="role" value="CUSTOMER"/>
+        </insert>
+    </changeSet>
 
 </databaseChangeLog>
