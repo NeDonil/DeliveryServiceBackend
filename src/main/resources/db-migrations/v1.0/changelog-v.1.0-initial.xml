@@ -294,5 +294,390 @@
             <column name="value" value="Беговая 6/3 п4 э5 кв 60"/>
         </insert>
     </changeSet>
+    
+    <changeSet id="2023-12-13-initial-schema-create-5" author="NeDonil">
+        <update tableName="addresses">
+            <column name="customer_id" value="1" />
+            <where>id = 1</where>
+        </update>
+        <update tableName="addresses">
+            <column name="customer_id" value="1" />
+            <where>id = 2</where>
+        </update>
+        <update tableName="addresses">
+            <column name="customer_id" value="2" />
+            <where>id = 3</where>
+        </update>
+    </changeSet>
+
+    <changeSet id="2023-12-13-initial-schema-create-6" author="NeDonil">
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/original/170753280_976093574.jpg"/>
+            <column name="price" value="189"/>
+            <column name="title" value="Перец желтый сочный классный"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/product_card/0025cb80-df43-4e4f-a682-a353e66d7c5e.jpg"/>
+            <column name="price" value="190"/>
+            <column name="title" value="Шоколад Милка молочный с фундуком"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/product_card/4f603584-a70b-46e7-b8ed-1bd011ad3c79.jpg"/>
+            <column name="price" value="102"/>
+            <column name="title" value="Чипсы Lays из печи нежный сыр"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/product_card/40ddd4d5-1c36-45ba-a294-60fecfd5a268.jpg"/>
+            <column name="price" value="107"/>
+            <column name="title" value="Гречка Свели"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/original/158334_425819778.jpg"/>
+            <column name="price" value="74"/>
+            <column name="title" value="Молоко Домик в деревне"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/public/ee23e3228c717463_4690388050474.jpg"/>
+            <column name="price" value="215"/>
+            <column name="title" value="Чипсы Lays рифленые сметана и лук"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/public/f3fbb4509de69b38_4630061958789-1.jpg"/>
+            <column name="price" value="85"/>
+            <column name="title" value="Самса Mr. Food с говядиной"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/public/165ba98f9d7bffd6_80969112-1.jpg"/>
+            <column name="price" value="139"/>
+            <column name="title" value="Шоколад Kinder Фигурный молочный"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/public/88970d79dc387229_2199603000000.jpg"/>
+            <column name="price" value="64"/>
+            <column name="title" value="Молоко пастеризованное Самокат"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/original/948a127d-9f93-11ec-b967-08c0eb32008b_304784882.jpg"/>
+            <column name="price" value="429"/>
+            <column name="title" value="Филе грудки цыпленка-бройлера"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/product_card/224f7330-8ee8-4514-85a8-de2ff2084ef1.jpg"/>
+            <column name="price" value="177"/>
+            <column name="title" value="Чипсы Lays рифленые паприка"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/public/c8f1c79b2281cc5e_4607135168924-1.jpg"/>
+            <column name="price" value="87"/>
+            <column name="title" value="Пшеничный хлеб ЭкоХлеб Монж"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/public/be2eb4fa45f71b6c_4630061956341-1.jpg"/>
+            <column name="price" value="86"/>
+            <column name="title" value="Сосиска в тесте Mr. Food"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/original/167196_1623671804.jpg"/>
+            <column name="price" value="182"/>
+            <column name="title" value="Рёбра Слово Мясника свинны"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/public/1d529a1460bfdaf1_4607100970354-1.jpg"/>
+            <column name="price" value="41"/>
+            <column name="title" value="Ромовая баба Хлебозавод №7"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/original/174846_1989637154.jpg"/>
+            <column name="price" value="42"/>
+            <column name="title" value="Слойка Лимак с вишневой начинкой"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/public/f431fbf095a41451_4601445206680-1.jpg"/>
+            <column name="price" value="315"/>
+            <column name="title" value="Комплексный обед"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/original/170757066_1561048227.jpg"/>
+            <column name="price" value="69"/>
+            <column name="title" value="Огурец Луховицкий длинноплодный"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/original/3aac2b0a-9f9a-11ec-b967-08c0eb32008b_719590546.jpg"/>
+            <column name="price" value="144"/>
+            <column name="title" value="Печень цеплёнка бройлера Наша птичка"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/original/170756323_640519044.jpg"/>
+            <column name="price" value="153"/>
+            <column name="title" value="Вода Святой источник без газа"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/public/711937cd1532ce68_4601662000023.jpg"/>
+            <column name="price" value="108"/>
+            <column name="title" value="Молоко Parmalat пастеризованное"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/public/eef66516a6288c67_4620005842113-1.jpg"/>
+            <column name="price" value="149"/>
+            <column name="title" value="Макароны Самокат с томатом"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/original/c3eb76f4-c465-11eb-85ac-1c34dae33151_699928974.jpg"/>
+            <column name="price" value="239"/>
+            <column name="title" value="Грибы шампиньон"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/public/349603eec48328c9_4690388111465.jpg"/>
+            <column name="price" value="177"/>
+            <column name="title" value="Чипсы Lays рифленые лобстер"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/public/a6c6cad1508e335a_4690228030161.jpg"/>
+            <column name="price" value="139"/>
+            <column name="title" value="Молоко Агуша ультрапастеризованное"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/public/743bed11dec5f138_4630016235941-1.jpg"/>
+            <column name="price" value="705"/>
+            <column name="title" value="Мякоть бедра Мираторг из говядины"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/public/951e3384ee773e22_4650061637675-1.jpg"/>
+            <column name="price" value="119"/>
+            <column name="title" value="Сырники Creative Kitchen"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/public/38019f76a2e6ca38_4607072719876.jpg"/>
+            <column name="price" value="69"/>
+            <column name="title" value="Макароны Самокат Fusilli спирали"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/public/8156f371aa0111f8_4635000821216-1.jpg"/>
+            <column name="price" value="99"/>
+            <column name="title" value="Томаты Эко-культура коктейльные"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/public/b752cb87b1b1de59_4607072719913-1.jpg"/>
+            <column name="price" value="99"/>
+            <column name="title" value="Макароны Самокат гнезда"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/public/a170360eebcf06e5_4607135168955-1.jpg"/>
+            <column name="price" value="64"/>
+            <column name="title" value="Ржано-пшеничный хлеб ЭкоХлеб"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/original/97285_1355385209.jpg"/>
+            <column name="price" value="223"/>
+            <column name="title" value="Шницель Слово Мясника охлажденный"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/public/3d4214cbe7e26439_4610092032047-1.jpg"/>
+            <column name="price" value="176"/>
+            <column name="title" value="Морковь по-корейски Fresh Secret"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/public/ca68743854e0bafe_7622201769291-2.jpg"/>
+            <column name="price" value="182"/>
+            <column name="title" value="Шоколад Милка молочный"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/public/1ab7217b0f187c74_4631158748627-1.jpg"/>
+            <column name="price" value="169"/>
+            <column name="title" value="Осетинский пирог Рамонти пайз"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/original/301285013_494472226.jpg"/>
+            <column name="price" value="88"/>
+            <column name="title" value="Молоко Авида пастеризованное"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/public/76c1a0c645089128_4600286103363.jpg"/>
+            <column name="price" value="249"/>
+            <column name="title" value="Напиток Starbar Soda water"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/public/b86c5d851cf12cb8_4601025115609.jpg"/>
+            <column name="price" value="112"/>
+            <column name="title" value="Вода Липецкая росинка без газа"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/product_card/37a5f1f8-a8bc-45ca-990d-e811a6a9f073.jpg"/>
+            <column name="price" value="150"/>
+            <column name="title" value="Чипсы Lays зеленый лук"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/original/170753259_967847855.jpg"/>
+            <column name="price" value="89"/>
+            <column name="title" value="Картофель красны"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/product_card/141f32b8-9410-4916-b568-87d94e1b913d.jpg"/>
+            <column name="price" value="129"/>
+            <column name="title" value="Яйцо шоколадное Kinder Сюрприз"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/public/f17b03ec87aa5320_7622210451255.jpg"/>
+            <column name="price" value="190"/>
+            <column name="title" value="Шоколад Милка с печеньем"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/public/6675082fa29e9912_4610092031996-1.jpg"/>
+            <column name="price" value="136"/>
+            <column name="title" value="Блинчики по-домашнему"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/public/773de7d153852a79_4620005842106-1.jpg"/>
+            <column name="price" value="154"/>
+            <column name="title" value="Макароны Самокат со шпинатом"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/original/180195_722042624.jpg"/>
+            <column name="price" value="43"/>
+            <column name="title" value="Вода Святой Источник без газа"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="count" value="100"/>
+            <column name="description" value="Описание продукта"/>
+            <column name="photo" value="https://cm.samokat.ru/processed/m/original/152455_1394027930.jpg"/>
+            <column name="price" value="94"/>
+            <column name="title" value="Молоко Вкуснотеево пастеризованное"/>
+        </insert>
+    </changeSet>
 
 </databaseChangeLog>
