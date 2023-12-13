@@ -1157,4 +1157,16 @@
         </insert>
     </changeSet>
 
+    <changeSet id="2023-12-13-initial-schema-create-8" author="NeDonil">
+        <insert tableName="orders">
+            <column name="customer_id" value="1"/>
+            <column name="status" value="MAKING"/>
+        </insert>
+
+        <insert tableName="orders">
+            <column name="customer_id" value="2"/>
+            <column name="status" value="MAKING"/>
+        </insert>
+    </changeSet>
+
 </databaseChangeLog>
