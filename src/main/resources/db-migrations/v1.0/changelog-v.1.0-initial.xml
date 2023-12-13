@@ -1,125 +1,214 @@
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd">
-<changeSet id="2023-12-13-initial-schema-create-1" author="NeDonil">
-    <createTable tableName="addresses">
-        <column name="id" type="bigserial">
-            <constraints nullable="false"/>
-        </column>
-        <column name="value" type="varchar(255)"/>
-        <column name="customer_id" type="bigint"/>
-    </createTable>
-    <addPrimaryKey tableName="addresses" columnNames="id" />
+    <changeSet id="2023-12-13-initial-schema-create-1" author="NeDonil">
+        <createTable tableName="addresses">
+            <column name="id" type="bigserial">
+                <constraints nullable="false"/>
+            </column>
+            <column name="value" type="varchar(255)"/>
+            <column name="customer_id" type="bigint"/>
+        </createTable>
+        <addPrimaryKey tableName="addresses" columnNames="id" />
 
-    <createTable tableName="admins">
-        <column name="id" type="bigserial">
-            <constraints nullable="false"/>
-        </column>
-        <column name="fio" type="varchar(255)"/>
-        <column name="credentials_id" type="bigint"/>
-    </createTable>
-    <addPrimaryKey tableName="admins" columnNames="id" />
+        <createTable tableName="admins">
+            <column name="id" type="bigserial">
+                <constraints nullable="false"/>
+            </column>
+            <column name="fio" type="varchar(255)"/>
+            <column name="credentials_id" type="bigint"/>
+        </createTable>
+        <addPrimaryKey tableName="admins" columnNames="id" />
 
-    <createTable tableName="assemblers">
-        <column name="id" type="bigserial">
-            <constraints nullable="false"/>
-        </column>
-        <column name="fio" type="varchar(255)"/>
-        <column name="credentials_id" type="bigint"/>
-    </createTable>
-    <addPrimaryKey tableName="assemblers" columnNames="id" />
+        <createTable tableName="assemblers">
+            <column name="id" type="bigserial">
+                <constraints nullable="false"/>
+            </column>
+            <column name="fio" type="varchar(255)"/>
+            <column name="credentials_id" type="bigint"/>
+        </createTable>
+        <addPrimaryKey tableName="assemblers" columnNames="id" />
 
-    <createTable tableName="couriers">
-        <column name="id" type="bigserial">
-            <constraints nullable="false"/>
-        </column>
-        <column name="fio" type="varchar(255)"/>
-        <column name="credentials_id" type="bigint"/>
-    </createTable>
-    <addPrimaryKey tableName="couriers" columnNames="id" />
+        <createTable tableName="couriers">
+            <column name="id" type="bigserial">
+                <constraints nullable="false"/>
+            </column>
+            <column name="fio" type="varchar(255)"/>
+            <column name="credentials_id" type="bigint"/>
+        </createTable>
+        <addPrimaryKey tableName="couriers" columnNames="id" />
 
-    <createTable tableName="customers">
-        <column name="id" type="bigserial">
-            <constraints nullable="false"/>
-        </column>
-        <column name="fio" type="varchar(255)"/>
-        <column name="credentials_id" type="bigint"/>
-        <column name="payment_data_id" type="bigint"/>
-    </createTable>
-    <addPrimaryKey tableName="customers" columnNames="id" />
+        <createTable tableName="customers">
+            <column name="id" type="bigserial">
+                <constraints nullable="false"/>
+            </column>
+            <column name="fio" type="varchar(255)"/>
+            <column name="credentials_id" type="bigint"/>
+            <column name="payment_data_id" type="bigint"/>
+        </createTable>
+        <addPrimaryKey tableName="customers" columnNames="id" />
 
-    <createTable tableName="group_product">
-        <column name="group_id" type="bigserial">
-            <constraints nullable="false"/>
-        </column>
-        <column name="product_id" type="bigint">
-            <constraints nullable="false"/>
-        </column>
-    </createTable>
-    <addPrimaryKey tableName="group_product" columnNames="group_id,product_id" />
+        <createTable tableName="group_product">
+            <column name="group_id" type="bigserial">
+                <constraints nullable="false"/>
+            </column>
+            <column name="product_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addPrimaryKey tableName="group_product" columnNames="group_id,product_id" />
 
-    <createTable tableName="groups">
-        <column name="id" type="bigserial">
-            <constraints nullable="false"/>
-        </column>
-        <column name="name" type="varchar(255)"/>
-        <column name="url" type="varchar(255)"/>
-    </createTable>
+        <createTable tableName="groups">
+            <column name="id" type="bigserial">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="varchar(255)"/>
+            <column name="url" type="varchar(255)"/>
+        </createTable>
 
-    <createTable tableName="order_items">
-        <column name="id" type="bigserial">
-            <constraints nullable="false"/>
-        </column>
-        <column name="count" type="int8"/>
-        <column name="product_id" type="bigint"/>
-        <column name="order_id" type="bigint"/>
-    </createTable>
-    <addPrimaryKey tableName="order_items" columnNames="id" />
+        <createTable tableName="order_items">
+            <column name="id" type="bigserial">
+                <constraints nullable="false"/>
+            </column>
+            <column name="count" type="int8"/>
+            <column name="product_id" type="bigint"/>
+            <column name="order_id" type="bigint"/>
+        </createTable>
+        <addPrimaryKey tableName="order_items" columnNames="id" />
 
-    <createTable tableName="orders">
-        <column name="id" type="bigserial">
-            <constraints nullable="false"/>
-        </column>
-        <column name="comment" type="varchar(255)"/>
-        <column name="begin_date" type="timestamp"/>
-        <column name="end_date" type="timestamp"/>
-        <column name="status" type="varchar(255)"/>
-        <column name="address_id" type="bigint"/>
-        <column name="assembler_id" type="bigint"/>
-        <column name="courier_id" type="bigint"/>
-        <column name="customer_id" type="bigint"/>
-    </createTable>
-    <addPrimaryKey tableName="orders" columnNames="id" />
+        <createTable tableName="orders">
+            <column name="id" type="bigserial">
+                <constraints nullable="false"/>
+            </column>
+            <column name="comment" type="varchar(255)"/>
+            <column name="begin_date" type="timestamp"/>
+            <column name="end_date" type="timestamp"/>
+            <column name="status" type="varchar(255)"/>
+            <column name="address_id" type="bigint"/>
+            <column name="assembler_id" type="bigint"/>
+            <column name="courier_id" type="bigint"/>
+            <column name="customer_id" type="bigint"/>
+        </createTable>
+        <addPrimaryKey tableName="orders" columnNames="id" />
 
-    <createTable tableName="payments">
-        <column name="id" type="bigserial">
-            <constraints nullable="false"/>
-        </column>
-        <column name="balance" type="bigint"/>
-    </createTable>
-    <addPrimaryKey tableName="payments" columnNames="id" />
+        <createTable tableName="payments">
+            <column name="id" type="bigserial">
+                <constraints nullable="false"/>
+            </column>
+            <column name="balance" type="bigint"/>
+        </createTable>
+        <addPrimaryKey tableName="payments" columnNames="id" />
 
-    <createTable tableName="products">
-        <column name="id" type="bigserial">
-            <constraints nullable="false"/>
-        </column>
-        <column name="count" type="bigint"/>
-        <column name="title" type="varchar(255)"/>
-        <column name="description" type="varchar(255)"/>
-        <column name="photo" type="varchar(255)"/>
-        <column name="price" type="bigint"/>
-    </createTable>
-    <addPrimaryKey tableName="products" columnNames="id" />
+        <createTable tableName="products">
+            <column name="id" type="bigserial">
+                <constraints nullable="false"/>
+            </column>
+            <column name="count" type="bigint"/>
+            <column name="title" type="varchar(255)"/>
+            <column name="description" type="varchar(255)"/>
+            <column name="photo" type="varchar(255)"/>
+            <column name="price" type="bigint"/>
+        </createTable>
+        <addPrimaryKey tableName="products" columnNames="id" />
 
-    <createTable tableName="user_credentials">
-        <column name="id" type="bigserial">
-            <constraints nullable="false"/>
-        </column>
-        <column name="email" type="varchar(255)"/>
-        <column name="password" type="varchar(255)"/>
-        <column name="enabled" type="boolean"/>
-        <column name="role" type="varchar(255)"/>
-    </createTable>
-    <addPrimaryKey tableName="user_credentials" columnNames="id" />
+        <createTable tableName="user_credentials">
+            <column name="id" type="bigserial">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" type="varchar(255)"/>
+            <column name="password" type="varchar(255)"/>
+            <column name="enabled" type="boolean"/>
+            <column name="role" type="varchar(255)"/>
+        </createTable>
+        <addPrimaryKey tableName="user_credentials" columnNames="id" />
 
-</changeSet>
+    </changeSet>
+
+    <changeSet id="2023-12-13-initial-schema-create-2" author="NeDonil">
+        <addPrimaryKey tableName="groups" columnNames="id" />
+
+        <addForeignKeyConstraint baseColumnNames="customer_id"
+                                 baseTableName="addresses"
+                                 constraintName="fk_address_customer_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="customers"/>
+
+        <addForeignKeyConstraint baseColumnNames="credentials_id"
+                                 baseTableName="admins"
+                                 constraintName="fk_admins_credentials_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="user_credentials"/>
+
+        <addForeignKeyConstraint baseColumnNames="credentials_id"
+                                 baseTableName="assemblers"
+                                 constraintName="fk_assemblers_credentials_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="user_credentials"/>
+
+        <addForeignKeyConstraint baseColumnNames="credentials_id"
+                                 baseTableName="couriers"
+                                 constraintName="fk_couriers_credentials_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="user_credentials"/>
+
+        <addForeignKeyConstraint baseColumnNames="credentials_id"
+                                 baseTableName="customers"
+                                 constraintName="fk_customers_credentials_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="user_credentials"/>
+
+        <addForeignKeyConstraint baseColumnNames="payment_data_id"
+                                 baseTableName="customers"
+                                 constraintName="fk_customers_payment_data_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="payments"/>
+
+        <addForeignKeyConstraint baseColumnNames="product_id"
+                                 baseTableName="group_product"
+                                 constraintName="fk_group_product_product_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="products"/>
+
+        <addForeignKeyConstraint baseColumnNames="group_id"
+                                 baseTableName="group_product"
+                                 constraintName="fk_group_product_group_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="groups"/>
+
+        <addForeignKeyConstraint baseColumnNames="product_id"
+                                 baseTableName="order_items"
+                                 constraintName="fk_order_items_product_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="products"/>
+
+        <addForeignKeyConstraint baseColumnNames="order_id"
+                                 baseTableName="order_items"
+                                 constraintName="fk_order_items_order_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="orders"/>
+
+        <addForeignKeyConstraint baseColumnNames="address_id"
+                                 baseTableName="orders"
+                                 constraintName="fk_order_address_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="addresses"/>
+
+        <addForeignKeyConstraint baseColumnNames="assembler_id"
+                                 baseTableName="orders"
+                                 constraintName="fk_order_assembler_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="assemblers"/>
+
+        <addForeignKeyConstraint baseColumnNames="courier_id"
+                                 baseTableName="orders"
+                                 constraintName="fk_order_courier_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="couriers"/>
+
+        <addForeignKeyConstraint baseColumnNames="customer_id"
+                                 baseTableName="orders"
+                                 constraintName="fk_order_customer_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="customers"/>
+
+    </changeSet>
 
 </databaseChangeLog>
