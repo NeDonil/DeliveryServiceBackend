@@ -1,0 +1,125 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd">
+<changeSet id="2023-12-13-initial-schema-create-1" author="NeDonil">
+    <createTable tableName="addresses">
+        <column name="id" type="bigserial">
+            <constraints nullable="false"/>
+        </column>
+        <column name="value" type="varchar(255)"/>
+        <column name="customer_id" type="bigint"/>
+    </createTable>
+    <addPrimaryKey tableName="addresses" columnNames="id" />
+
+    <createTable tableName="admins">
+        <column name="id" type="bigserial">
+            <constraints nullable="false"/>
+        </column>
+        <column name="fio" type="varchar(255)"/>
+        <column name="credentials_id" type="bigint"/>
+    </createTable>
+    <addPrimaryKey tableName="admins" columnNames="id" />
+
+    <createTable tableName="assemblers">
+        <column name="id" type="bigserial">
+            <constraints nullable="false"/>
+        </column>
+        <column name="fio" type="varchar(255)"/>
+        <column name="credentials_id" type="bigint"/>
+    </createTable>
+    <addPrimaryKey tableName="assemblers" columnNames="id" />
+
+    <createTable tableName="couriers">
+        <column name="id" type="bigserial">
+            <constraints nullable="false"/>
+        </column>
+        <column name="fio" type="varchar(255)"/>
+        <column name="credentials_id" type="bigint"/>
+    </createTable>
+    <addPrimaryKey tableName="couriers" columnNames="id" />
+
+    <createTable tableName="customers">
+        <column name="id" type="bigserial">
+            <constraints nullable="false"/>
+        </column>
+        <column name="fio" type="varchar(255)"/>
+        <column name="credentials_id" type="bigint"/>
+        <column name="payment_data_id" type="bigint"/>
+    </createTable>
+    <addPrimaryKey tableName="customers" columnNames="id" />
+
+    <createTable tableName="group_product">
+        <column name="group_id" type="bigserial">
+            <constraints nullable="false"/>
+        </column>
+        <column name="product_id" type="bigint">
+            <constraints nullable="false"/>
+        </column>
+    </createTable>
+    <addPrimaryKey tableName="group_product" columnNames="group_id,product_id" />
+
+    <createTable tableName="groups">
+        <column name="id" type="bigserial">
+            <constraints nullable="false"/>
+        </column>
+        <column name="name" type="varchar(255)"/>
+        <column name="url" type="varchar(255)"/>
+    </createTable>
+
+    <createTable tableName="order_items">
+        <column name="id" type="bigserial">
+            <constraints nullable="false"/>
+        </column>
+        <column name="count" type="int8"/>
+        <column name="product_id" type="bigint"/>
+        <column name="order_id" type="bigint"/>
+    </createTable>
+    <addPrimaryKey tableName="order_items" columnNames="id" />
+
+    <createTable tableName="orders">
+        <column name="id" type="bigserial">
+            <constraints nullable="false"/>
+        </column>
+        <column name="comment" type="varchar(255)"/>
+        <column name="begin_date" type="timestamp"/>
+        <column name="end_date" type="timestamp"/>
+        <column name="status" type="varchar(255)"/>
+        <column name="address_id" type="bigint"/>
+        <column name="assembler_id" type="bigint"/>
+        <column name="courier_id" type="bigint"/>
+        <column name="customer_id" type="bigint"/>
+    </createTable>
+    <addPrimaryKey tableName="orders" columnNames="id" />
+
+    <createTable tableName="payments">
+        <column name="id" type="bigserial">
+            <constraints nullable="false"/>
+        </column>
+        <column name="balance" type="bigint"/>
+    </createTable>
+    <addPrimaryKey tableName="payments" columnNames="id" />
+
+    <createTable tableName="products">
+        <column name="id" type="bigserial">
+            <constraints nullable="false"/>
+        </column>
+        <column name="count" type="bigint"/>
+        <column name="title" type="varchar(255)"/>
+        <column name="description" type="varchar(255)"/>
+        <column name="photo" type="varchar(255)"/>
+        <column name="price" type="bigint"/>
+    </createTable>
+    <addPrimaryKey tableName="products" columnNames="id" />
+
+    <createTable tableName="user_credentials">
+        <column name="id" type="bigserial">
+            <constraints nullable="false"/>
+        </column>
+        <column name="email" type="varchar(255)"/>
+        <column name="password" type="varchar(255)"/>
+        <column name="enabled" type="boolean"/>
+        <column name="role" type="varchar(255)"/>
+    </createTable>
+    <addPrimaryKey tableName="user_credentials" columnNames="id" />
+
+</changeSet>
+
+</databaseChangeLog>
