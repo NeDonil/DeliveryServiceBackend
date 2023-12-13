@@ -246,5 +246,53 @@
             <column name="role" value="CUSTOMER"/>
         </insert>
     </changeSet>
+    <changeSet id="2023-12-13-initial-schema-create-4" author="NeDonil">
+        <insert tableName="admins">
+            <column name="credentials_id" value="1"/>
+            <column name="fio" value="Фиона Галагер"/>
+        </insert>
+
+        <insert tableName="couriers">
+            <column name="credentials_id" value="2"/>
+            <column name="fio" value="Данил Вонтроп"/>
+        </insert>
+
+        <insert tableName="assemblers">
+            <column name="credentials_id" value="3"/>
+            <column name="fio" value="Марина Ковалева"/>
+        </insert>
+
+        <insert tableName="payments">
+            <column name="balance" value="0"/>
+        </insert>
+
+        <insert tableName="payments">
+            <column name="balance" value="0"/>
+        </insert>
+
+        <insert tableName="customers">
+            <column name="credentials_id" value="4"/>
+            <column name="fio" value="Дмитрий Руднев"/>
+            <column name="payment_data_id" value="1"/>
+        </insert>
+
+        <insert tableName="customers">
+            <column name="credentials_id" value="5"/>
+            <column name="fio" value="Данил Свиноухов"/>
+            <column name="payment_data_id" value="2"/>
+        </insert>
+
+        <insert tableName="addresses">
+            <column name="value" value="Куколкина 11 п4 э4 кв 290"/>
+        </insert>
+
+        <insert tableName="addresses">
+            <column name="value" value="Беговая 6/3 п4 э5 кв 60"/>
+        </insert>
+
+        <insert tableName="addresses">
+            <column name="value" value="Беговая 6/3 п4 э5 кв 60"/>
+        </insert>
+    </changeSet>
 
 </databaseChangeLog>
