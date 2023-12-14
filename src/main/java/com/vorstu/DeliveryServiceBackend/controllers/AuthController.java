@@ -2,6 +2,7 @@ package com.vorstu.DeliveryServiceBackend.controllers;
 
 import com.vorstu.DeliveryServiceBackend.db.entities.CustomerEntity;
 import com.vorstu.DeliveryServiceBackend.dto.request.NewUserDTO;
+import com.vorstu.DeliveryServiceBackend.mappers.BaseUserMapper;
 import com.vorstu.DeliveryServiceBackend.services.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +27,9 @@ public class AuthController {
     @Autowired
     AuthService authService;
 
+    @Autowired
+    BaseUserMapper baseUserMapper;
+
     @GetMapping("/auth")
     @ResponseBody
     public Principal user(Principal user){
@@ -36,14 +40,8 @@ public class AuthController {
     @PostMapping("/register")
     @ResponseBody
     public ResponseEntity register(@RequestBody NewUserDTO user){
-        try{
-            authService.register(user);
-            return ResponseEntity.ok(user);
-        } catch(Exception ex) {
-            log.warn(ex.getMessage());
-            return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).build();
-        }
-
+        authService.register(user);
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping(path = "/logout", consumes = "application/json", produces = "applicaton/json")

@@ -9,6 +9,9 @@ import com.vorstu.DeliveryServiceBackend.dto.request.FullCourierDTO;
 import com.vorstu.DeliveryServiceBackend.dto.response.CourierDTO;
 import com.vorstu.DeliveryServiceBackend.dto.response.OrderDTO;
 import com.vorstu.DeliveryServiceBackend.dto.response.OrderWithStatusDTO;
+import com.vorstu.DeliveryServiceBackend.exception.EmployeeNotFoundException;
+import com.vorstu.DeliveryServiceBackend.exception.IllegalOrderOperationException;
+import com.vorstu.DeliveryServiceBackend.exception.OrderNotFoundException;
 import com.vorstu.DeliveryServiceBackend.mappers.*;
 import com.vorstu.DeliveryServiceBackend.messages.OrderMessage;
 import com.vorstu.DeliveryServiceBackend.services.action.resolver.ActionResolver;
@@ -48,28 +51,24 @@ public class CourierService {
 
     public OrderWithStatusDTO getCurrentOrder(String email) {
         CourierEntity courier = courierRepository.findUserByEmail(email);
-        OrderWithStatusDTO candid;
-        Optional<OrderEntity> orderCandid = orderRepository.findCurrentEmployeeOrder(courier.getId(), Arrays.asList(OrderStatus.DELIVERING));
-        if(orderCandid.isPresent()) { //Todo orElseThrow
-            OrderEntity order = orderCandid.get();
-            return new OrderWithStatusDTO(order.getStatus(), orderMapper.toDTO(order));
-        } else {
-            return new OrderWithStatusDTO();
-        }
+        OrderEntity order = orderRepository.findCurrentEmployeeOrder(courier.getId(), Arrays.asList(OrderStatus.DELIVERING))
+                .orElse(new OrderEntity());
+        return new OrderWithStatusDTO(order.getStatus(), orderMapper.toDTO(order));
     }
 
-    public OrderMessage doAction(String email, Long orderId, OrderAction action) throws NoSuchElementException {
+    public OrderMessage doAction(String email, Long orderId, OrderAction action)  {
         CourierEntity courier = courierRepository.findUserByEmail(email);
-        Optional<OrderEntity> orderEntityCandid = orderRepository.findById(orderId);
+        OrderEntity orderEntity = orderRepository.findById(orderId)
+                .orElseThrow(() -> new OrderNotFoundException(String.format("Order not found, id = ", orderId)));
 
-        if(orderEntityCandid.isEmpty()){
-            throw new NoSuchElementException(String.format("Order with id %d not found", orderId));
+        CourierEntity orderCourier = orderEntity.getCourier();
+        if(orderCourier != null && orderCourier.getId() != courier.getId()){
+            throw new IllegalOrderOperationException(String.format("You cannot operate with order(%d)", orderId));
         }
-
-        OrderEntity orderEntity = orderEntityCandid.get();
 
         courierActionResolver.resolve(action, orderEntity, courier);
         orderRepository.save(orderEntity);
+
         return new OrderMessage(action, baseUserMapper.toDTO(courier), orderMapper.toDTO(orderEntity));
     }
 
@@ -89,12 +88,9 @@ public class CourierService {
     }
 
     public CourierDTO updateCourier(Long courierId, FullCourierDTO courier) throws NoSuchElementException{
-        Optional<CourierEntity> courierEntityCandid = courierRepository.findById(courierId);
-        if(!courierEntityCandid.isPresent()){
-            throw new NoSuchElementException(String.format("Courier with id %d not found", courierId));
-        }
+        CourierEntity courierEntity = courierRepository.findById(courierId)
+                .orElseThrow( () -> new EmployeeNotFoundException(String.format("Courier not found, id = %d", courierId)));
 
-        CourierEntity courierEntity = courierEntityCandid.get();
         courierEntity.setFio(courier.getFio());
         return courierMapper.toDTO(courierRepository.save(courierEntity));
     }

@@ -22,6 +22,8 @@ public class ActionResolver<T> {
         ActionProcessor processor = actionProcessors.get(action);
         if(processor != null){
             processor.process(order, entity);
+        } else {
+            throw new UnsupportedOperationException();
         }
     }
 

@@ -11,8 +11,11 @@ import com.vorstu.DeliveryServiceBackend.dto.request.ShortOrderItemDTO;
 import com.vorstu.DeliveryServiceBackend.dto.response.AddressDTO;
 import com.vorstu.DeliveryServiceBackend.dto.response.CustomerDTO;
 import com.vorstu.DeliveryServiceBackend.dto.response.OrderDTO;
+import com.vorstu.DeliveryServiceBackend.exception.IllegalOrderOperationException;
+import com.vorstu.DeliveryServiceBackend.exception.OrderNotFoundException;
 import com.vorstu.DeliveryServiceBackend.mappers.*;
 import com.vorstu.DeliveryServiceBackend.messages.OrderMessage;
+import com.vorstu.DeliveryServiceBackend.services.action.resolver.ActionResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -47,6 +50,9 @@ public class CustomerService {
     @Autowired
     AddressListMapper addressListMapper;
 
+    @Autowired
+    ActionResolver customerActionResolver;
+
     public CustomerDTO getCustomerInfo(String email){
         CustomerEntity customer = customerRepository.findUserByEmail(email);
         return customerMapper.toDTO(customer);
@@ -64,16 +70,16 @@ public class CustomerService {
         return orderMapper.toDTO(currentOrderEntity);
     }
 
-    public OrderDTO getOrder(String email, Long orderId) throws NoSuchElementException{
+    public OrderDTO getOrder(String email, Long orderId){
         CustomerEntity customerEntity = customerRepository.findUserByEmail(email);
-        Optional<OrderEntity> orderEntityCandid = orderRepository.findById(orderId);
+        OrderEntity orderEntity = orderRepository.findById(orderId)
+                .orElseThrow(() -> new OrderNotFoundException(String.format("Order not found, id = {%d}", orderId)));
 
-        if(orderEntityCandid.isEmpty()){
-            throw new NoSuchElementException(String.format("Order with id %d is not found", orderId));
+        if(orderEntity.getCustomer() != customerEntity){
+            throw new IllegalOrderOperationException("Access denied");
         }
 
-        //Todo: check customer before
-        return orderMapper.toDTO(orderEntityCandid.get());
+        return orderMapper.toDTO(orderEntity);
     }
 
     public OrderDTO updateCurrentOrder(String email, ShortOrderDTO order){
@@ -122,14 +128,11 @@ public class CustomerService {
         return orderMapper.toDTO(orderRepository.save(orderEntity));
     }
 
-    public OrderMessage doAction(String email, Long orderId, OrderAction action) throws NoSuchElementException{
+    public OrderMessage doAction(String email, Long orderId, OrderAction action){
         CustomerEntity customer = customerRepository.findUserByEmail(email);
-        Optional<OrderEntity> orderEntityCandid = orderRepository.findById(orderId);
-        if(orderEntityCandid.isEmpty()){
-            throw new NoSuchElementException(String.format("Order with id %d not found", orderId));
-        }
+        OrderEntity orderEntity = orderRepository.findById(orderId)
+                .orElseThrow(() -> new OrderNotFoundException(String.format("Order not found, id = %d", orderId)));
 
-        OrderEntity orderEntity = orderEntityCandid.get();
         OrderMessage orderMessage = new OrderMessage();
         switch (action) { // TODO strategy
             case MAKE -> {

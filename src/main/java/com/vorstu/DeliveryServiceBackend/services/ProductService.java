@@ -6,6 +6,7 @@ import com.vorstu.DeliveryServiceBackend.db.repositories.GroupRepository;
 import com.vorstu.DeliveryServiceBackend.db.repositories.ProductRepository;
 import com.vorstu.DeliveryServiceBackend.dto.response.FullProductDTO;
 import com.vorstu.DeliveryServiceBackend.dto.response.GroupDTO;
+import com.vorstu.DeliveryServiceBackend.exception.ProductNotFoundException;
 import com.vorstu.DeliveryServiceBackend.mappers.FullProductListMapper;
 import com.vorstu.DeliveryServiceBackend.mappers.GroupListMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +37,7 @@ public class ProductService {
         if(productCandid.isPresent()) {
             return FullProductDTO.fromEntity(productCandid.get());
         } else {
-            throw new NoSuchElementException(String.format("Product with id %d not found", productId));
+            throw new ProductNotFoundException(String.format("Product with id %d not found", productId));
         }
     }
 
