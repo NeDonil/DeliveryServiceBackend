@@ -98,19 +98,26 @@ public class DeliveryServiceApplicationIntegrationTest {
     void changeOrder(){
         ProductEntity product = productRepository.save(
                 new ProductEntity("title", "desc", "", 1L, 1L));
-        List<ShortOrderItemDTO> orders = Arrays.asList(new ShortOrderItemDTO(
-                1L, new ShortProductDTO(
-                product.getId()))
-        );
+
+        ShortProductDTO trivialProductDTO = new ShortProductDTO();
+        trivialProductDTO.setId(product.getId());
+
+        ShortOrderItemDTO trivialOrderItemDTO = new ShortOrderItemDTO();
+        trivialOrderItemDTO.setCount(1L);
+        trivialOrderItemDTO.setProduct(trivialProductDTO);
+
+        List<ShortOrderItemDTO> items = Arrays.asList(trivialOrderItemDTO);
 
         assertNotNull(customerService.getCurrentOrder(customerEmail));
 
-        OrderDTO updatedOrder = customerService.updateCurrentOrder(customerEmail, new ShortOrderDTO(
-                new ShortAddressDTO(
-                        address.getId()
-                ),
-                orders
-        ));
+        ShortAddressDTO trivialAddress = new ShortAddressDTO();
+        trivialAddress.setId(address.getId());
+
+        ShortOrderDTO trivialOrderDTO = new ShortOrderDTO();
+        trivialOrderDTO.setAddress(trivialAddress);
+        trivialOrderDTO.setItems(items);
+
+        OrderDTO updatedOrder = customerService.updateCurrentOrder(customerEmail, trivialOrderDTO);
 
         assertEquals(updatedOrder, customerService.getCurrentOrder(customerEmail));
     }
