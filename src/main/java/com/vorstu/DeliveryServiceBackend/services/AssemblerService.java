@@ -20,6 +20,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Service
 public class AssemblerService {
@@ -68,7 +70,6 @@ public class AssemblerService {
 
     public OrderWithStatusDTO getCurrentOrder(String email) {
         AssemblerEntity assembler = assemblerRepository.findUserByEmail(email);
-        OrderWithStatusDTO candid;
         OrderEntity order = orderRepository.findCurrentEmployeeOrder(assembler.getId(), List.of(OrderStatus.ASSEMBLING))
                 .orElse(new OrderEntity());
 
@@ -76,19 +77,15 @@ public class AssemblerService {
     }
 
     public List<AssemblerDTO> getAssemblers(){
-        List<AssemblerEntity> assemblerEntities = new ArrayList<>();
-        assemblerRepository.findAll().forEach(assemblerEntities::add);
-
-        return assemblerListMapper.toDTOList(assemblerEntities);
+        return assemblerListMapper.toDTOList(
+                StreamSupport
+                        .stream(assemblerRepository.findAll().spliterator(), false)
+                        .collect(Collectors.toList())
+        );
     }
 
-    public AssemblerDTO createAssembler(FullAssemblerDTO assembler){
-        AssemblerEntity assemblerEntity = new AssemblerEntity(
-                assembler.getFio(),
-                assembler.getEmail(),
-                assembler.getPassword()
-        );
-
+    public AssemblerDTO createAssembler(FullAssemblerDTO fullAssemblerDTO){
+        AssemblerEntity assemblerEntity = new AssemblerEntity(fullAssemblerDTO);
         return assemblerMapper.toDTO(assemblerRepository.save(assemblerEntity));
     }
 
