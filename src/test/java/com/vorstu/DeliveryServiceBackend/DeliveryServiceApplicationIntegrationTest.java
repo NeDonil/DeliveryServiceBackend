@@ -140,12 +140,33 @@ public class DeliveryServiceApplicationIntegrationTest {
     @Test
     @Order(5)
     void toAssembledTest(){
-
         OrderDTO order = assemblerService.getCurrentOrder(assemblerEmail).getOrder();
         assertNotNull(order);
         assemblerService.doAction(assemblerEmail, order.getId(), OrderAction.TO_ASSEMBLED);
 
         assertNotEquals(order, assemblerService.getCurrentOrder(assemblerEmail).getOrder());
         assertNotNull(courierService.getOrders().get(0));
+    }
+
+    @Test
+    @Order(6)
+    void toDeliveryTest(){
+        OrderDTO assembledOrder = courierService.getOrders().get(0);
+        assertNotNull(assembledOrder);
+
+        courierService.doAction(courierEmail, assembledOrder.getId(), OrderAction.TO_DELIVERY);
+
+        assembledOrder.setStatus(OrderStatus.DELIVERING.toString());
+        assertEquals(assembledOrder, courierService.getCurrentOrder(courierEmail).getOrder());
+    }
+
+    @Test
+    @Order(7)
+    void toDeliveredTest(){
+        OrderDTO order = courierService.getCurrentOrder(courierEmail).getOrder();
+        assertNotNull(order);
+        courierService.doAction(courierEmail, order.getId(), OrderAction.TO_DELIVERED);
+
+        assertNotEquals(order, courierService.getCurrentOrder(courierEmail).getOrder());
     }
 }
