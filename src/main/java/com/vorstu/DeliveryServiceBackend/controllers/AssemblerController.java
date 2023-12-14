@@ -1,10 +1,11 @@
 package com.vorstu.DeliveryServiceBackend.controllers;
 
+import com.vorstu.DeliveryServiceBackend.dto.response.OrderDTO;
+import com.vorstu.DeliveryServiceBackend.dto.response.OrderWithStatusDTO;
 import com.vorstu.DeliveryServiceBackend.messages.OrderMessage;
 import com.vorstu.DeliveryServiceBackend.services.AssemblerService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Principal;
-import java.util.NoSuchElementException;
+import java.util.List;
 
 @RestController
 @RequestMapping("api/assembler")
@@ -23,13 +24,13 @@ public class AssemblerController {
     @Autowired
     AssemblerService assemblerService;
     @GetMapping("order")
-    ResponseEntity getOrders(){
-        return ResponseEntity.ok().body(assemblerService.getOrders());
+    List<OrderDTO> getOrders(){
+        return assemblerService.getOrders();
     }
 
     @GetMapping("order/current")
-    ResponseEntity getCurrentOrder(Principal principal){
-        return ResponseEntity.ok().body(assemblerService.getCurrentOrder(principal.getName()));
+    OrderWithStatusDTO getCurrentOrder(Principal principal){
+        return assemblerService.getCurrentOrder(principal.getName());
     }
 
     @MessageMapping("assembler/order/{orderId}")
