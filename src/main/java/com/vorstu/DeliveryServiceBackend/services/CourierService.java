@@ -79,11 +79,7 @@ public class CourierService {
     }
 
     public CourierDTO createCourier(FullCourierDTO courier){
-        CourierEntity courierEntity = new CourierEntity(
-                courier.getFio(),
-                courier.getEmail(),
-                courier.getPassword()
-        );
+        CourierEntity courierEntity = new CourierEntity(courier);
         return courierMapper.toDTO(courierRepository.save(courierEntity));
     }
 

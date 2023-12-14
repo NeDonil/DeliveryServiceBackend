@@ -6,17 +6,13 @@ import com.vorstu.DeliveryServiceBackend.db.repositories.GroupRepository;
 import com.vorstu.DeliveryServiceBackend.db.repositories.ProductRepository;
 import com.vorstu.DeliveryServiceBackend.dto.response.FullProductDTO;
 import com.vorstu.DeliveryServiceBackend.dto.response.GroupDTO;
-import com.vorstu.DeliveryServiceBackend.exception.ProductNotFoundException;
 import com.vorstu.DeliveryServiceBackend.mappers.FullProductListMapper;
 import com.vorstu.DeliveryServiceBackend.mappers.GroupListMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @Service
 public class ProductService {
@@ -31,15 +27,6 @@ public class ProductService {
 
     @Autowired
     FullProductListMapper fullProductListMapper;
-
-    public FullProductDTO getFullProduct(Long productId) throws NoSuchElementException{
-        Optional<ProductEntity> productCandid = productRepository.findById(productId);
-        if(productCandid.isPresent()) {
-            return FullProductDTO.fromEntity(productCandid.get());
-        } else {
-            throw new ProductNotFoundException(String.format("Product with id %d not found", productId));
-        }
-    }
 
     public List<GroupDTO> getGroups(){
         List<GroupEntity> groupEntities = new ArrayList();

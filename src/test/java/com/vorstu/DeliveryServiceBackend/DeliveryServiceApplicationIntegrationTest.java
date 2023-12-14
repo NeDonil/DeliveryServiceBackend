@@ -95,7 +95,7 @@ public class DeliveryServiceApplicationIntegrationTest {
 
     @Test
     @Order(2)
-    void changeOrder(){
+    void changeOrderTest(){
         ProductEntity product = productRepository.save(
                 new ProductEntity("title", "desc", "", 1L, 1L));
 
@@ -124,7 +124,7 @@ public class DeliveryServiceApplicationIntegrationTest {
 
     @Test
     @Order(3)
-    void makeOrder(){
+    void makeOrderTest(){
         OrderDTO order = customerService.getCurrentOrder(customerEmail);
         customerService.doAction(customerEmail, order.getId(), OrderAction.MAKE);
         assertNotEquals(order, customerService.getCurrentOrder(customerEmail));

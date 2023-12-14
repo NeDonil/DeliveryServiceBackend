@@ -3,6 +3,9 @@ package com.vorstu.DeliveryServiceBackend.controllers;
 import com.vorstu.DeliveryServiceBackend.db.entities.OrderStatus;
 import com.vorstu.DeliveryServiceBackend.dto.request.FullAssemblerDTO;
 import com.vorstu.DeliveryServiceBackend.dto.request.FullCourierDTO;
+import com.vorstu.DeliveryServiceBackend.dto.response.AssemblerDTO;
+import com.vorstu.DeliveryServiceBackend.dto.response.CourierDTO;
+import com.vorstu.DeliveryServiceBackend.dto.response.OrderWithEmployeeDTO;
 import com.vorstu.DeliveryServiceBackend.messages.OrderMessage;
 import com.vorstu.DeliveryServiceBackend.services.AdminService;
 import com.vorstu.DeliveryServiceBackend.services.AssemblerService;
@@ -16,6 +19,7 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @RestController
@@ -32,47 +36,40 @@ public class AdminController {
     AdminService adminService;
 
     @GetMapping("assembler")
-    ResponseEntity getAssemblers(){
-        return ResponseEntity.ok().body(
-                assemblerService.getAssemblers()
-        );
+    List<AssemblerDTO> getAssemblers(){
+        return assemblerService.getAssemblers();
     }
 
     @PostMapping("assembler")
-    ResponseEntity addAssembler(@RequestBody FullAssemblerDTO assembler){
-        return ResponseEntity.ok().body(
-                assemblerService.createAssembler(assembler)
-        );
+    AssemblerDTO addAssembler(@RequestBody FullAssemblerDTO assembler){
+        return assemblerService.createAssembler(assembler);
     }
 
     @PutMapping("assembler")
-    ResponseEntity updateAssembler(@RequestParam Long assemblerId,
-                                @RequestBody FullAssemblerDTO assembler){
-            return ResponseEntity.ok().body(assemblerService.updateAssembler(assemblerId, assembler));
+    AssemblerDTO updateAssembler(@RequestParam Long assemblerId,
+                                 @RequestBody FullAssemblerDTO assembler){
+        return assemblerService.updateAssembler(assemblerId, assembler);
     }
 
     @DeleteMapping("assembler")
-    ResponseEntity deleteAssembler(@RequestParam Long assemblerId){
+    void deleteAssembler(@RequestParam Long assemblerId){
         assemblerService.deleteAssembler(assemblerId);
-        return ResponseEntity.ok().build();
     }
 
     @GetMapping("courier")
-    ResponseEntity getCouriers(){
-        return ResponseEntity.ok().body(
-                courierService.getCouriers()
-        );
+    List<CourierDTO> getCouriers(){
+        return courierService.getCouriers();
     }
 
     @PostMapping("courier")
-    ResponseEntity addCourier(@RequestBody FullCourierDTO courier){
-        return ResponseEntity.ok().body(courierService.createCourier(courier));
+    CourierDTO addCourier(@RequestBody FullCourierDTO courier){
+        return courierService.createCourier(courier);
     }
 
     @PutMapping("courier")
-    ResponseEntity updateCourier(@RequestParam Long courierId,
-                                   @RequestBody FullCourierDTO courier){
-            return ResponseEntity.ok().body(courierService.updateCourier(courierId, courier));
+    CourierDTO updateCourier(@RequestParam Long courierId,
+                             @RequestBody FullCourierDTO courier){
+        return courierService.updateCourier(courierId, courier);
     }
 
     @DeleteMapping("courier")
@@ -82,8 +79,8 @@ public class AdminController {
     }
 
     @GetMapping("order/{status}")
-    ResponseEntity getOrdersByStatus(@PathVariable OrderStatus status){
-        return ResponseEntity.ok().body(adminService.getOrdersByStatus(status));
+    List<OrderWithEmployeeDTO> getOrdersByStatus(@PathVariable OrderStatus status){
+        return adminService.getOrdersByStatus(status);
     }
 
     @MessageMapping("admin/order/{orderId}")

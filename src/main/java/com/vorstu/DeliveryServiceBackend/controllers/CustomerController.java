@@ -1,17 +1,21 @@
 package com.vorstu.DeliveryServiceBackend.controllers;
 
 import com.vorstu.DeliveryServiceBackend.dto.request.ShortOrderDTO;
+import com.vorstu.DeliveryServiceBackend.dto.response.AddressDTO;
+import com.vorstu.DeliveryServiceBackend.dto.response.CustomerDTO;
+import com.vorstu.DeliveryServiceBackend.dto.response.OrderDTO;
 import com.vorstu.DeliveryServiceBackend.messages.OrderMessage;
 import com.vorstu.DeliveryServiceBackend.services.CustomerService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.List;
+
 @RestController
 @RequestMapping("api/customer")
 @Slf4j
@@ -20,40 +24,28 @@ public class CustomerController {
     @Autowired
     CustomerService customerService;
     @GetMapping
-    public ResponseEntity getCustomerInfo(Principal principal){
-        return ResponseEntity.ok().body(
-                customerService.getCustomerInfo(principal.getName())
-        );
+    public CustomerDTO getCustomerInfo(Principal principal){
+        return customerService.getCustomerInfo(principal.getName());
     }
 
     @GetMapping("order")
-    public ResponseEntity getAllOrders(Principal principal){
-        return ResponseEntity.ok().body(
-                customerService.getCustomerOrders(principal.getName())
-        );
+    public List<OrderDTO> getAllOrders(Principal principal){
+        return customerService.getCustomerOrders(principal.getName());
     }
 
     @GetMapping("order/current")
-    public ResponseEntity getCurrentOrder(Principal principal){
-        return ResponseEntity.ok().body(
-                customerService.getCurrentOrder(principal.getName())
-        );
+    public OrderDTO getCurrentOrder(Principal principal){
+        return customerService.getCurrentOrder(principal.getName());
     }
 
     @GetMapping("order/{orderId}")
-    public ResponseEntity getOrder(Principal principal,
-                                   @PathVariable Long orderId){
-            return ResponseEntity.ok().body(
-                    customerService.getOrder(principal.getName(), orderId)
-            );
+    public OrderDTO getOrder(Principal principal, @PathVariable Long orderId){
+        return customerService.getOrder(principal.getName(), orderId);
     }
 
     @PutMapping("order/current")
-    public ResponseEntity updateCurrentOrder(Principal principal,
-                                          @RequestBody ShortOrderDTO order){
-        return ResponseEntity.ok().body(
-                customerService.updateCurrentOrder(principal.getName(), order)
-        );
+    public OrderDTO updateCurrentOrder(Principal principal, @RequestBody ShortOrderDTO order){
+        return customerService.updateCurrentOrder(principal.getName(), order);
     }
 
     @MessageMapping("customer/order/{orderId}")
@@ -63,16 +55,12 @@ public class CustomerController {
     }
 
     @GetMapping("address")
-    public ResponseEntity getAddresses(Principal principal){
-        return ResponseEntity.ok().body(
-                customerService.getAddresses(principal.getName())
-        );
+    public List<AddressDTO> getAddresses(Principal principal){
+        return customerService.getAddresses(principal.getName());
     }
 
     @PostMapping("address")
-    public ResponseEntity getAddresses(Principal principal, @RequestBody String address){
-        return ResponseEntity.ok().body(
-                customerService.createAddress(principal.getName(), address)
-        );
+    public AddressDTO getAddresses(Principal principal, @RequestBody String address){
+        return customerService.createAddress(principal.getName(), address);
     }
 }
