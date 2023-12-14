@@ -18,7 +18,6 @@ public class AuthService {
     @Autowired
     OrderRepository orderRepository;
 
-    @SneakyThrows
     public void register(NewUserDTO user){
         CustomerEntity newUser = new CustomerEntity(user.getFio(), user.getEmail(), user.getPassword());
         OrderEntity firstOrder = new OrderEntity(newUser);

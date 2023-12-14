@@ -11,6 +11,8 @@ import com.vorstu.DeliveryServiceBackend.dto.request.ShortOrderItemDTO;
 import com.vorstu.DeliveryServiceBackend.dto.response.AddressDTO;
 import com.vorstu.DeliveryServiceBackend.dto.response.CustomerDTO;
 import com.vorstu.DeliveryServiceBackend.dto.response.OrderDTO;
+import com.vorstu.DeliveryServiceBackend.exception.IllegalOrderOperationException;
+import com.vorstu.DeliveryServiceBackend.exception.OrderNotFoundException;
 import com.vorstu.DeliveryServiceBackend.mappers.*;
 import com.vorstu.DeliveryServiceBackend.messages.OrderMessage;
 import com.vorstu.DeliveryServiceBackend.services.action.resolver.ActionResolver;
@@ -68,13 +70,13 @@ public class CustomerService {
         return orderMapper.toDTO(currentOrderEntity);
     }
 
-    public OrderDTO getOrder(String email, Long orderId) throws NoSuchElementException{
+    public OrderDTO getOrder(String email, Long orderId){
         CustomerEntity customerEntity = customerRepository.findUserByEmail(email);
         OrderEntity orderEntity = orderRepository.findById(orderId)
-                .orElseThrow(NoSuchElementException::new);
+                .orElseThrow(() -> new OrderNotFoundException(String.format("Order not found, id = {%d}", orderId)));
 
         if(orderEntity.getCustomer() != customerEntity){
-            throw new UnsupportedOperationException();
+            throw new IllegalOrderOperationException("Access denied");
         }
 
         return orderMapper.toDTO(orderEntity);
@@ -126,10 +128,10 @@ public class CustomerService {
         return orderMapper.toDTO(orderRepository.save(orderEntity));
     }
 
-    public OrderMessage doAction(String email, Long orderId, OrderAction action) throws NoSuchElementException{
+    public OrderMessage doAction(String email, Long orderId, OrderAction action){
         CustomerEntity customer = customerRepository.findUserByEmail(email);
         OrderEntity orderEntity = orderRepository.findById(orderId)
-                .orElseThrow(NoSuchElementException::new);
+                .orElseThrow(() -> new OrderNotFoundException(String.format("Order not found, id = %d", orderId)));
 
         OrderMessage orderMessage = new OrderMessage();
         switch (action) { // TODO strategy

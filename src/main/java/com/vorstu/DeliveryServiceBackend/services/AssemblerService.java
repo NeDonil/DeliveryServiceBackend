@@ -10,6 +10,9 @@ import com.vorstu.DeliveryServiceBackend.dto.request.FullAssemblerDTO;
 import com.vorstu.DeliveryServiceBackend.dto.response.AssemblerDTO;
 import com.vorstu.DeliveryServiceBackend.dto.response.OrderDTO;
 import com.vorstu.DeliveryServiceBackend.dto.response.OrderWithStatusDTO;
+import com.vorstu.DeliveryServiceBackend.exception.EmployeeNotFoundException;
+import com.vorstu.DeliveryServiceBackend.exception.IllegalOrderOperationException;
+import com.vorstu.DeliveryServiceBackend.exception.OrderNotFoundException;
 import com.vorstu.DeliveryServiceBackend.mappers.*;
 import com.vorstu.DeliveryServiceBackend.messages.OrderMessage;
 import com.vorstu.DeliveryServiceBackend.services.action.resolver.ActionResolver;
@@ -50,11 +53,11 @@ public class AssemblerService {
     public OrderMessage doAction(String email, Long orderId, OrderAction action) {
         AssemblerEntity assembler = assemblerRepository.findUserByEmail(email);
         OrderEntity orderEntity = orderRepository.findById(orderId)
-                .orElseThrow(()-> new NoSuchElementException(String.format("Order with id %d not found", orderId)));
+                .orElseThrow(()-> new OrderNotFoundException(String.format("Order with id %d not found", orderId)));
 
         AssemblerEntity orderAssembler = orderEntity.getAssembler();
-                if(orderAssembler != null && orderAssembler.getId() != assembler.getId()){
-            throw new UnsupportedOperationException(String.format("You cannot operate with order(%d)", orderId));
+        if(orderAssembler != null && orderAssembler.getId() != assembler.getId()){
+            throw new IllegalOrderOperationException(String.format("You cannot operate with order(%d)", orderId));
         }
 
         assemblerActionResolver.resolve(action, orderEntity, assembler);
@@ -67,7 +70,7 @@ public class AssemblerService {
         AssemblerEntity assembler = assemblerRepository.findUserByEmail(email);
         OrderWithStatusDTO candid;
         OrderEntity order = orderRepository.findCurrentEmployeeOrder(assembler.getId(), List.of(OrderStatus.ASSEMBLING))
-                .orElseThrow(NoSuchElementException::new);
+                .orElse(new OrderEntity());
 
         return new OrderWithStatusDTO(order.getStatus(), orderMapper.toDTO(order));
     }
@@ -91,7 +94,7 @@ public class AssemblerService {
 
     public AssemblerDTO updateAssembler(Long assemblerId, FullAssemblerDTO assembler){
         AssemblerEntity assemblerEntity = assemblerRepository.findById(assemblerId)
-                .orElseThrow(NoSuchElementException::new);
+                .orElseThrow(()-> new EmployeeNotFoundException(String.format("Assembler not found, id = {%d}", assemblerId)));
         assemblerEntity.setFio(assembler.getFio());
 
         return assemblerMapper.toDTO(assemblerRepository.save(assemblerEntity));
