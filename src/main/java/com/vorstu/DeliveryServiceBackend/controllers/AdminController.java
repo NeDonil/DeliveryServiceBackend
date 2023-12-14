@@ -48,13 +48,7 @@ public class AdminController {
     @PutMapping("assembler")
     ResponseEntity updateAssembler(@RequestParam Long assemblerId,
                                 @RequestBody FullAssemblerDTO assembler){
-        try{
-            assemblerService.updateAssembler(assemblerId, assembler);
-            return ResponseEntity.ok().build();
-        } catch(NoSuchElementException ex){
-            log.warn(ex.getMessage());
-        }
-        return ResponseEntity.notFound().build();
+            return ResponseEntity.ok().body(assemblerService.updateAssembler(assemblerId, assembler));
     }
 
     @DeleteMapping("assembler")
@@ -72,21 +66,13 @@ public class AdminController {
 
     @PostMapping("courier")
     ResponseEntity addCourier(@RequestBody FullCourierDTO courier){
-        return ResponseEntity.ok().body(
-                courierService.createCourier(courier)
-        );
+        return ResponseEntity.ok().body(courierService.createCourier(courier));
     }
 
     @PutMapping("courier")
     ResponseEntity updateCourier(@RequestParam Long courierId,
                                    @RequestBody FullCourierDTO courier){
-        try{
-            courierService.updateCourier(courierId, courier);
-            return ResponseEntity.ok().build();
-        } catch(NoSuchElementException ex){
-            log.warn(ex.getMessage());
-        }
-        return ResponseEntity.notFound().build();
+            return ResponseEntity.ok().body(courierService.updateCourier(courierId, courier));
     }
 
     @DeleteMapping("courier")
@@ -97,9 +83,7 @@ public class AdminController {
 
     @GetMapping("order/{status}")
     ResponseEntity getOrdersByStatus(@PathVariable OrderStatus status){
-        return ResponseEntity.ok().body(
-                adminService.getOrdersByStatus(status)
-        );
+        return ResponseEntity.ok().body(adminService.getOrdersByStatus(status));
     }
 
     @MessageMapping("admin/order/{orderId}")

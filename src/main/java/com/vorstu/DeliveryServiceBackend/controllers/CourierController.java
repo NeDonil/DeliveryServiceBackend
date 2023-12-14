@@ -34,11 +34,6 @@ public class CourierController {
     @MessageMapping("courier/order/{orderId}")
     @SendTo({"/order/assembled", "/order/delivering", "/order/delivered", "/order/{orderId}"})
     public OrderMessage makeOrder(Principal principal, @DestinationVariable Long orderId, OrderAction action){
-        try{
             return courierService.doAction(principal.getName(), orderId, action);
-        } catch(NoSuchElementException ex){
-            log.warn(ex.getMessage());
-        }
-        return new OrderMessage();
     }
 }

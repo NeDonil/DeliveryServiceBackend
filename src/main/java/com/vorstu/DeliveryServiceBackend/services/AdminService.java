@@ -8,6 +8,7 @@ import com.vorstu.DeliveryServiceBackend.db.repositories.AdminRepository;
 import com.vorstu.DeliveryServiceBackend.db.repositories.OrderRepository;
 import com.vorstu.DeliveryServiceBackend.dto.response.OrderDTO;
 import com.vorstu.DeliveryServiceBackend.dto.response.OrderWithEmployeeDTO;
+import com.vorstu.DeliveryServiceBackend.exception.OrderNotFoundException;
 import com.vorstu.DeliveryServiceBackend.mappers.BaseUserMapper;
 import com.vorstu.DeliveryServiceBackend.mappers.OrderListMapper;
 import com.vorstu.DeliveryServiceBackend.mappers.OrderMapper;
@@ -42,7 +43,8 @@ public class AdminService {
 
     public OrderMessage setOrderStatus(String email, Long orderId, OrderStatus status){
         AdminEntity admin = adminRepository.findAdminByEmail(email);
-        OrderEntity order = orderRepository.findById(orderId).orElseThrow(NoSuchElementException::new);
+        OrderEntity order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new OrderNotFoundException(String.format("Order not found, id = {%d}", orderId)));
         order.setStatus(status);
         orderRepository.save(order);
         return new OrderMessage(OrderActionMapper.getAction(status), baseUserMapper.toDTO(admin), orderMapper.toDTO(order));
