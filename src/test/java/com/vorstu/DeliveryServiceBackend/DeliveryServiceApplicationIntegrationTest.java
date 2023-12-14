@@ -2,6 +2,7 @@ package com.vorstu.DeliveryServiceBackend;
 
 import com.vorstu.DeliveryServiceBackend.controllers.OrderAction;
 import com.vorstu.DeliveryServiceBackend.db.entities.AssemblerEntity;
+import com.vorstu.DeliveryServiceBackend.db.entities.CourierEntity;
 import com.vorstu.DeliveryServiceBackend.db.entities.OrderStatus;
 import com.vorstu.DeliveryServiceBackend.db.entities.ProductEntity;
 import com.vorstu.DeliveryServiceBackend.db.repositories.ProductRepository;
@@ -34,10 +35,11 @@ public class DeliveryServiceApplicationIntegrationTest {
     static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>(
             "postgres:15-alpine"
     );
-
     static AddressDTO address;
     static AssemblerEntity assembler;
     static final String assemblerEmail = "assembler@email.com";
+    static CourierEntity courier;
+    static final String courierEmail = "courier@email.com";
     @Autowired
     private CustomerService customerService;
     @Autowired
@@ -87,7 +89,7 @@ public class DeliveryServiceApplicationIntegrationTest {
 
         assertNotNull(
                 courierService.createCourier(
-                    new FullCourierDTO("courier", "courier@email.com", "c12345")
+                    new FullCourierDTO("courier", courierEmail, "c12345")
                 )
         );
     }
@@ -120,7 +122,7 @@ public class DeliveryServiceApplicationIntegrationTest {
         OrderDTO order = customerService.getCurrentOrder("test@email.com");
         customerService.doAction("test@email.com", order.getId(), OrderAction.MAKE);
         assertNotEquals(order, customerService.getCurrentOrder("test@email.com"));
-        assertNotNull(assemblerService.getOrders());
+        assertNotNull(assemblerService.getOrders().get(0));
     }
 
     @Test
@@ -144,5 +146,6 @@ public class DeliveryServiceApplicationIntegrationTest {
         assemblerService.doAction(assemblerEmail, order.getId(), OrderAction.TO_ASSEMBLED);
 
         assertNotEquals(order, assemblerService.getCurrentOrder(assemblerEmail).getOrder());
+        assertNotNull(courierService.getOrders().get(0));
     }
 }
