@@ -62,6 +62,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/api/admin/order/**").hasAnyAuthority(UserRole.ADMIN.toString())
                 .antMatchers(HttpMethod.GET, "/api/courier/**").hasAnyAuthority(UserRole.COURIER.toString(), UserRole.ADMIN.toString())
                 .antMatchers(HttpMethod.GET, "/api/assembler/**").hasAnyAuthority(UserRole.ASSEMBLER.toString(), UserRole.ADMIN.toString())
+                .anyRequest().authenticated()
                 .and()
                 .exceptionHandling()
                 .and()

@@ -24,7 +24,6 @@ public class UserCredentialsEntity {
     @Column(unique = true)
     private String email;
 
-    @NotNull
     private String password;
 
     private boolean enabled;

@@ -3,14 +3,19 @@ package com.vorstu.DeliveryServiceBackend.controllers;
 import com.vorstu.DeliveryServiceBackend.db.entities.OrderStatus;
 import com.vorstu.DeliveryServiceBackend.dto.request.FullAssemblerDTO;
 import com.vorstu.DeliveryServiceBackend.dto.request.FullCourierDTO;
+import com.vorstu.DeliveryServiceBackend.messages.OrderMessage;
 import com.vorstu.DeliveryServiceBackend.services.AdminService;
 import com.vorstu.DeliveryServiceBackend.services.AssemblerService;
 import com.vorstu.DeliveryServiceBackend.services.CourierService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.NoSuchElementException;
 
 @RestController
@@ -79,5 +84,16 @@ public class AdminController {
     @GetMapping("order/{status}")
     ResponseEntity getOrdersByStatus(@PathVariable OrderStatus status){
         return ResponseEntity.ok().body(adminService.getOrdersByStatus(status));
+    }
+
+    @MessageMapping("admin/order/{orderId}")
+    @SendTo({"/order/placed", "/order/assembling", "/order/assembled", "/order/delivering", "/order/{orderId}"})
+    public OrderMessage setOrderStatus(Principal principal, @DestinationVariable Long orderId, OrderStatus status){
+        try{
+            return adminService.setOrderStatus(principal.getName(), orderId, status);
+        } catch(NoSuchElementException ex){
+            log.warn(ex.getMessage());
+        }
+        return new OrderMessage();
     }
 }
