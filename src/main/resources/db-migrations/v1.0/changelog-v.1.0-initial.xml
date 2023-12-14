@@ -214,4 +214,13 @@
     <changeSet id="2023-12-13-initial-schema-create-3" author="NeDonil">
         <addUniqueConstraint tableName="user_credentials" columnNames="email"/>
     </changeSet>
+    <changeSet id="2023-12-13-initial-schema-create-4" author="NeDonil">
+        <dropForeignKeyConstraint baseTableName="order_items" constraintName="fk_order_items_order_id"/>
+        <addForeignKeyConstraint baseColumnNames="order_id"
+                                 baseTableName="order_items"
+                                 constraintName="fk_order_items_order_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="orders"
+                                 onDelete="CASCADE"/>
+    </changeSet>
 </databaseChangeLog>
