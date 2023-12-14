@@ -1,10 +1,7 @@
 package com.vorstu.DeliveryServiceBackend;
 
 import com.vorstu.DeliveryServiceBackend.controllers.OrderAction;
-import com.vorstu.DeliveryServiceBackend.db.entities.AssemblerEntity;
-import com.vorstu.DeliveryServiceBackend.db.entities.CourierEntity;
-import com.vorstu.DeliveryServiceBackend.db.entities.OrderStatus;
-import com.vorstu.DeliveryServiceBackend.db.entities.ProductEntity;
+import com.vorstu.DeliveryServiceBackend.db.entities.*;
 import com.vorstu.DeliveryServiceBackend.db.repositories.ProductRepository;
 import com.vorstu.DeliveryServiceBackend.dto.request.*;
 import com.vorstu.DeliveryServiceBackend.dto.response.AddressDTO;
@@ -36,6 +33,8 @@ public class DeliveryServiceApplicationIntegrationTest {
             "postgres:15-alpine"
     );
     static AddressDTO address;
+    static CustomerEntity customer;
+    static final String customerEmail = "customer@email.com";
     static AssemblerEntity assembler;
     static final String assemblerEmail = "assembler@email.com";
     static CourierEntity courier;
@@ -74,11 +73,11 @@ public class DeliveryServiceApplicationIntegrationTest {
     void createDataTest(){
         assertDoesNotThrow(() ->
             authService.register(
-                    new NewUserDTO("test@email.com", "testuser", "t12345")
+                    new NewUserDTO(customerEmail, "testuser", "t12345")
             )
         );
 
-        address = customerService.createAddress("test@email.com", "TestAddress");
+        address = customerService.createAddress(customerEmail, "TestAddress");
         assertNotNull(address);
 
         assertNotNull(
@@ -104,24 +103,24 @@ public class DeliveryServiceApplicationIntegrationTest {
                 product.getId()))
         );
 
-        assertNotNull(customerService.getCurrentOrder("test@email.com"));
+        assertNotNull(customerService.getCurrentOrder(customerEmail));
 
-        OrderDTO updatedOrder = customerService.updateCurrentOrder("test@email.com", new ShortOrderDTO(
+        OrderDTO updatedOrder = customerService.updateCurrentOrder(customerEmail, new ShortOrderDTO(
                 new ShortAddressDTO(
                         address.getId()
                 ),
                 orders
         ));
 
-        assertEquals(updatedOrder, customerService.getCurrentOrder("test@email.com"));
+        assertEquals(updatedOrder, customerService.getCurrentOrder(customerEmail));
     }
 
     @Test
     @Order(3)
     void makeOrder(){
-        OrderDTO order = customerService.getCurrentOrder("test@email.com");
-        customerService.doAction("test@email.com", order.getId(), OrderAction.MAKE);
-        assertNotEquals(order, customerService.getCurrentOrder("test@email.com"));
+        OrderDTO order = customerService.getCurrentOrder(customerEmail);
+        customerService.doAction(customerEmail, order.getId(), OrderAction.MAKE);
+        assertNotEquals(order, customerService.getCurrentOrder(customerEmail));
         assertNotNull(assemblerService.getOrders().get(0));
     }
 
@@ -168,5 +167,13 @@ public class DeliveryServiceApplicationIntegrationTest {
         courierService.doAction(courierEmail, order.getId(), OrderAction.TO_DELIVERED);
 
         assertNotEquals(order, courierService.getCurrentOrder(courierEmail).getOrder());
+    }
+
+    @Test
+    @Order(8)
+    void orderDeliveredSuccessTest(){
+        OrderDTO order = customerService.getCustomerOrders(customerEmail).get(0);
+        assertEquals(order.getStatus(), OrderStatus.DELIVERED.toString());
+
     }
 }
