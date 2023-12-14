@@ -1,14 +1,11 @@
 package com.vorstu.DeliveryServiceBackend.controllers;
 
-import com.vorstu.DeliveryServiceBackend.db.entities.CustomerEntity;
 import com.vorstu.DeliveryServiceBackend.dto.request.NewUserDTO;
 import com.vorstu.DeliveryServiceBackend.mappers.BaseUserMapper;
 import com.vorstu.DeliveryServiceBackend.services.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.web.authentication.logout.CookieClearingLogoutHandler;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.security.web.authentication.rememberme.AbstractRememberMeServices;
@@ -39,9 +36,8 @@ public class AuthController {
 
     @PostMapping("/register")
     @ResponseBody
-    public ResponseEntity register(@RequestBody NewUserDTO user){
+    public void register(@RequestBody NewUserDTO user){
         authService.register(user);
-        return ResponseEntity.ok().build();
     }
 
     @PostMapping(path = "/logout", consumes = "application/json", produces = "applicaton/json")
