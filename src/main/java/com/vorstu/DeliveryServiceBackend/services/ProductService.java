@@ -32,15 +32,6 @@ public class ProductService {
     @Autowired
     FullProductListMapper fullProductListMapper;
 
-    public FullProductDTO getFullProduct(Long productId) throws NoSuchElementException{
-        Optional<ProductEntity> productCandid = productRepository.findById(productId);
-        if(productCandid.isPresent()) {
-            return FullProductDTO.fromEntity(productCandid.get());
-        } else {
-            throw new ProductNotFoundException(String.format("Product with id %d not found", productId));
-        }
-    }
-
     public List<GroupDTO> getGroups(){
         List<GroupEntity> groupEntities = new ArrayList();
         groupRepository.findAll().forEach(groupEntities::add);
