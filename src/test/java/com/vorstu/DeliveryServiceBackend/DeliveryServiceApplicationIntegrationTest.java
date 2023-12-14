@@ -1,14 +1,15 @@
 package com.vorstu.DeliveryServiceBackend;
 
+import com.vorstu.DeliveryServiceBackend.controllers.OrderAction;
+import com.vorstu.DeliveryServiceBackend.db.entities.AssemblerEntity;
+import com.vorstu.DeliveryServiceBackend.db.entities.OrderStatus;
 import com.vorstu.DeliveryServiceBackend.db.entities.ProductEntity;
 import com.vorstu.DeliveryServiceBackend.db.repositories.ProductRepository;
 import com.vorstu.DeliveryServiceBackend.dto.request.*;
 import com.vorstu.DeliveryServiceBackend.dto.response.AddressDTO;
 import com.vorstu.DeliveryServiceBackend.dto.response.OrderDTO;
 import com.vorstu.DeliveryServiceBackend.services.*;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -28,13 +29,15 @@ import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(SpringExtension.class)
 @ActiveProfiles("test")
 @SpringBootTest
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class DeliveryServiceApplicationIntegrationTest {
     static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>(
             "postgres:15-alpine"
     );
 
     static AddressDTO address;
-
+    static AssemblerEntity assembler;
+    static final String assemblerEmail = "assembler@email.com";
     @Autowired
     private CustomerService customerService;
     @Autowired
@@ -65,6 +68,7 @@ public class DeliveryServiceApplicationIntegrationTest {
     }
 
     @Test
+    @Order(1)
     void createDataTest(){
         assertDoesNotThrow(() ->
             authService.register(
@@ -77,7 +81,7 @@ public class DeliveryServiceApplicationIntegrationTest {
 
         assertNotNull(
                 assemblerService.createAssembler(
-                    new FullAssemblerDTO("assembler", "assembler@email.com", "a12345")
+                    new FullAssemblerDTO("assembler", assemblerEmail, "a12345")
                 )
         );
 
@@ -89,14 +93,17 @@ public class DeliveryServiceApplicationIntegrationTest {
     }
 
     @Test
-    void makeOrderTest(){
+    @Order(2)
+    void changeOrder(){
         ProductEntity product = productRepository.save(
                 new ProductEntity("title", "desc", "", 1L, 1L));
         List<ShortOrderItemDTO> orders = Arrays.asList(new ShortOrderItemDTO(
                 1L, new ShortProductDTO(
                 product.getId()))
         );
-        customerService.getCurrentOrder("test@email.com");
+
+        assertNotNull(customerService.getCurrentOrder("test@email.com"));
+
         OrderDTO updatedOrder = customerService.updateCurrentOrder("test@email.com", new ShortOrderDTO(
                 new ShortAddressDTO(
                         address.getId()
@@ -105,5 +112,37 @@ public class DeliveryServiceApplicationIntegrationTest {
         ));
 
         assertEquals(updatedOrder, customerService.getCurrentOrder("test@email.com"));
+    }
+
+    @Test
+    @Order(3)
+    void makeOrder(){
+        OrderDTO order = customerService.getCurrentOrder("test@email.com");
+        customerService.doAction("test@email.com", order.getId(), OrderAction.MAKE);
+        assertNotEquals(order, customerService.getCurrentOrder("test@email.com"));
+        assertNotNull(assemblerService.getOrders());
+    }
+
+    @Test
+    @Order(4)
+    void toAssemblyTest(){
+        OrderDTO placedOrder = assemblerService.getOrders().get(0);
+        assertNotNull(placedOrder);
+
+        assemblerService.doAction(assemblerEmail, placedOrder.getId(), OrderAction.TO_ASSEMBLY);
+        placedOrder.setStatus(OrderStatus.ASSEMBLING.toString());
+
+        assertEquals(placedOrder, assemblerService.getCurrentOrder(assemblerEmail).getOrder());
+    }
+
+    @Test
+    @Order(5)
+    void toAssembledTest(){
+
+        OrderDTO order = assemblerService.getCurrentOrder(assemblerEmail).getOrder();
+        assertNotNull(order);
+        assemblerService.doAction(assemblerEmail, order.getId(), OrderAction.TO_ASSEMBLED);
+
+        assertNotEquals(order, assemblerService.getCurrentOrder(assemblerEmail).getOrder());
     }
 }
