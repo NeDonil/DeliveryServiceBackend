@@ -18,6 +18,7 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -41,13 +42,15 @@ public class AdminController {
     }
 
     @PostMapping("assembler")
-    AssemblerDTO addAssembler(@RequestBody FullAssemblerDTO assembler){
+    AssemblerDTO addAssembler(@RequestBody
+                              @Valid FullAssemblerDTO assembler){
         return assemblerService.createAssembler(assembler);
     }
 
     @PutMapping("assembler")
     AssemblerDTO updateAssembler(@RequestParam Long assemblerId,
-                                 @RequestBody FullAssemblerDTO assembler){
+                                 @RequestBody
+                                 @Valid FullAssemblerDTO assembler){
         return assemblerService.updateAssembler(assemblerId, assembler);
     }
 
@@ -62,13 +65,15 @@ public class AdminController {
     }
 
     @PostMapping("courier")
-    CourierDTO addCourier(@RequestBody FullCourierDTO courier){
+    CourierDTO addCourier(@RequestBody
+                          @Valid FullCourierDTO courier){
         return courierService.createCourier(courier);
     }
 
     @PutMapping("courier")
     CourierDTO updateCourier(@RequestParam Long courierId,
-                             @RequestBody FullCourierDTO courier){
+                             @RequestBody
+                             @Valid FullCourierDTO courier){
         return courierService.updateCourier(courierId, courier);
     }
 
