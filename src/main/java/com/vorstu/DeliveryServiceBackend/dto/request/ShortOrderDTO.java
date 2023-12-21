@@ -10,6 +10,8 @@ import java.util.List;
 public class ShortOrderDTO {
 
     private String comment;
+
     private ShortAddressDTO address;
+
     private List<ShortOrderItemDTO> items;
 }
