@@ -11,6 +11,7 @@ import com.vorstu.DeliveryServiceBackend.dto.request.ShortOrderItemDTO;
 import com.vorstu.DeliveryServiceBackend.dto.response.AddressDTO;
 import com.vorstu.DeliveryServiceBackend.dto.response.CustomerDTO;
 import com.vorstu.DeliveryServiceBackend.dto.response.OrderDTO;
+import com.vorstu.DeliveryServiceBackend.exception.EmptyFieldException;
 import com.vorstu.DeliveryServiceBackend.exception.IllegalOrderOperationException;
 import com.vorstu.DeliveryServiceBackend.exception.OrderNotFoundException;
 import com.vorstu.DeliveryServiceBackend.mappers.*;
@@ -166,9 +167,13 @@ public class CustomerService {
 
     public AddressDTO createAddress(String email, String address) {
         CustomerEntity customer = customerRepository.findUserByEmail(email);
-        AddressEntity newAddress = new AddressEntity(address);
 
-        customer.getAddresses().add(newAddress);
-        return addressMapper.toDTO(addressRepository.save(newAddress));
+        if(address.isEmpty()) { // split to street, house, floor, etc.
+            AddressEntity newAddress = new AddressEntity(address);
+            customer.getAddresses().add(newAddress);
+            return addressMapper.toDTO(addressRepository.save(newAddress));
+        } else{
+            throw EmptyFieldException("Address must not be empty");
+        }
     }
 }

@@ -1,16 +1,16 @@
 package com.vorstu.DeliveryServiceBackend.dto.request;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Positive;
 
 @Data
 public class ShortOrderItemDTO {
     private Long id;
 
     @NotBlank
+    @Positive
     private Long count;
 
     @NotBlank

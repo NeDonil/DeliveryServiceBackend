@@ -1,6 +1,7 @@
 package com.vorstu.DeliveryServiceBackend.advice;
 
 import com.vorstu.DeliveryServiceBackend.controllers.CustomerController;
+import com.vorstu.DeliveryServiceBackend.exception.EmptyFieldException;
 import com.vorstu.DeliveryServiceBackend.exception.IllegalOrderOperationException;
 import com.vorstu.DeliveryServiceBackend.exception.OrderNotFoundException;
 import lombok.extern.slf4j.Slf4j;
@@ -29,5 +30,11 @@ public class CustomerControllerAdvice {
     public ResponseEntity methodArgumentNotValidExceptionHandler(MethodArgumentNotValidException ex){
         log.warn(ex.toString());
         return new ResponseEntity(HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(EmptyFieldException.class)
+    public ResponseEntity emptyFieldException(EmptyFieldException ex){
+        log.warn(ex.toString());
+        return ResponseEntity.badRequest().body(ex.getMessage());
     }
 }

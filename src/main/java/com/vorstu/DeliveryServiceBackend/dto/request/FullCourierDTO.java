@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+
 
 @Data
 @AllArgsConstructor
@@ -13,6 +15,7 @@ import javax.validation.constraints.NotBlank;
 public class FullCourierDTO {
 
     @NotBlank
+    @Size(min = 5, max = 20)
     private String fio;
 
     @NotBlank
@@ -20,6 +23,7 @@ public class FullCourierDTO {
     private String email;
 
     @NotBlank
+    @Size(min = 5, max = 20)
     private String password;
 
 }
