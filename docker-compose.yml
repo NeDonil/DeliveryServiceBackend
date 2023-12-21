@@ -23,15 +23,14 @@ services:
       - ./minio_volume/:/data
     ports:
       - '9000:9000'
-      - '9090:9090'
     environment:
       MINIO_ROOT_USER: minio_admin
       MINIO_ROOT_PASSWORD: minio12345
-    command: server /data --console-address ":9090"
+    command: server /data
     networks:
       - 'backend'
   employee-system-backend:
-    image: vorstu/delivery-service-backend:latest
+    image: vorstu/delivery-service-backend:0.0.1-SNAPSHOT
     environment:
       DATABASESERVER_PORT: "5432"
       SPRING_PROFILES_ACTIVE : "docker"
