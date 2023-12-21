@@ -13,6 +13,8 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import java.security.Principal;
 import java.util.List;
 
@@ -44,7 +46,9 @@ public class CustomerController {
     }
 
     @PutMapping("order/current")
-    public OrderDTO updateCurrentOrder(Principal principal, @RequestBody ShortOrderDTO order){
+    public OrderDTO updateCurrentOrder(Principal principal,
+                                       @RequestBody
+                                       @Valid ShortOrderDTO order){
         return customerService.updateCurrentOrder(principal.getName(), order);
     }
 
