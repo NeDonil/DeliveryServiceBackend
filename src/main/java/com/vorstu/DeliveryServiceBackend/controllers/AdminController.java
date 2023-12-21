@@ -91,11 +91,6 @@ public class AdminController {
     @MessageMapping("admin/order/{orderId}")
     @SendTo({"/order/placed", "/order/assembling", "/order/assembled", "/order/delivering", "/order/{orderId}"})
     public OrderMessage setOrderStatus(Principal principal, @DestinationVariable Long orderId, OrderStatus status){
-        try{
-            return adminService.setOrderStatus(principal.getName(), orderId, status);
-        } catch(NoSuchElementException ex){
-            log.warn(ex.getMessage());
-        }
-        return new OrderMessage();
+        return adminService.setOrderStatus(principal.getName(), orderId, status);
     }
 }
