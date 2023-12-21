@@ -173,7 +173,7 @@ public class CustomerService {
             customer.getAddresses().add(newAddress);
             return addressMapper.toDTO(addressRepository.save(newAddress));
         } else{
-            throw EmptyFieldException("Address must not be empty");
+            throw new EmptyFieldException("Address must not be empty");
         }
     }
 }
