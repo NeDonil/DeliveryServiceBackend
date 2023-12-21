@@ -17,6 +17,18 @@ services:
       backend:
         aliases:
           - "database"
+  static_storage:
+    image: minio/minio:latest
+    volumes:
+      - ./minio_volume/:/data
+    ports:
+      - '9000:9000'
+    environment:
+      MINIO_ROOT_USER: minio_admin
+      MINIO_ROOT_PASSWORD: minio12345
+    command: server /data
+    networks:
+      - 'backend'
   employee-system-backend:
     image: vorstu/delivery-service-backend:0.0.1-SNAPSHOT
     environment:

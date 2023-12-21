@@ -1,0 +1,15 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd">
+    <changeSet id="2023-12-21-newphotourl-1" author="NeDonil">
+        <update tableName="products">
+            <column name="photo" type="varchar(255)" valueComputed="REPLACE(photo, 'https://cm.samokat.ru/processed/m/original', 'api/photo')" />
+        </update>
+    </changeSet>
+    <changeSet id="2023-12-21-newphotourl-2" author="NeDonil">
+        <update tableName="products">
+            <column name="photo" type="varchar(255)" valueComputed="REPLACE(photo, 'https://cm.samokat.ru/processed/m/product_card', 'api/photo')" />
+        </update>
+        <update tableName="products">
+            <column name="photo" type="varchar(255)" valueComputed="REPLACE(photo, 'https://cm.samokat.ru/processed/m/public', 'api/photo')" />
+        </update>
+    </changeSet>
+</databaseChangeLog>
