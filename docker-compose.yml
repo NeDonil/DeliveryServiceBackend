@@ -29,7 +29,7 @@ services:
     command: server /data
     networks:
       - 'backend'
-  employee-system-backend:
+  delivery-service-backend:
     image: vorstu/delivery-service-backend:0.0.1-SNAPSHOT
     environment:
       DATABASESERVER_PORT: "5432"
