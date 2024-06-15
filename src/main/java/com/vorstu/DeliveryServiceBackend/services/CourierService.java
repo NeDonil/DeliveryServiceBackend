@@ -18,6 +18,7 @@ import com.vorstu.DeliveryServiceBackend.services.action.resolver.ActionResolver
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.*;
 
 @Service
@@ -43,11 +44,13 @@ public class CourierService {
     @Autowired
     ActionResolver<CourierEntity> courierActionResolver;
 
+    @Transactional
     public List<OrderDTO> getOrders(){
         List<OrderEntity> orderEntities = orderRepository.findAllOrdersByStatus(OrderStatus.ASSEMBLED);
         return orderListMapper.toDTOList(orderEntities);
     }
 
+    @Transactional
     public OrderWithStatusDTO getCurrentOrder(String email) {
         CourierEntity courier = courierRepository.findUserByEmail(email);
         OrderEntity order = orderRepository.findCurrentEmployeeOrder(courier.getId(), Arrays.asList(OrderStatus.DELIVERING))
@@ -55,6 +58,7 @@ public class CourierService {
         return new OrderWithStatusDTO(order.getStatus(), orderMapper.toDTO(order));
     }
 
+    @Transactional
     public OrderMessage doAction(String email, Long orderId, OrderAction action)  {
         CourierEntity courier = courierRepository.findUserByEmail(email);
         OrderEntity orderEntity = orderRepository.findById(orderId)
@@ -71,17 +75,20 @@ public class CourierService {
         return new OrderMessage(action, baseUserMapper.toDTO(courier), orderMapper.toDTO(orderEntity));
     }
 
+    @Transactional
     public List<CourierDTO> getCouriers(){
         List<CourierEntity> courierEntities = new ArrayList();
         courierRepository.findAll().forEach(courierEntities::add);
         return courierListMapper.toDTOList(courierEntities);
     }
 
+    @Transactional
     public CourierDTO createCourier(FullCourierDTO courier){
         CourierEntity courierEntity = new CourierEntity(courier);
         return courierMapper.toDTO(courierRepository.save(courierEntity));
     }
 
+    @Transactional
     public CourierDTO updateCourier(Long courierId, FullCourierDTO courier) throws NoSuchElementException{
         CourierEntity courierEntity = courierRepository.findById(courierId)
                 .orElseThrow( () -> new EmployeeNotFoundException(String.format("Courier not found, id = %d", courierId)));

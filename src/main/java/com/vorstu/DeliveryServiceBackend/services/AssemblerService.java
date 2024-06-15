@@ -19,6 +19,7 @@ import com.vorstu.DeliveryServiceBackend.services.action.resolver.ActionResolver
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -47,11 +48,13 @@ public class AssemblerService {
     @Autowired
     ActionResolver<AssemblerEntity> assemblerActionResolver;
 
+    @Transactional
     public List<OrderDTO> getOrders(){
         List<OrderEntity> orderEntities = orderRepository.findAllOrdersByStatus(OrderStatus.PLACED);
         return orderListMapper.toDTOList(orderEntities);
     }
 
+    @Transactional
     public OrderMessage doAction(String email, Long orderId, OrderAction action) {
         AssemblerEntity assembler = assemblerRepository.findUserByEmail(email);
         OrderEntity orderEntity = orderRepository.findById(orderId)
@@ -68,6 +71,7 @@ public class AssemblerService {
         return new OrderMessage(action, baseUserMapper.toDTO(assembler), orderMapper.toDTO(orderEntity));
     }
 
+    @Transactional
     public OrderWithStatusDTO getCurrentOrder(String email) {
         AssemblerEntity assembler = assemblerRepository.findUserByEmail(email);
         OrderEntity order = orderRepository.findCurrentEmployeeOrder(assembler.getId(), List.of(OrderStatus.ASSEMBLING))
@@ -76,6 +80,7 @@ public class AssemblerService {
         return new OrderWithStatusDTO(order.getStatus(), orderMapper.toDTO(order));
     }
 
+    @Transactional
     public List<AssemblerDTO> getAssemblers(){
         return assemblerListMapper.toDTOList(
                 StreamSupport
@@ -84,11 +89,13 @@ public class AssemblerService {
         );
     }
 
+    @Transactional
     public AssemblerDTO createAssembler(FullAssemblerDTO fullAssemblerDTO){
         AssemblerEntity assemblerEntity = new AssemblerEntity(fullAssemblerDTO);
         return assemblerMapper.toDTO(assemblerRepository.save(assemblerEntity));
     }
 
+    @Transactional
     public AssemblerDTO updateAssembler(Long assemblerId, FullAssemblerDTO assembler){
         AssemblerEntity assemblerEntity = assemblerRepository.findById(assemblerId)
                 .orElseThrow(()-> new EmployeeNotFoundException(String.format("Assembler not found, id = {%d}", assemblerId)));

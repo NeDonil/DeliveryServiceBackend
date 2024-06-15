@@ -60,12 +60,14 @@ public class CustomerService {
         return customerMapper.toDTO(customer);
     }
 
+    @Transactional
     public List<OrderDTO> getCustomerOrders(String email){
         CustomerEntity customerEntity = customerRepository.findUserByEmail(email);
         List<OrderEntity> orderEntityList = orderRepository.findAllOrdersByCustomerId(customerEntity.getId());
         return orderMapper.toDTOList(orderEntityList);
     }
 
+    @Transactional
     public OrderDTO getCurrentOrder(String email){
         CustomerEntity customerEntity = customerRepository.findUserByEmail(email);
         OrderEntity currentOrderEntity = orderRepository.findCurrentOrderByCustomerId(customerEntity.getId());

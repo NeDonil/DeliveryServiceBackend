@@ -13,6 +13,7 @@ import com.vorstu.DeliveryServiceBackend.messages.OrderMessage;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,6 +27,8 @@ public class AdminService {
     final OrderRepository orderRepository;
 
     final AdminRepository adminRepository;
+
+    @Transactional
     public List<OrderWithEmployeeDTO> getOrdersByStatus(OrderStatus status){
         List<OrderEntity> orders = orderRepository.findAllOrdersByStatus(status);
         return orders.stream()
@@ -36,6 +39,7 @@ public class AdminService {
 
     }
 
+    @Transactional
     public OrderMessage setOrderStatus(String email, Long orderId, OrderStatus status){
         AdminEntity admin = adminRepository.findAdminByEmail(email);
         OrderEntity order = orderRepository.findById(orderId)
