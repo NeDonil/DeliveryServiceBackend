@@ -1,4 +1,4 @@
-FROM openjdk:17-slim as build
+FROM gradle:6.5.1-jdk17 as build
 LABEL maintainer="Danil Svinoukhov <svinoukhov03@gmail.com>"
 COPY . /home/gradle/app/
 WORKDIR /home/gradle/app
