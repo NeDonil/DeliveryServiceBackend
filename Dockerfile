@@ -1,17 +1,10 @@
 FROM openjdk:17-slim as build
 LABEL maintainer="Danil Svinoukhov <svinoukhov03@gmail.com>"
-ARG JAR_FILE
-COPY ${JAR_FILE} app.jar
-RUN mkdir -p target/dependency && (cd target/dependency; jar -xf /app.jar)
+COPY . /home/gradle/app/
+WORKDIR /home/gradle/app
+RUN gradle build
 
-#stage 2
-FROM openjdk:17-slim
-#Add volume pointing to /tmp
-VOLUME /tmp
-#Copy unpackaged application to new container
-ARG DEPENDENCY=/target/dependency
-COPY --from=build ${DEPENDENCY}/BOOT-INF/lib /app/lib
-COPY --from=build ${DEPENDENCY}/META-INF /app/META-INF
-COPY --from=build ${DEPENDENCY}/BOOT-INF/classes /app
-#execute the application
-ENTRYPOINT ["java","-cp","app:app/lib/*","com.vorstu.DeliveryServiceBackend.DeliveryServiceApplication"]
+FROM openjdk:17.0
+COPY --from=build /home/gradle/app/build/libs/delivery-service-backend-0.0.1-SNAPSHOT-plain.jar /app.jar
+ENTRYPOINT ["java", "-jar"]
+CMD ["app.jar"]
