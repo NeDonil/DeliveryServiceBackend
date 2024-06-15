@@ -20,6 +20,7 @@ import com.vorstu.DeliveryServiceBackend.services.action.resolver.ActionResolver
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -44,12 +45,12 @@ public class CustomerService {
     OrderMapper orderMapper;
 
     @Autowired
-    OrderListMapper orderListMapper;
+    OrderMapper orderListMapper;
 
     @Autowired
     AddressMapper addressMapper;
     @Autowired
-    AddressListMapper addressListMapper;
+    AddressMapper addressListMapper;
 
     @Autowired
     ActionResolver customerActionResolver;
@@ -62,7 +63,7 @@ public class CustomerService {
     public List<OrderDTO> getCustomerOrders(String email){
         CustomerEntity customerEntity = customerRepository.findUserByEmail(email);
         List<OrderEntity> orderEntityList = orderRepository.findAllOrdersByCustomerId(customerEntity.getId());
-        return orderListMapper.toDTOList(orderEntityList);
+        return orderMapper.toDTOList(orderEntityList);
     }
 
     public OrderDTO getCurrentOrder(String email){
@@ -71,6 +72,7 @@ public class CustomerService {
         return orderMapper.toDTO(currentOrderEntity);
     }
 
+    @Transactional
     public OrderDTO getOrder(String email, Long orderId){
         CustomerEntity customerEntity = customerRepository.findUserByEmail(email);
         OrderEntity orderEntity = orderRepository.findById(orderId)
@@ -83,6 +85,7 @@ public class CustomerService {
         return orderMapper.toDTO(orderEntity);
     }
 
+    @Transactional
     public OrderDTO updateCurrentOrder(String email, ShortOrderDTO order){
         CustomerEntity customerEntity = customerRepository.findUserByEmail(email);
         OrderEntity orderEntity = orderRepository.findCurrentOrderByCustomerId(customerEntity.getId());
@@ -129,6 +132,7 @@ public class CustomerService {
         return orderMapper.toDTO(orderRepository.save(orderEntity));
     }
 
+    @Transactional
     public OrderMessage doAction(String email, Long orderId, OrderAction action){
         CustomerEntity customer = customerRepository.findUserByEmail(email);
         OrderEntity orderEntity = orderRepository.findById(orderId)
@@ -159,12 +163,14 @@ public class CustomerService {
         return orderMessage;
     }
 
+    @Transactional
     public List<AddressDTO> getAddresses(String email){
         return addressListMapper.toDTOList(
                 addressRepository.findAllAddressesByEmail(email)
         );
     }
 
+    @Transactional
     public AddressDTO createAddress(String email, String address) {
         CustomerEntity customer = customerRepository.findUserByEmail(email);
 

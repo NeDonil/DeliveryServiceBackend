@@ -18,7 +18,6 @@ import com.vorstu.DeliveryServiceBackend.services.action.resolver.ActionResolver
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -31,9 +30,9 @@ public class CourierService {
     @Autowired
     OrderMapper orderMapper;
     @Autowired
-    OrderListMapper orderListMapper;
+    OrderMapper orderListMapper;
     @Autowired
-    CourierListMapper courierListMapper;
+    CourierMapper courierListMapper;
 
     @Autowired
     CourierMapper courierMapper;

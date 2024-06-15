@@ -5,7 +5,7 @@ import com.vorstu.DeliveryServiceBackend.dto.response.CustomerDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper(componentModel = "spring", uses = AddressListMapper.class)
+@Mapper(componentModel = "spring")
 public interface CustomerMapper {
     @Mapping(target = "email", source = "entity.credentials.email")
     CustomerDTO toDTO(CustomerEntity entity);

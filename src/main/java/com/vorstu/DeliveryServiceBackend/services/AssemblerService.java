@@ -33,10 +33,10 @@ public class AssemblerService {
     @Autowired
     OrderMapper orderMapper;
     @Autowired
-    OrderListMapper orderListMapper;
+    OrderMapper orderListMapper;
 
     @Autowired
-    AssemblerListMapper assemblerListMapper;
+    AssemblerMapper assemblerListMapper;
 
     @Autowired
     AssemblerMapper assemblerMapper;

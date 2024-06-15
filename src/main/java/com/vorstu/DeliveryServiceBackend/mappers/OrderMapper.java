@@ -4,7 +4,10 @@ import com.vorstu.DeliveryServiceBackend.db.entities.OrderEntity;
 import com.vorstu.DeliveryServiceBackend.dto.response.OrderDTO;
 import org.mapstruct.Mapper;
 
-@Mapper(componentModel = "spring", uses = {OrderItemListMapper.class, AddressMapper.class})
+import java.util.List;
+
+@Mapper(componentModel = "spring")
 public interface OrderMapper {
     OrderDTO toDTO(OrderEntity entity);
+    List<OrderDTO> toDTOList(List<OrderEntity> orders);
 }
