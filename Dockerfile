@@ -5,6 +5,6 @@ WORKDIR /home/gradle/app
 RUN gradle build
 
 FROM openjdk:17
-COPY --from=build /home/gradle/app/build/libs/delivery-service-backend-0.0.1-SNAPSHOT-plain.jar /app.jar
+COPY --from=build /home/gradle/app/build/libs/delivery-service-backend-0.0.1-SNAPSHOT.jar /app.jar
 ENTRYPOINT ["java", "-jar"]
 CMD ["app.jar"]
