@@ -2,13 +2,12 @@ package com.vorstu.DeliveryServiceBackend.db.repositories;
 
 import com.vorstu.DeliveryServiceBackend.db.entities.OrderEntity;
 import com.vorstu.DeliveryServiceBackend.db.entities.OrderStatus;
+import java.util.List;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface OrderRepository extends CrudRepository<OrderEntity, Long> {
@@ -22,5 +21,6 @@ public interface OrderRepository extends CrudRepository<OrderEntity, Long> {
     List<OrderEntity> findAllOrdersByStatus(@Param("status") OrderStatus status);
 
     @Query("SELECT o FROM OrderEntity o WHERE o.status IN :statuses AND (o.assembler.id=:employee_id OR o.courier.id=:employee_id)")
-    Optional<OrderEntity> findCurrentEmployeeOrder(@Param("employee_id") Long employee_id, @Param("statuses") List<OrderStatus> statuses);
+    Optional<OrderEntity> findCurrentEmployeeOrder(@Param("employee_id") Long employee_id,
+            @Param("statuses") List<OrderStatus> statuses);
 }

@@ -10,7 +10,7 @@ public class AddressDTO {
     private Long id;
     private String value;
 
-    public static AddressDTO fromEntity(AddressEntity entity){
+    public static AddressDTO fromEntity(AddressEntity entity) {
         return new AddressDTO(entity.getId(), entity.getValue());
     }
 }

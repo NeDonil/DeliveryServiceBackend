@@ -1,6 +1,5 @@
 package com.vorstu.DeliveryServiceBackend.dto.response;
 
-import com.vorstu.DeliveryServiceBackend.db.entities.GroupEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

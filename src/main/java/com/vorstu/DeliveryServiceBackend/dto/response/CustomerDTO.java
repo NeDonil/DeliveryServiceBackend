@@ -15,14 +15,12 @@ public class CustomerDTO {
     private String email;
     private List<AddressDTO> addresses;
 
-    public static CustomerDTO fromEntity(CustomerEntity entity){
-        return new CustomerDTO(entity.getId(),
-                entity.getFio(),
-                entity.getCredentials().getEmail(),
-                entity.getAddresses() == null ? null : entity.getAddresses()
-                        .stream()
-                        .map(AddressDTO::fromEntity)
-                        .collect(Collectors.toList())
-        );
+    public static CustomerDTO fromEntity(CustomerEntity entity) {
+        return new CustomerDTO(entity.getId(), entity.getFio(), entity.getCredentials().getEmail(),
+                entity.getAddresses() == null
+                        ? null
+                        : entity.getAddresses().stream()
+                                .map(AddressDTO::fromEntity)
+                                .collect(Collectors.toList()));
     }
 }

@@ -13,7 +13,8 @@ public class ProductDTO {
     private Long count;
     private Long price;
 
-    public static ProductDTO fromEntity(ProductEntity entity){
-        return new ProductDTO(entity.getId(), entity.getTitle(), entity.getPhoto(), entity.getCount(), entity.getPrice());
+    public static ProductDTO fromEntity(ProductEntity entity) {
+        return new ProductDTO(entity.getId(), entity.getTitle(), entity.getPhoto(), entity.getCount(),
+                entity.getPrice());
     }
 }

@@ -10,10 +10,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class MakeActionProcessor implements ActionProcessor<CustomerEntity> {
     @Override
-    public void process(OrderEntity order, CustomerEntity entity){
+    public void process(OrderEntity order, CustomerEntity entity) {
         order.setStatus(OrderStatus.PLACED);
     }
 
     @Override
-    public OrderAction getAction(){return OrderAction.MAKE;}
+    public OrderAction getAction() {
+        return OrderAction.MAKE;
+    }
 }

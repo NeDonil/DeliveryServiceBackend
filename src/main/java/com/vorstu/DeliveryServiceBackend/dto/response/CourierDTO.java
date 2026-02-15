@@ -10,7 +10,7 @@ public class CourierDTO {
     private Long id;
     private String fio;
 
-    public static CourierDTO fromEntity(CourierEntity entity){
+    public static CourierDTO fromEntity(CourierEntity entity) {
         return new CourierDTO(entity.getId(), entity.getFio());
     }
 }

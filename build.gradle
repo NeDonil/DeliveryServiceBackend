@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '2.7.17'
     id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+    id 'com.diffplug.spotless' version "8.0.0"
 }
 
 group = 'com.example'
@@ -9,6 +10,15 @@ version = '0.0.1-SNAPSHOT'
 
 java {
     sourceCompatibility = '17'
+}
+
+spotless {
+    java {
+        target 'src/**/*.java'
+        targetExclude 'src/main/java/com/vorstu/DeliveryServiceBackend/config/SecurityConfig.java'
+        eclipse().configFile('config/spotless/eclipse-java-formatter.xml')
+        removeUnusedImports()
+    }
 }
 
 configurations {
@@ -58,6 +68,10 @@ dependencies {
 
 tasks.named('bootBuildImage') {
     builder = 'paketobuildpacks/builder-jammy-base:latest'
+}
+
+tasks.named('check') {
+    dependsOn 'spotlessCheck'
 }
 
 tasks.named('test') {

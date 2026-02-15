@@ -1,12 +1,11 @@
 package com.vorstu.DeliveryServiceBackend.db.entities;
 
 import com.sun.istack.NotNull;
+import javax.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-
-import javax.persistence.*;
 
 @Entity
 @Table(name = "order_items")

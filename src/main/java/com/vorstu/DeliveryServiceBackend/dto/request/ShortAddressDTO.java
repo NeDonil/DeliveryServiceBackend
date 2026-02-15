@@ -1,9 +1,8 @@
 package com.vorstu.DeliveryServiceBackend.dto.request;
 
-import lombok.Data;
-
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
+import lombok.Data;
 
 @Data
 public class ShortAddressDTO {

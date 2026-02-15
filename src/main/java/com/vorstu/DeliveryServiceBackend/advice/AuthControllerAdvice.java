@@ -14,13 +14,13 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class AuthControllerAdvice {
 
     @ExceptionHandler(DuplicateEmailException.class)
-    public ResponseEntity handleDuplicateEmailExceptionHandler(DuplicateEmailException ex){
+    public ResponseEntity handleDuplicateEmailExceptionHandler(DuplicateEmailException ex) {
         log.warn(ex.toString());
         return new ResponseEntity(HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity methodArgumentNotValidExceptionHandler(MethodArgumentNotValidException ex){
+    public ResponseEntity methodArgumentNotValidExceptionHandler(MethodArgumentNotValidException ex) {
         log.warn(ex.toString());
         return new ResponseEntity(HttpStatus.BAD_REQUEST);
     }

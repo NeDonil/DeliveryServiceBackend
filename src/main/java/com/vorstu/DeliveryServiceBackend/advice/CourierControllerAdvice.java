@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @Slf4j
 public class CourierControllerAdvice {
     @ExceptionHandler(IllegalOrderOperationException.class)
-    public ResponseEntity illegalOrderOperationException(IllegalOrderOperationException ex){
+    public ResponseEntity illegalOrderOperationException(IllegalOrderOperationException ex) {
         log.warn(ex.toString());
         return new ResponseEntity(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }

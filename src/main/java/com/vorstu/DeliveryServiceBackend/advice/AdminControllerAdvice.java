@@ -10,25 +10,23 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import java.util.NoSuchElementException;
-
 @ControllerAdvice(assignableTypes = AdminController.class)
 @Slf4j
 public class AdminControllerAdvice {
     @ExceptionHandler(OrderNotFoundException.class)
-    public ResponseEntity orderNotFoundException(OrderNotFoundException ex){
+    public ResponseEntity orderNotFoundException(OrderNotFoundException ex) {
         log.warn(ex.toString());
         return new ResponseEntity(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(IllegalOrderOperationException.class)
-    public ResponseEntity illegalOrderOperationException(IllegalOrderOperationException ex){
+    public ResponseEntity illegalOrderOperationException(IllegalOrderOperationException ex) {
         log.warn(ex.toString());
         return new ResponseEntity(HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity methodArgumentNotValidExceptionHandler(MethodArgumentNotValidException ex){
+    public ResponseEntity methodArgumentNotValidExceptionHandler(MethodArgumentNotValidException ex) {
         log.warn(ex.toString());
         return new ResponseEntity(HttpStatus.BAD_REQUEST);
     }

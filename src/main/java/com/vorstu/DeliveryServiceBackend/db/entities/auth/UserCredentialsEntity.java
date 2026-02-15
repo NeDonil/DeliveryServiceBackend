@@ -1,12 +1,11 @@
 package com.vorstu.DeliveryServiceBackend.db.entities.auth;
 
 import com.sun.istack.NotNull;
+import javax.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
-import javax.persistence.*;
 
 @Entity
 @Table(name = "user_credentials")
@@ -16,6 +15,7 @@ import javax.persistence.*;
 public class UserCredentialsEntity {
 
     static BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -32,7 +32,7 @@ public class UserCredentialsEntity {
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
-    public UserCredentialsEntity(String email, String password, UserRole role){
+    public UserCredentialsEntity(String email, String password, UserRole role) {
         this.email = email;
         this.enabled = true;
         this.password = passwordEncoder.encode(password);

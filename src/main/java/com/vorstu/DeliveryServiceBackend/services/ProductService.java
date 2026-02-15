@@ -8,12 +8,11 @@ import com.vorstu.DeliveryServiceBackend.dto.response.FullProductDTO;
 import com.vorstu.DeliveryServiceBackend.dto.response.GroupDTO;
 import com.vorstu.DeliveryServiceBackend.mappers.FullProductMapper;
 import com.vorstu.DeliveryServiceBackend.mappers.GroupMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import javax.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service
 public class ProductService {
@@ -30,20 +29,20 @@ public class ProductService {
     FullProductMapper fullProductListMapper;
 
     @Transactional
-    public List<GroupDTO> getGroups(){
+    public List<GroupDTO> getGroups() {
         List<GroupEntity> groupEntities = new ArrayList();
         groupRepository.findAll().forEach(groupEntities::add);
         return groupListMapper.toDTOList(groupEntities);
     }
 
     @Transactional
-    public List<FullProductDTO> getProductsInGroup(Long groupId){
+    public List<FullProductDTO> getProductsInGroup(Long groupId) {
         List<ProductEntity> productEntities = groupRepository.findProductsInGroup(groupId);
         return fullProductListMapper.toDTOList(productEntities);
     }
 
     @Transactional
-    public List<FullProductDTO> findProductsByPattern(String pattern){
+    public List<FullProductDTO> findProductsByPattern(String pattern) {
         List<ProductEntity> productEntities = productRepository.findProductsByPattern(pattern);
         return fullProductListMapper.toDTOList(productEntities);
     }

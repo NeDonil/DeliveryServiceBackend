@@ -15,25 +15,25 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @Slf4j
 public class CustomerControllerAdvice {
     @ExceptionHandler(IllegalOrderOperationException.class)
-    public ResponseEntity illegalOrderOperationException(IllegalOrderOperationException ex){
+    public ResponseEntity illegalOrderOperationException(IllegalOrderOperationException ex) {
         log.warn(ex.toString());
-        return new ResponseEntity( HttpStatus.BAD_REQUEST);
+        return new ResponseEntity(HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(OrderNotFoundException.class)
-    public ResponseEntity orderNotFoundException(OrderNotFoundException ex){
+    public ResponseEntity orderNotFoundException(OrderNotFoundException ex) {
         log.warn(ex.toString());
         return new ResponseEntity(HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity methodArgumentNotValidExceptionHandler(MethodArgumentNotValidException ex){
+    public ResponseEntity methodArgumentNotValidExceptionHandler(MethodArgumentNotValidException ex) {
         log.warn(ex.toString());
         return new ResponseEntity(HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(EmptyFieldException.class)
-    public ResponseEntity emptyFieldException(EmptyFieldException ex){
+    public ResponseEntity emptyFieldException(EmptyFieldException ex) {
         log.warn(ex.toString());
         return ResponseEntity.badRequest().body(ex.getMessage());
     }

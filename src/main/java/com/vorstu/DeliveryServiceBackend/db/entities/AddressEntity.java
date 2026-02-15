@@ -1,9 +1,8 @@
 package com.vorstu.DeliveryServiceBackend.db.entities;
 
 import com.sun.istack.NotNull;
-import lombok.*;
-
 import javax.persistence.*;
+import lombok.*;
 
 @Entity
 @Table(name = "addresses")

@@ -17,12 +17,11 @@ import com.vorstu.DeliveryServiceBackend.exception.OrderNotFoundException;
 import com.vorstu.DeliveryServiceBackend.mappers.*;
 import com.vorstu.DeliveryServiceBackend.messages.OrderMessage;
 import com.vorstu.DeliveryServiceBackend.services.action.resolver.ActionResolver;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.*;
+import javax.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service
 public class CustomerService {
@@ -55,32 +54,32 @@ public class CustomerService {
     @Autowired
     ActionResolver customerActionResolver;
 
-    public CustomerDTO getCustomerInfo(String email){
+    public CustomerDTO getCustomerInfo(String email) {
         CustomerEntity customer = customerRepository.findUserByEmail(email);
         return customerMapper.toDTO(customer);
     }
 
     @Transactional
-    public List<OrderDTO> getCustomerOrders(String email){
+    public List<OrderDTO> getCustomerOrders(String email) {
         CustomerEntity customerEntity = customerRepository.findUserByEmail(email);
         List<OrderEntity> orderEntityList = orderRepository.findAllOrdersByCustomerId(customerEntity.getId());
         return orderMapper.toDTOList(orderEntityList);
     }
 
     @Transactional
-    public OrderDTO getCurrentOrder(String email){
+    public OrderDTO getCurrentOrder(String email) {
         CustomerEntity customerEntity = customerRepository.findUserByEmail(email);
         OrderEntity currentOrderEntity = orderRepository.findCurrentOrderByCustomerId(customerEntity.getId());
         return orderMapper.toDTO(currentOrderEntity);
     }
 
     @Transactional
-    public OrderDTO getOrder(String email, Long orderId){
+    public OrderDTO getOrder(String email, Long orderId) {
         CustomerEntity customerEntity = customerRepository.findUserByEmail(email);
         OrderEntity orderEntity = orderRepository.findById(orderId)
                 .orElseThrow(() -> new OrderNotFoundException(String.format("Order not found, id = {%d}", orderId)));
 
-        if(orderEntity.getCustomer() != customerEntity){
+        if (orderEntity.getCustomer() != customerEntity) {
             throw new IllegalOrderOperationException("Access denied");
         }
 
@@ -88,30 +87,28 @@ public class CustomerService {
     }
 
     @Transactional
-    public OrderDTO updateCurrentOrder(String email, ShortOrderDTO order){
+    public OrderDTO updateCurrentOrder(String email, ShortOrderDTO order) {
         CustomerEntity customerEntity = customerRepository.findUserByEmail(email);
         OrderEntity orderEntity = orderRepository.findCurrentOrderByCustomerId(customerEntity.getId());
 
         List<OrderItemEntity> orderItemEntities = orderEntity.getItems();
         Iterator<OrderItemEntity> orderItemEntitiesIterator = orderItemEntities.iterator();
 
-        if(order.getComment() != null){
+        if (order.getComment() != null) {
             orderEntity.setComment(order.getComment());
         }
 
-        if(order.getAddress() != null){
+        if (order.getAddress() != null) {
             Long addressId = order.getAddress().getId();
             orderEntity.setAddress(addressRepository.findById(addressId).get());
         }
 
-        while(orderItemEntitiesIterator.hasNext()){
+        while (orderItemEntitiesIterator.hasNext()) {
             OrderItemEntity entity = orderItemEntitiesIterator.next();
-            Optional<ShortOrderItemDTO> itemCandid = order.getItems()
-                    .stream()
-                    .filter(x -> Objects.equals(x.getId(), entity.getId()))
-                    .findFirst();
+            Optional<ShortOrderItemDTO> itemCandid = order.getItems().stream()
+                    .filter(x -> Objects.equals(x.getId(), entity.getId())).findFirst();
 
-            if(itemCandid.isPresent()){
+            if (itemCandid.isPresent()) {
                 entity.setCount(itemCandid.get().getCount());
                 order.getItems().remove(itemCandid.get());
             } else {
@@ -119,7 +116,7 @@ public class CustomerService {
             }
         }
 
-        for(ShortOrderItemDTO newItem : order.getItems()){
+        for (ShortOrderItemDTO newItem : order.getItems()) {
             OrderItemEntity newOrderItemEntity = new OrderItemEntity();
 
             Long productId = newItem.getProduct().getId();
@@ -135,7 +132,7 @@ public class CustomerService {
     }
 
     @Transactional
-    public OrderMessage doAction(String email, Long orderId, OrderAction action){
+    public OrderMessage doAction(String email, Long orderId, OrderAction action) {
         CustomerEntity customer = customerRepository.findUserByEmail(email);
         OrderEntity orderEntity = orderRepository.findById(orderId)
                 .orElseThrow(() -> new OrderNotFoundException(String.format("Order not found, id = %d", orderId)));
@@ -166,21 +163,19 @@ public class CustomerService {
     }
 
     @Transactional
-    public List<AddressDTO> getAddresses(String email){
-        return addressListMapper.toDTOList(
-                addressRepository.findAllAddressesByEmail(email)
-        );
+    public List<AddressDTO> getAddresses(String email) {
+        return addressListMapper.toDTOList(addressRepository.findAllAddressesByEmail(email));
     }
 
     @Transactional
     public AddressDTO createAddress(String email, String address) {
         CustomerEntity customer = customerRepository.findUserByEmail(email);
 
-        if(address.isEmpty()) { // split to street, house, floor, etc.
+        if (address.isEmpty()) { // split to street, house, floor, etc.
             AddressEntity newAddress = new AddressEntity(address);
             customer.getAddresses().add(newAddress);
             return addressMapper.toDTO(addressRepository.save(newAddress));
-        } else{
+        } else {
             throw new EmptyFieldException("Address must not be empty");
         }
     }
