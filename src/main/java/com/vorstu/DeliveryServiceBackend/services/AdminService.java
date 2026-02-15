@@ -10,12 +10,11 @@ import com.vorstu.DeliveryServiceBackend.exception.OrderNotFoundException;
 import com.vorstu.DeliveryServiceBackend.mappers.BaseUserMapper;
 import com.vorstu.DeliveryServiceBackend.mappers.OrderMapper;
 import com.vorstu.DeliveryServiceBackend.messages.OrderMessage;
-import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Service;
-
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.transaction.Transactional;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
@@ -29,24 +28,23 @@ public class AdminService {
     final AdminRepository adminRepository;
 
     @Transactional
-    public List<OrderWithEmployeeDTO> getOrdersByStatus(OrderStatus status){
+    public List<OrderWithEmployeeDTO> getOrdersByStatus(OrderStatus status) {
         List<OrderEntity> orders = orderRepository.findAllOrdersByStatus(status);
         return orders.stream()
-                .map( order -> new OrderWithEmployeeDTO(
-                        baseUserMapper.toDTO( order.getCourier() != null ? order.getCourier() :order.getAssembler()),
+                .map(order -> new OrderWithEmployeeDTO(
+                        baseUserMapper.toDTO(order.getCourier() != null ? order.getCourier() : order.getAssembler()),
                         orderMapper.toDTO(order)))
                 .collect(Collectors.toList());
-
     }
 
     @Transactional
-    public OrderMessage setOrderStatus(String email, Long orderId, OrderStatus status){
+    public OrderMessage setOrderStatus(String email, Long orderId, OrderStatus status) {
         AdminEntity admin = adminRepository.findAdminByEmail(email);
         OrderEntity order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new OrderNotFoundException(String.format("Order not found, id = {%d}", orderId)));
         order.setStatus(status);
         orderRepository.save(order);
-        return new OrderMessage(OrderActionMapper.getAction(status), baseUserMapper.toDTO(admin), orderMapper.toDTO(order));
-
+        return new OrderMessage(OrderActionMapper.getAction(status), baseUserMapper.toDTO(admin),
+                orderMapper.toDTO(order));
     }
 }

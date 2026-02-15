@@ -1,6 +1,5 @@
 package com.vorstu.DeliveryServiceBackend.advice;
 
-
 import com.vorstu.DeliveryServiceBackend.controllers.ProductController;
 import com.vorstu.DeliveryServiceBackend.exception.ProductNotFoundException;
 import lombok.extern.slf4j.Slf4j;
@@ -13,8 +12,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @Slf4j
 public class ProductControllerAdvice {
     @ExceptionHandler(ProductNotFoundException.class)
-    public ResponseEntity productNotFoundException(ProductNotFoundException ex){
+    public ResponseEntity productNotFoundException(ProductNotFoundException ex) {
         log.warn(ex.toString());
-        return new ResponseEntity( HttpStatus.NOT_FOUND);
+        return new ResponseEntity(HttpStatus.NOT_FOUND);
     }
 }

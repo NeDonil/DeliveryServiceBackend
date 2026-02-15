@@ -1,14 +1,11 @@
 package com.vorstu.DeliveryServiceBackend.db.entities;
 
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "orders")
@@ -46,7 +43,7 @@ public class OrderEntity {
     @JoinColumn(name = "order_id")
     private List<OrderItemEntity> items;
 
-    public OrderEntity(CustomerEntity customer){
+    public OrderEntity(CustomerEntity customer) {
         this.status = OrderStatus.MAKING;
         this.customer = customer;
         this.items = new ArrayList<>();

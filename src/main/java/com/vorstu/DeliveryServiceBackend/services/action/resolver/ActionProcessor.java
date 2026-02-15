@@ -7,10 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 public interface ActionProcessor<T> {
 
     void process(OrderEntity order, T entity);
+
     OrderAction getAction();
 
     @Autowired
-    default void registerMyself(ActionResolver actionResolver){
+    default void registerMyself(ActionResolver actionResolver) {
         actionResolver.register(getAction(), this);
     }
 }

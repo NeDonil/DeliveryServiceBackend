@@ -3,6 +3,10 @@ package com.vorstu.DeliveryServiceBackend.controllers;
 import com.vorstu.DeliveryServiceBackend.dto.request.NewUserDTO;
 import com.vorstu.DeliveryServiceBackend.mappers.BaseUserMapper;
 import com.vorstu.DeliveryServiceBackend.services.AuthService;
+import java.security.Principal;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,11 +14,6 @@ import org.springframework.security.web.authentication.logout.CookieClearingLogo
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.security.web.authentication.rememberme.AbstractRememberMeServices;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-import java.security.Principal;
 
 @RestController
 @RequestMapping("/api")
@@ -30,22 +29,22 @@ public class AuthController {
 
     @GetMapping("/auth")
     @ResponseBody
-    public Principal user(Principal user){
-        log.warn("getUserAuth: " + (user != null ? user.getName() : "null") );
+    public Principal user(Principal user) {
+        log.warn("getUserAuth: " + (user != null ? user.getName() : "null"));
         return user;
     }
 
     @PostMapping("/register")
     @ResponseBody
-    public void register(@RequestBody
-                         @Valid NewUserDTO user){
+    public void register(@RequestBody @Valid NewUserDTO user) {
         authService.register(user);
     }
 
     @PostMapping(path = "/logout", consumes = "application/json", produces = "applicaton/json")
     @ResponseBody
-    public void logout(Principal user, HttpServletRequest request, HttpServletResponse response){
-        CookieClearingLogoutHandler cookieClearingLogoutHandler = new CookieClearingLogoutHandler(AbstractRememberMeServices.SPRING_SECURITY_REMEMBER_ME_COOKIE_KEY);
+    public void logout(Principal user, HttpServletRequest request, HttpServletResponse response) {
+        CookieClearingLogoutHandler cookieClearingLogoutHandler = new CookieClearingLogoutHandler(
+                AbstractRememberMeServices.SPRING_SECURITY_REMEMBER_ME_COOKIE_KEY);
         SecurityContextLogoutHandler securityContextLogoutHandler = new SecurityContextLogoutHandler();
         cookieClearingLogoutHandler.logout(request, response, null);
         securityContextLogoutHandler.logout(request, response, null);

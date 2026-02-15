@@ -10,11 +10,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class CourierRefuseActionProcessor implements ActionProcessor<CourierEntity> {
     @Override
-    public void process(OrderEntity order, CourierEntity entity){
+    public void process(OrderEntity order, CourierEntity entity) {
         order.setStatus(OrderStatus.ASSEMBLED);
         order.setCourier(null);
     }
 
     @Override
-    public OrderAction getAction(){return OrderAction.COURIER_REFUSE;}
+    public OrderAction getAction() {
+        return OrderAction.COURIER_REFUSE;
+    }
 }

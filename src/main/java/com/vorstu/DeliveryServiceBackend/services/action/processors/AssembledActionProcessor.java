@@ -10,8 +10,12 @@ import org.springframework.stereotype.Component;
 @Component()
 public class AssembledActionProcessor implements ActionProcessor<AssemblerEntity> {
     @Override
-    public void process(OrderEntity order, AssemblerEntity entity){order.setStatus(OrderStatus.ASSEMBLED);}
+    public void process(OrderEntity order, AssemblerEntity entity) {
+        order.setStatus(OrderStatus.ASSEMBLED);
+    }
 
     @Override
-    public OrderAction getAction(){return OrderAction.TO_ASSEMBLED;}
+    public OrderAction getAction() {
+        return OrderAction.TO_ASSEMBLED;
+    }
 }

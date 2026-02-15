@@ -1,13 +1,10 @@
 package com.vorstu.DeliveryServiceBackend.dto.response;
 
-import com.vorstu.DeliveryServiceBackend.db.entities.OrderEntity;
+import java.time.LocalDateTime;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Data
 @AllArgsConstructor
@@ -21,6 +18,7 @@ public class OrderDTO {
     private String status;
     private List<OrderItemDTO> items;
 
-    public OrderDTO(Long id) {this.id = id;}
-
+    public OrderDTO(Long id) {
+        this.id = id;
+    }
 }

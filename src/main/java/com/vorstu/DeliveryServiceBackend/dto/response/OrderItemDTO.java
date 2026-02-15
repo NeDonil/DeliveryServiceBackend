@@ -11,9 +11,7 @@ public class OrderItemDTO {
     private Long count;
     private ProductDTO product;
 
-    public static OrderItemDTO fromEntity(OrderItemEntity entity){
-        return new OrderItemDTO(entity.getId(), entity.getCount(),
-                ProductDTO.fromEntity(entity.getProduct())
-        );
+    public static OrderItemDTO fromEntity(OrderItemEntity entity) {
+        return new OrderItemDTO(entity.getId(), entity.getCount(), ProductDTO.fromEntity(entity.getProduct()));
     }
 }

@@ -2,11 +2,11 @@ package com.vorstu.DeliveryServiceBackend.services;
 
 import com.vorstu.DeliveryServiceBackend.controllers.OrderAction;
 import com.vorstu.DeliveryServiceBackend.db.entities.OrderStatus;
-
 import java.util.EnumMap;
 
 public class OrderActionMapper {
     public static EnumMap<OrderStatus, OrderAction> map;
+
     static {
         map = new EnumMap<>(OrderStatus.class);
         map.put(OrderStatus.PLACED, OrderAction.MAKE);
@@ -16,7 +16,7 @@ public class OrderActionMapper {
         map.put(OrderStatus.DELIVERED, OrderAction.TO_DELIVERED);
     }
 
-    public static OrderAction getAction(OrderStatus status){
+    public static OrderAction getAction(OrderStatus status) {
         return map.get(status);
     }
 }

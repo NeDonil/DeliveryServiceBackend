@@ -10,7 +10,7 @@ public class AssemblerDTO {
     private Long id;
     private String fio;
 
-    public static AssemblerDTO fromEntity(AssemblerEntity entity){
+    public static AssemblerDTO fromEntity(AssemblerEntity entity) {
         return new AssemblerDTO(entity.getId(), entity.getFio());
     }
 }

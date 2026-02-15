@@ -1,14 +1,12 @@
 package com.vorstu.DeliveryServiceBackend.db.entities;
 
-
 import com.vorstu.DeliveryServiceBackend.db.entities.auth.UserRole;
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter
@@ -17,11 +15,12 @@ import java.util.List;
 @NoArgsConstructor
 public class CustomerEntity extends BaseUser {
 
-    public CustomerEntity(String fio, String email, String password){
+    public CustomerEntity(String fio, String email, String password) {
         super(fio, email, password, UserRole.CUSTOMER);
         this.paymentData = new PaymentDataEntity(0L);
         this.addresses = new ArrayList<>();
     }
+
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id")
     private List<AddressEntity> addresses;

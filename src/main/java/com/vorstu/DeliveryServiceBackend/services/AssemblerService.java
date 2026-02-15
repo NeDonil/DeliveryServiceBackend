@@ -16,13 +16,12 @@ import com.vorstu.DeliveryServiceBackend.exception.OrderNotFoundException;
 import com.vorstu.DeliveryServiceBackend.mappers.*;
 import com.vorstu.DeliveryServiceBackend.messages.OrderMessage;
 import com.vorstu.DeliveryServiceBackend.services.action.resolver.ActionResolver;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import javax.transaction.Transactional;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
+import javax.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service
 public class AssemblerService {
@@ -44,12 +43,11 @@ public class AssemblerService {
     @Autowired
     BaseUserMapper baseUserMapper;
 
-
     @Autowired
     ActionResolver<AssemblerEntity> assemblerActionResolver;
 
     @Transactional
-    public List<OrderDTO> getOrders(){
+    public List<OrderDTO> getOrders() {
         List<OrderEntity> orderEntities = orderRepository.findAllOrdersByStatus(OrderStatus.PLACED);
         return orderListMapper.toDTOList(orderEntities);
     }
@@ -58,10 +56,10 @@ public class AssemblerService {
     public OrderMessage doAction(String email, Long orderId, OrderAction action) {
         AssemblerEntity assembler = assemblerRepository.findUserByEmail(email);
         OrderEntity orderEntity = orderRepository.findById(orderId)
-                .orElseThrow(()-> new OrderNotFoundException(String.format("Order with id %d not found", orderId)));
+                .orElseThrow(() -> new OrderNotFoundException(String.format("Order with id %d not found", orderId)));
 
         AssemblerEntity orderAssembler = orderEntity.getAssembler();
-        if(orderAssembler != null && orderAssembler.getId() != assembler.getId()){
+        if (orderAssembler != null && orderAssembler.getId() != assembler.getId()) {
             throw new IllegalOrderOperationException(String.format("You cannot operate with order(%d)", orderId));
         }
 
@@ -81,30 +79,27 @@ public class AssemblerService {
     }
 
     @Transactional
-    public List<AssemblerDTO> getAssemblers(){
+    public List<AssemblerDTO> getAssemblers() {
         return assemblerListMapper.toDTOList(
-                StreamSupport
-                        .stream(assemblerRepository.findAll().spliterator(), false)
-                        .collect(Collectors.toList())
-        );
+                StreamSupport.stream(assemblerRepository.findAll().spliterator(), false).collect(Collectors.toList()));
     }
 
     @Transactional
-    public AssemblerDTO createAssembler(FullAssemblerDTO fullAssemblerDTO){
+    public AssemblerDTO createAssembler(FullAssemblerDTO fullAssemblerDTO) {
         AssemblerEntity assemblerEntity = new AssemblerEntity(fullAssemblerDTO);
         return assemblerMapper.toDTO(assemblerRepository.save(assemblerEntity));
     }
 
     @Transactional
-    public AssemblerDTO updateAssembler(Long assemblerId, FullAssemblerDTO assembler){
-        AssemblerEntity assemblerEntity = assemblerRepository.findById(assemblerId)
-                .orElseThrow(()-> new EmployeeNotFoundException(String.format("Assembler not found, id = {%d}", assemblerId)));
+    public AssemblerDTO updateAssembler(Long assemblerId, FullAssemblerDTO assembler) {
+        AssemblerEntity assemblerEntity = assemblerRepository.findById(assemblerId).orElseThrow(
+                () -> new EmployeeNotFoundException(String.format("Assembler not found, id = {%d}", assemblerId)));
         assemblerEntity.setFio(assembler.getFio());
 
         return assemblerMapper.toDTO(assemblerRepository.save(assemblerEntity));
     }
 
-    public void deleteAssembler(Long assemblerId){
+    public void deleteAssembler(Long assemblerId) {
         assemblerRepository.deleteById(assemblerId);
     }
 }

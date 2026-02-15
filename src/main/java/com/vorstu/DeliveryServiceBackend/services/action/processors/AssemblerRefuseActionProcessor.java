@@ -10,11 +10,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class AssemblerRefuseActionProcessor implements ActionProcessor<AssemblerEntity> {
     @Override
-    public void process(OrderEntity order, AssemblerEntity entity){
+    public void process(OrderEntity order, AssemblerEntity entity) {
         order.setStatus(OrderStatus.PLACED);
         order.setAssembler(null);
     }
 
     @Override
-    public OrderAction getAction(){return OrderAction.ASSEMBLER_REFUSE;}
+    public OrderAction getAction() {
+        return OrderAction.ASSEMBLER_REFUSE;
+    }
 }
